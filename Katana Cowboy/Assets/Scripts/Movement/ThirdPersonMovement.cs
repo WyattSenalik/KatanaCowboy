@@ -3,6 +3,9 @@
 [RequireComponent(typeof(CharacterController))]
 public class ThirdPersonMovement : MonoBehaviour
 {
+    // For what kind of rotation the player should follow.
+    public enum RotationType { FOLLOWMOVE, FOLLOWCAM };
+
     // Customization.
     // Speed the character will move at.
     [SerializeField]
@@ -25,6 +28,11 @@ public class ThirdPersonMovement : MonoBehaviour
     // Height to reach on a jump.
     [SerializeField]
     private float jumpHeight = 3f;
+    // Speed to rotate camera while aiming.
+    [SerializeField]
+    private float aimRotateSpeedX = 2f;
+    [SerializeField]
+    private float aimRotateSpeedY = 300f;
 
     // References.
     // Reference to the camera that will determine our forward direction.
@@ -37,15 +45,19 @@ public class ThirdPersonMovement : MonoBehaviour
     private CharacterController charContRef;
 
     // Holds the turn velocity to smooth the turn.
-    private float turnSmoothVelocity;
+    // Should never be changed by this script.
+    private float turnSmoothVelocity = 0;
     // Current velocity due to gravity.
-    private Vector3 velocity;
+    private Vector3 velocity = Vector3.zero;
     // If the player is grounded.
-    private bool isGrounded;
+    private bool isGrounded = true;
+    // If the player should follow its movement with rotation or follow the camera with its rotation
+    private RotationType rotType = RotationType.FOLLOWCAM;
 
     // Called 0th before Start
     private void Awake()
     {
+        Debug.Log(rotType);
         // Try to set references
         try
         {
@@ -82,9 +94,14 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             // The the target angle to move at.
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + camTrans.eulerAngles.y;
-            // Get the angle we rotate the character so we don't simply snap and set the rotation of the character.
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+            // Only do this if rotation is following movment.
+            if (rotType == RotationType.FOLLOWMOVE)
+            {
+                // Get the angle we rotate the character so we don't simply snap and set the rotation of the character.
+                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+                transform.rotation = Quaternion.Euler(0f, angle, 0f);
+            }
 
             // Get if the player is sprinting.
             bool isSprinting = Input.GetButton("Sprint");
@@ -93,6 +110,19 @@ public class ThirdPersonMovement : MonoBehaviour
             // Move the character based on the target angle.
             Vector3 moveDirection = (Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward).normalized;
             charContRef.Move(moveDirection * curSpeed * Time.deltaTime);
+        }
+
+        // Only do this is rotation is attached to camera.
+        if (rotType == RotationType.FOLLOWCAM)
+        {
+            Debug.Log("Hello");
+            // Spin the player based on the mouse input.
+            float xAxis = Input.GetAxisRaw("Mouse X");
+            float yAxis = -Input.GetAxisRaw("Mouse Y");
+            Vector3 eulerRot = transform.eulerAngles;
+            eulerRot.x += xAxis * aimRotateSpeedX * Time.deltaTime;
+            eulerRot.y += xAxis * aimRotateSpeedY * Time.deltaTime;
+            transform.rotation = Quaternion.Euler(eulerRot);
         }
     }
 
@@ -117,5 +147,10 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
+    }
+
+    public void SetRotationType(RotationType _rotType_)
+    {
+        rotType = _rotType_;
     }
 }
