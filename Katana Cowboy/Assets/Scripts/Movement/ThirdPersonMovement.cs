@@ -52,7 +52,7 @@ public class ThirdPersonMovement : MonoBehaviour
     // If the player is grounded.
     private bool isGrounded = true;
     // If the player should follow its movement with rotation or follow the camera with its rotation
-    private RotationType rotType = RotationType.FOLLOWCAM;
+    private RotationType rotType = RotationType.FOLLOWMOVE;
 
     // Called 0th before Start
     private void Awake()
@@ -115,7 +115,6 @@ public class ThirdPersonMovement : MonoBehaviour
         // Only do this is rotation is attached to camera.
         if (rotType == RotationType.FOLLOWCAM)
         {
-            Debug.Log("Hello");
             // Spin the player based on the mouse input.
             float xAxis = Input.GetAxisRaw("Mouse X");
             float yAxis = -Input.GetAxisRaw("Mouse Y");
@@ -149,6 +148,12 @@ public class ThirdPersonMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Sets the player's rotation type to swap between different modes.
+    /// FOLLOWMOVE - player will rotate towards where they are moving.
+    /// FOLLOWCAM - player will rotate towards where they are looking.
+    /// </summary>
+    /// <param name="_rotType_">Type of rotation to set the player to.</param>
     public void SetRotationType(RotationType _rotType_)
     {
         rotType = _rotType_;
