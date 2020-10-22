@@ -14,16 +14,20 @@ public class GunController : MonoBehaviour
     // Reference to the camera's transform.
     [SerializeField]
     private Transform camTrans = null;
+    // Reference to the player's inventory.
+    [SerializeField]
+    private Inventory inventory = null;
 
-    // Amount of bullets the gun has.
-    private int numBullets;
     // If shoot is being held down.
     private bool isShootHeld;
+    // Layermask int to shoot at.
+    private int shootLayerMask;
 
     // Start is called before the first frame update
     private void Start()
     {
         isShootHeld = false;
+        shootLayerMask = LayerMask.GetMask(Shootable.SHOOT_LAYER_NAME);
     }
 
     // Update is called once per frame
@@ -52,21 +56,27 @@ public class GunController : MonoBehaviour
     /// </summary>
     private void Shoot()
     {
-        Debug.Log("Shoot");
-
-        RaycastHit hit;
-        if (Physics.Raycast(camTrans.position, camTrans.forward, out hit, range))
+        // Get the amount of bullets we have.
+        int amountBullets = inventory.GetAmount(InventoryItem.BULLET);
+        if (amountBullets > 0)
         {
-            Debug.Log(hit.transform.name);
-            // Pull Shootable off object.
-            Shootable shotThing = hit.transform.GetComponent<Shootable>();
-            if (shotThing != null)
+            inventory.LoseItem(InventoryItem.BULLET, 1);
+            Debug.Log("Shoot");
+
+            RaycastHit hit;
+            if (Physics.Raycast(camTrans.position, camTrans.forward, out hit, range, shootLayerMask))
             {
-                // Shoot the thing.
-                // Get the info of the shot.
-                Vector3 from = (hit.point - camTrans.position).normalized;
-                ShotInfo info = new ShotInfo(hit.point, from);
-                shotThing.GetShot(damage, info);
+                Debug.Log(hit.transform.name);
+                // Pull Shootable off object.
+                Shootable shotThing = hit.transform.GetComponent<Shootable>();
+                if (shotThing != null)
+                {
+                    // Shoot the thing.
+                    // Get the info of the shot.
+                    Vector3 from = (hit.point - camTrans.position).normalized;
+                    ShotInfo info = new ShotInfo(hit.point, from);
+                    shotThing.GetShot(damage, info);
+                }
             }
         }
     }
