@@ -1,8 +1,5 @@
 ﻿using UnityEngine;
 
-/// <summary>
-/// When this gameobject is shot, a force will be applied.
-/// </summary>
 [RequireComponent(typeof(Rigidbody))]
 public class PushShootable : Shootable
 {

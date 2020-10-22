@@ -7,9 +7,6 @@ public abstract class Shootable : MonoBehaviour
     [SerializeField]
     protected float maxHealth = 1f;
 
-    // Name of the layer that can be shot.
-    public static readonly string SHOOT_LAYER_NAME = "Shootable";
-
     // The current health of the shootable.
     protected float curHealth;
     // The raycast hit information of the shot.
@@ -18,17 +15,6 @@ public abstract class Shootable : MonoBehaviour
     // Called before the first frame.
     private void Start()
     {
-        // If we are changing the layer from some other specified layer, let me know.
-        if (this.gameObject.layer != LayerMask.NameToLayer("Default") &&
-            this.gameObject.layer != LayerMask.NameToLayer(SHOOT_LAYER_NAME))
-        {
-            Debug.Log("Changed " + this.gameObject.name + "'s layer from " +
-                LayerMask.LayerToName(this.gameObject.layer) + " to " + SHOOT_LAYER_NAME);
-        }
-        // Change the layer of the shootable.
-        this.gameObject.layer = LayerMask.NameToLayer(SHOOT_LAYER_NAME);
-
-        // Initialize health.
         curHealth = maxHealth;
     }
 
