@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
 
-// NO LONGER IN USE.
 public class CameraInput : MonoBehaviour, AxisState.IInputAxisProvider
 {
     // If the player is allowed to 

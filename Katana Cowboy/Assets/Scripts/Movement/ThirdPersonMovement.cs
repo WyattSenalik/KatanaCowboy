@@ -3,8 +3,8 @@
 [RequireComponent(typeof(CharacterController))]
 public class ThirdPersonMovement : MonoBehaviour
 {
-    // For what kind of controls the player should be using.
-    public enum ControlType { STANDARD, AIM };
+    // For what kind of rotation the player should follow.
+    public enum RotationType { FOLLOWMOVE, FOLLOWCAM };
 
     // Customization.
     // Speed the character will move at.
@@ -52,11 +52,12 @@ public class ThirdPersonMovement : MonoBehaviour
     // If the player is grounded.
     private bool isGrounded = true;
     // If the player should follow its movement with rotation or follow the camera with its rotation
-    private ControlType rotType = ControlType.AIM;
+    private RotationType rotType = RotationType.FOLLOWMOVE;
 
     // Called 0th before Start
     private void Awake()
     {
+        Debug.Log(rotType);
         // Try to set references
         try
         {
@@ -91,24 +92,15 @@ public class ThirdPersonMovement : MonoBehaviour
         // If there was input, move the character.
         if (direction.magnitude >= 0.1f)
         {
-            // Set target angle based on input.
-            float targetAngle;
+            // The the target angle to move at.
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + camTrans.eulerAngles.y;
 
-            // Handle the different movement types.
-            switch (rotType)
+            // Only do this if rotation is following movment.
+            if (rotType == RotationType.FOLLOWMOVE)
             {
-                // Standard 3rd person rotation.
-                case (ControlType.STANDARD):
-                    targetAngle = StandardMoveAngle(direction);
-                    break;
-                // Over the shoulder aiming.
-                case (ControlType.AIM):
-                    targetAngle = AimMoveAngle(direction);
-                    break;
-                default:
-                    Debug.LogError("Unknown control type " + rotType);
-                    targetAngle = 0;
-                    break;
+                // Get the angle we rotate the character so we don't simply snap and set the rotation of the character.
+                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+                transform.rotation = Quaternion.Euler(0f, angle, 0f);
             }
 
             // Get if the player is sprinting.
@@ -120,9 +112,17 @@ public class ThirdPersonMovement : MonoBehaviour
             charContRef.Move(moveDirection * curSpeed * Time.deltaTime);
         }
 
-        // Handle non-movement dependent things.
-        // Update the rotation when aiming.
-        AimRotation();
+        // Only do this is rotation is attached to camera.
+        if (rotType == RotationType.FOLLOWCAM)
+        {
+            // Spin the player based on the mouse input.
+            float xAxis = Input.GetAxisRaw("Mouse X");
+            float yAxis = -Input.GetAxisRaw("Mouse Y");
+            Vector3 eulerRot = transform.eulerAngles;
+            eulerRot.x += xAxis * aimRotateSpeedX * Time.deltaTime;
+            eulerRot.y += xAxis * aimRotateSpeedY * Time.deltaTime;
+            transform.rotation = Quaternion.Euler(eulerRot);
+        }
     }
 
     /// <summary>
@@ -149,62 +149,12 @@ public class ThirdPersonMovement : MonoBehaviour
     }
 
     /// <summary>
-    /// Helper function for PlaneMovement.
-    /// Handles which direction to move for the standard control type.
-    /// </summary>
-    /// <param name="direction">Holds x and y input information.</param>
-    /// <returns>float targetAngle that the player should move towards.</returns>
-    private float StandardMoveAngle(Vector3 direction)
-    {
-        // Set the target angle to move at to be based on input and the camera's angle.
-        float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + camTrans.eulerAngles.y;
-
-        // Get the angle we rotate the character so we don't simply snap and set the rotation of the character.
-        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-        // Change the rotation of the character.
-        transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-        return targetAngle;
-    }
-
-    /// <summary>
-    /// Helper function for PlaneMovement.
-    /// Handles which direction to move for the aim control type.
-    /// </summary>
-    /// <param name="direction">Holds x and y input information.</param>
-    /// <returns>float targetAngle that the player should move towards.</returns>
-    private float AimMoveAngle(Vector3 direction)
-    {
-        // Set the target angle to move at to be based on only the input.
-        float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + transform.eulerAngles.y;
-        return targetAngle;
-    }
-
-    /// <summary>
-    /// Helper function for PlaneMovement.
-    /// Updates the player's rotation based on camera view input.
-    /// </summary>
-    private void AimRotation()
-    {
-        // Spin the player based on the (mouse)/(camera view) input.
-        float xAxis = Input.GetAxisRaw("Mouse X");
-
-        if (xAxis != 0f)
-        {
-            // Change the rotation of the character.
-            Vector3 eulerRot = transform.eulerAngles;
-            eulerRot.y += xAxis * aimRotateSpeedY * Time.deltaTime;
-            transform.rotation = Quaternion.Euler(eulerRot);
-        }
-    }
-
-    /// <summary>
     /// Sets the player's rotation type to swap between different modes.
     /// FOLLOWMOVE - player will rotate towards where they are moving.
     /// FOLLOWCAM - player will rotate towards where they are looking.
     /// </summary>
     /// <param name="_rotType_">Type of rotation to set the player to.</param>
-    public void SetRotationType(ControlType _rotType_)
+    public void SetRotationType(RotationType _rotType_)
     {
         rotType = _rotType_;
     }
