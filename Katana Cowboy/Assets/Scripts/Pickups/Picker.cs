@@ -3,15 +3,18 @@
 public class Picker : MonoBehaviour
 {
     // Specifications.
-    // Range from the picker things can be picked up.
+    /// <summary>The maximum amount of pickups that can be picked up each frame.</summary>
+    private const int MAX_COLS = 16;
+    /// <summary>Range from the picker things can be picked up.</summary>
     [SerializeField]
     private float pickupRadius = 3f;
-    // The maximum amount of pickups that can be picked up each frame.
-    private const int MAX_COLS = 16;
+    /// <summary>If gizmos should be shown (editor only).</summary>
+    [SerializeField]
+    private bool showGizmos = false;
 
-    // Layermask to check for pickups on.
+    /// <summary>Layermask to check for pickups on.</summary>
     private int pickLayerMask;
-    // Colliders that are hit for pickups.
+    /// <summary>Colliders that are hit for pickups.</summary>
     private Collider[] hitcolliders;
 
     // Start is called before the first frame update
@@ -51,8 +54,12 @@ public class Picker : MonoBehaviour
         }
     }
 
+    // Draws gizmos in editor.
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(this.gameObject.transform.position, pickupRadius);
+        if (showGizmos)
+        {
+            Gizmos.DrawWireSphere(this.gameObject.transform.position, pickupRadius);
+        }
     }
 }
