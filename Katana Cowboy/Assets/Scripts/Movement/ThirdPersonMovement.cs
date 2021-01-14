@@ -54,6 +54,13 @@ public class ThirdPersonMovement : MonoBehaviour
     // If the player should follow its movement with rotation or follow the camera with its rotation
     private ControlType rotType = ControlType.AIM;
 
+    // Sword attack control variables.
+    // Reference to the sword controller for handling animation and such on the sword.
+    [SerializeField]
+    private SwordController swordContRef = null;
+    // If the player is attacking with their sword right now, we don't want them to be able to move.
+    private bool isAttacking = false;
+
     // Called 0th before Start
     private void Awake()
     {
@@ -71,8 +78,13 @@ public class ThirdPersonMovement : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        // See if the player is attacking
+        HandleAttack();
         // Handle moving along x and z axes.
-        PlaneMovement();
+        if (!isAttacking)
+        {
+            PlaneMovement();
+        }
         // Handle moving along y axis.
         VerticalMovement();
     }
@@ -146,6 +158,27 @@ public class ThirdPersonMovement : MonoBehaviour
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
+    }
+
+    /// <summary>
+    /// Starts the attacking animation in the animator.
+    /// </summary>
+    private void HandleAttack()
+    {
+        // If the user presses to attack.
+        if (Input.GetButtonDown("SwordAttack"))
+        {
+            swordContRef.StartSwingAnimation();
+            isAttacking = true;
+        }
+    }
+
+    /// <summary>
+    /// Called by animator to let the controller know it has finished attacking.
+    /// </summary>
+    public void FinishAttack()
+    {
+        isAttacking = false;
     }
 
     /// <summary>
