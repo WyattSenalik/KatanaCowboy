@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
 public class ThirdPersonMovement : MonoBehaviour
@@ -49,6 +50,8 @@ public class ThirdPersonMovement : MonoBehaviour
     private float turnSmoothVelocity = 0;
     // Current velocity due to gravity.
     private Vector3 velocity = Vector3.zero;
+    // If the player is sprinting
+    private bool isSprinting = false;
     // If the player is grounded.
     private bool isGrounded = true;
     // If the player should follow its movement with rotation or follow the camera with its rotation
@@ -74,7 +77,6 @@ public class ThirdPersonMovement : MonoBehaviour
             Debug.LogError("Could not set references in ThirdPersonMovement attached to " + this.name);
         }
     }
-
     // Update is called once per frame
     private void Update()
     {
@@ -88,6 +90,25 @@ public class ThirdPersonMovement : MonoBehaviour
         // Handle moving along y axis.
         VerticalMovement();
     }
+
+
+    public void OnMovement(InputAction.CallbackContext context)
+    {
+        // Get movement input
+        Vector2 rawAxis = context.ReadValue<Vector2>();
+        Vector3 direction = new Vector3(rawAxis.x, 0, rawAxis.y).normalized;
+
+        // Standard 3D rotation
+        float targetAngle = StandardMoveAngle(direction);
+        // Determine speed based on if sprinting
+        float curSpeed = isSprinting ? sprintSpeed : speed;
+    }
+    public void OnSprint(InputAction.CallbackContext context)
+    {
+        // Set if the player is sprinting
+        isSprinting = context.performed;
+    }
+
 
     /// <summary>
     /// Move the player based on horizontal and vertical input axes on
