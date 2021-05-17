@@ -26,7 +26,7 @@ public abstract class SingletonMonoBehav<T> : MonoBehaviour where T : SingletonM
         }
         else
         {
-            Debug.LogError("Cannot have multiple InputControllers");
+            Debug.LogError("Cannot have multiple " + (this as T).GetType());
             Destroy(this);
         }
     }
