@@ -90,9 +90,121 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 23fe90d3-2ede-4710-8cc2-b52ce44cf210
     m_ActionName: ThirdPersonMovement/Sprint[/Keyboard/leftShift]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1326993436587885992}
+        m_TargetAssemblyTypeName: ThirdPersonMovement, Assembly-CSharp
+        m_MethodName: OnJump
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 9277f3ba-2bba-4416-bb1f-394015884bb4
+    m_ActionName: ThirdPersonMovement/Jump[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1326993436587885992}
+        m_TargetAssemblyTypeName: ThirdPersonMovement, Assembly-CSharp
+        m_MethodName: OnAttack
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: d6387c61-502a-4026-b036-cdbaca2c9fbb
+    m_ActionName: ThirdPersonMovement/Attack[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1326993434883745120}
+        m_TargetAssemblyTypeName: CameraController, Assembly-CSharp
+        m_MethodName: OnAim
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 181b40c7-c260-4c40-86f8-5401dd490bd9
+    m_ActionName: Standard/Aim[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1326993436587885992}
+        m_TargetAssemblyTypeName: ThirdPersonMovement, Assembly-CSharp
+        m_MethodName: OnMovement
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: f8c5b9fa-bcdd-4779-be04-a2a6252a1ebf
+    m_ActionName: Aim/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1326993436587885992}
+        m_TargetAssemblyTypeName: ThirdPersonMovement, Assembly-CSharp
+        m_MethodName: OnSprint
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 782dcd1d-760a-4ecf-8d8e-2950f9588a81
+    m_ActionName: Aim/Sprint[/Keyboard/leftShift]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1326993436587885992}
+        m_TargetAssemblyTypeName: ThirdPersonMovement, Assembly-CSharp
+        m_MethodName: OnJump
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 9ad42ee7-301f-46e2-922b-0d40d47c8e59
+    m_ActionName: Aim/Jump[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1326993436587885992}
+        m_TargetAssemblyTypeName: ThirdPersonMovement, Assembly-CSharp
+        m_MethodName: OnAimLook
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 9918aa8e-5b10-4b61-bd85-bf23b792b019
+    m_ActionName: Aim/AimLook[/Mouse/delta/x]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: ThirdPersonMovement
+  m_DefaultActionMap: Standard
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!114 &1369258437975215215
@@ -108,7 +220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInputRef: {fileID: 2155093888541627668}
-  defaultMapName: ThirdPersonMovement
+  defaultMapName: Standard
 --- !u!1 &1326993434627919309
 GameObject:
   m_ObjectHideFlags: 0
@@ -340,7 +452,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326993434844261576}
-  m_LocalRotation: {x: 0.18674427, y: 0.000000016903694, z: -0.0000000032131928, w: 0.9824086}
+  m_LocalRotation: {x: 0.18674427, y: 0.00000001763808, z: -0.0000000033527905, w: 0.9824086}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -418,7 +530,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326993434883745134}
-  m_LocalRotation: {x: 0.20987457, y: -0.000000008795423, z: 0.0000000018879842, w: 0.9777283}
+  m_LocalRotation: {x: 0.20987459, y: -0.000000017536996, z: 0.000000003764409, w: 0.9777283}
   m_LocalPosition: {x: 13.53, y: 5.659849, z: 3.312849}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -560,6 +672,7 @@ MonoBehaviour:
   - {fileID: 1326993435005120917}
   - {fileID: 6942264096795003590}
   thirdPersonMove: {fileID: 1326993436587885992}
+  aimInputMapName: Aim
 --- !u!1 &1326993435005120917
 GameObject:
   m_ObjectHideFlags: 0
@@ -1032,7 +1145,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326993435632172918}
-  m_LocalRotation: {x: 0.22230697, y: 0.000000014528284, z: -0.0000000033126317, w: 0.9749767}
+  m_LocalRotation: {x: 0.22230698, y: -2.620085e-15, z: 6.1694116e-16, w: 0.9749767}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1346,7 +1459,7 @@ Animator:
   m_GameObject: {fileID: 1326993435726055006}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b83e529ea2e73824e992c9c2637d294a, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

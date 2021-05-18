@@ -4,24 +4,21 @@ public class GunController : MonoBehaviour
 {
     // Configurables.
     // Range the gun can shoot.
-    [SerializeField]
-    private float range = 100f;
+    [SerializeField] private float range = 100f;
     // The damage a gunshot does.
-    [SerializeField]
-    private float damage = 1f;
+    [SerializeField] private float damage = 1f;
 
     // References.
     // Reference to the camera's transform.
-    [SerializeField]
-    private Transform camTrans = null;
+    [SerializeField] private Transform camTrans = null;
     // Reference to the player's inventory.
-    [SerializeField]
-    private Inventory inventory = null;
+    [SerializeField] private Inventory inventory = null;
 
     // If shoot is being held down.
     private bool isShootHeld;
     // Layermask int to shoot at.
     private int shootLayerMask;
+
 
     // Start is called before the first frame update
     private void Start()
@@ -29,7 +26,6 @@ public class GunController : MonoBehaviour
         isShootHeld = false;
         shootLayerMask = LayerMask.GetMask(Shootable.SHOOT_LAYER_NAME);
     }
-
     // Update is called once per frame
     private void Update()
     {
@@ -50,6 +46,7 @@ public class GunController : MonoBehaviour
             isShootHeld = false;
         }
     }
+
 
     /// <summary>
     /// Shoots a bullet.
