@@ -25,7 +25,7 @@ public class ThirdPersonMovement : MonoBehaviour
     private float groundDistance = 0.4f;
     // Mask to check for ground.
     [SerializeField]
-    private LayerMask groundMask;
+    private LayerMask groundMask = 1 << 0;
     // Height to reach on a jump.
     [SerializeField]
     private float jumpHeight = 3f;
@@ -48,8 +48,12 @@ public class ThirdPersonMovement : MonoBehaviour
     // Holds the turn velocity to smooth the turn.
     // Should never be changed by this script.
     private float turnSmoothVelocity = 0;
-    // Current velocity due to gravity.
-    private Vector3 velocity = Vector3.zero;
+    // Target direction to face
+    private Vector3 rawMoveDirection = Vector3.zero;
+    // Current velocity due to gravity
+    private Vector3 gravityVelocity = Vector3.zero;
+    // If the player is moving
+    private bool isMoving = false;
     // If the player is sprinting
     private bool isSprinting = false;
     // If the player is grounded.
@@ -64,135 +68,108 @@ public class ThirdPersonMovement : MonoBehaviour
     // If the player is attacking with their sword right now, we don't want them to be able to move.
     private bool isAttacking = false;
 
-    // Called 0th before Start
+    // Called 0th
+    // Set references
     private void Awake()
     {
-        // Try to set references
-        try
-        {
-            charContRef = this.GetComponent<CharacterController>();
-        }
-        catch
-        {
-            Debug.LogError("Could not set references in ThirdPersonMovement attached to " + this.name);
-        }
+        charContRef = GetComponent<CharacterController>();
     }
-    // Update is called once per frame
-    private void Update()
+    // Called at a fixed interval
+    // Used for physics calculations
+    private void FixedUpdate()
     {
-        // See if the player is attacking
-        HandleAttack();
-        // Handle moving along x and z axes.
-        if (!isAttacking)
-        {
-            PlaneMovement();
-        }
-        // Handle moving along y axis.
-        VerticalMovement();
+        // Apply gravity velocity and handle if we are grounded
+        ApplyGravityVelocity();
+        // Apply rotation to the character so they are facing towards where they are walking and
+        // apply a movement velocity towards teh direction the camera is facing
+        Vector3 moveVelocity = DetermineMovementVelocity();
+
+        // Apply the velocities to the actual character
+        charContRef.Move((moveVelocity + gravityVelocity) * Time.deltaTime);
     }
 
 
+    /// <summary>
+    /// Gives the player a direction to move in and sets if the player is moving or not.
+    /// Called by the unity input events.
+    /// </summary>
     public void OnMovement(InputAction.CallbackContext context)
     {
-        // Get movement input
-        Vector2 rawAxis = context.ReadValue<Vector2>();
-        Vector3 direction = new Vector3(rawAxis.x, 0, rawAxis.y).normalized;
-
-        // Standard 3D rotation
-        float targetAngle = StandardMoveAngle(direction);
-        // Determine speed based on if sprinting
-        float curSpeed = isSprinting ? sprintSpeed : speed;
+        // If we pressed down and are not currently attacking
+        if (context.performed && !isAttacking)
+        {
+            isMoving = true;
+            // Get movement input
+            Vector2 rawAxis = context.ReadValue<Vector2>();
+            rawMoveDirection = new Vector3(rawAxis.x, 0, rawAxis.y).normalized;
+        }
+        else
+        {
+            isMoving = false;
+        }
     }
+    /// <summary>
+    /// Sets is sprinting to true or false.
+    /// Called by the unity input events.
+    /// </summary>
     public void OnSprint(InputAction.CallbackContext context)
     {
         // Set if the player is sprinting
         isSprinting = context.performed;
     }
-
-
     /// <summary>
-    /// Move the player based on horizontal and vertical input axes on
-    /// the x and z axes in game.
+    /// Starts jumping if the player is on the ground.
+    /// Called by the unity input events.
     /// </summary>
-    private void PlaneMovement()
+    public void OnJump(InputAction.CallbackContext context)
     {
-        // Get movement input.
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
-        Vector3 direction = new Vector3(horizontal, 0, vertical).normalized;
-
-        // If there was input, move the character.
-        if (direction.magnitude >= 0.1f)
+        if (context.performed && isGrounded)
         {
-            // Set target angle based on input.
-            float targetAngle;
-
-            // Handle the different movement types.
+            gravityVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        }
+    }
+    /// <summary>
+    /// Starts the attacking animation and sets is attacking to true.
+    /// Called by the unity input events.
+    /// </summary>
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
             switch (rotType)
             {
-                // Standard 3rd person rotation.
-                case (ControlType.STANDARD):
-                    targetAngle = StandardMoveAngle(direction);
+                // Start attacking with the sword
+                case ControlType.STANDARD:
+                    swordContRef.StartSwingAnimation();
+                    isAttacking = true;
                     break;
-                // Over the shoulder aiming.
-                case (ControlType.AIM):
-                    targetAngle = AimMoveAngle(direction);
+                // Shoot with the gun will be handled in gun controller
+                case ControlType.AIM:
                     break;
                 default:
-                    Debug.LogError("Unknown control type " + rotType);
-                    targetAngle = 0;
+                    Debug.LogError("Unhandled ControlType " + rotType);
                     break;
             }
-
-            // Get if the player is sprinting.
-            bool isSprinting = Input.GetButton("Sprint");
-            float curSpeed = isSprinting ? sprintSpeed : speed;
-
-            // Move the character based on the target angle.
-            Vector3 moveDirection = (Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward).normalized;
-            charContRef.Move(moveDirection * curSpeed * Time.deltaTime);
         }
-
-        // Handle non-movement dependent things.
-        // Update the rotation when aiming.
-        AimRotation();
     }
-
     /// <summary>
-    /// Cause the player to fall due to gravity and jump based on jump button input.
+    /// Updates the player's rotation based on camera view input.
+    /// Called by the unity input events.
     /// </summary>
-    private void VerticalMovement()
+    public void OnAimLook(InputAction.CallbackContext context)
     {
-        // Check if the player is on the ground.
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
-        // Update velocity due to gravity.
-        velocity.y += gravity * Time.deltaTime;
-        charContRef.Move(velocity * Time.deltaTime);
-        // Check if we should reset velocity.
-        if (isGrounded && velocity.y < 0)
+        if (context.performed)
         {
-            velocity.y = -2f;
-        }
+            // Get the raw input.
+            float rotVal = context.ReadValue<float>();
 
-        // If we are on the ground and try to jump, jump.
-        if (Input.GetButtonDown("Jump") && isGrounded)
-        {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            // Change the rotation of the character.
+            Vector3 eulerRot = transform.eulerAngles;
+            eulerRot.y += rotVal * aimRotateSpeedY * Time.deltaTime;
+            transform.rotation = Quaternion.Euler(eulerRot);
         }
     }
 
-    /// <summary>
-    /// Starts the attacking animation in the animator.
-    /// </summary>
-    private void HandleAttack()
-    {
-        // If the user presses to attack.
-        if (Input.GetButtonDown("SwordAttack"))
-        {
-            swordContRef.StartSwingAnimation();
-            isAttacking = true;
-        }
-    }
 
     /// <summary>
     /// Called by animator to let the controller know it has finished attacking.
@@ -201,57 +178,6 @@ public class ThirdPersonMovement : MonoBehaviour
     {
         isAttacking = false;
     }
-
-    /// <summary>
-    /// Helper function for PlaneMovement.
-    /// Handles which direction to move for the standard control type.
-    /// </summary>
-    /// <param name="direction">Holds x and y input information.</param>
-    /// <returns>float targetAngle that the player should move towards.</returns>
-    private float StandardMoveAngle(Vector3 direction)
-    {
-        // Set the target angle to move at to be based on input and the camera's angle.
-        float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + camTrans.eulerAngles.y;
-
-        // Get the angle we rotate the character so we don't simply snap and set the rotation of the character.
-        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-        // Change the rotation of the character.
-        transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-        return targetAngle;
-    }
-
-    /// <summary>
-    /// Helper function for PlaneMovement.
-    /// Handles which direction to move for the aim control type.
-    /// </summary>
-    /// <param name="direction">Holds x and y input information.</param>
-    /// <returns>float targetAngle that the player should move towards.</returns>
-    private float AimMoveAngle(Vector3 direction)
-    {
-        // Set the target angle to move at to be based on only the input.
-        float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + transform.eulerAngles.y;
-        return targetAngle;
-    }
-
-    /// <summary>
-    /// Helper function for PlaneMovement.
-    /// Updates the player's rotation based on camera view input.
-    /// </summary>
-    private void AimRotation()
-    {
-        // Spin the player based on the (mouse)/(camera view) input.
-        float xAxis = Input.GetAxisRaw("Mouse X");
-
-        if (xAxis != 0f)
-        {
-            // Change the rotation of the character.
-            Vector3 eulerRot = transform.eulerAngles;
-            eulerRot.y += xAxis * aimRotateSpeedY * Time.deltaTime;
-            transform.rotation = Quaternion.Euler(eulerRot);
-        }
-    }
-
     /// <summary>
     /// Sets the player's rotation type to swap between different modes.
     /// FOLLOWMOVE - player will rotate towards where they are moving.
@@ -261,5 +187,105 @@ public class ThirdPersonMovement : MonoBehaviour
     public void SetRotationType(ControlType _rotType_)
     {
         rotType = _rotType_;
+    }
+
+
+    /// <summary>
+    /// Check if the player is grounded and apply gravity to gravityVelocity accordingly.
+    /// Causes the player to fall due to gravity.
+    /// </summary>
+    private void ApplyGravityVelocity()
+    {
+        // Check if the player is on the ground.
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        // Update velocity due to gravity.
+        gravityVelocity.y += gravity * Time.deltaTime;
+        // Check if we should reset velocity.
+        if (isGrounded && gravityVelocity.y < 0)
+        {
+            gravityVelocity.y = -2f;
+        }
+    }
+
+    /// <summary>
+    /// Calculates the direction and speed at which the player should move
+    /// by walking/running. Returns the result.
+    /// </summary>
+    /// <returns>Movement vector the player should walk/run using.</returns>
+    private Vector3 DetermineMovementVelocity()
+    {
+        if (isMoving)
+        {
+            // Determine the target angle to move at
+            float targetAngle = DetermineTargetAngle();
+            // Determine speed based on if sprinting
+            float curSpeed = DetermineSpeed();
+
+            // Change where the character is facing
+            // Get the angle we rotate the character so we don't simply snap and set the rotation of the character.
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+            // Change the rotation of the character.
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+            // Move the character based on the target angle.
+            Vector3 moveDirection = (Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward).normalized;
+            return moveDirection * curSpeed;
+        }
+        else
+        {
+            return Vector3.zero;
+        }
+    }
+
+    
+    /// <summary>
+    /// Helper function to determine if the player should move at sprint speed or walking speed.
+    /// </summary>
+    /// <returns></returns>
+    private float DetermineSpeed()
+    {
+        return isSprinting ? sprintSpeed : speed;
+    }
+
+    /// <summary>
+    /// Helper function to determine which movement angle we want based on the current rotation type.
+    /// </summary>
+    /// <returns>float (euler angle) targetAngle that the player should move towards.</returns>
+    private float DetermineTargetAngle()
+    {
+        // Handle the different movement types.
+        switch (rotType)
+        {
+            // Standard 3rd person rotation.
+            case (ControlType.STANDARD):
+                return DetermineStandardMoveAngle();
+            // Over the shoulder aiming.
+            case (ControlType.AIM):
+                return DetermineAimMoveAngle();
+            default:
+                Debug.LogError("Unknown control type " + rotType);
+                return 0;
+        }
+    }
+    /// <summary>
+    /// Helper function to determine which direction the player should move in
+    /// when the camera is the standard 3rd person camera.
+    /// </summary>
+    /// <returns>float (euler angle) targetAngle that the player should move towards.</returns>
+    private float DetermineStandardMoveAngle()
+    {
+        // Set the target angle to move at to be based on input and the camera's angle.
+        return Mathf.Atan2(rawMoveDirection.x, rawMoveDirection.z) * Mathf.Rad2Deg + camTrans.eulerAngles.y;
+    }
+    /// <summary>
+    /// Handles which direction to move for the aim control type.
+    /// </summary>
+    /// <param name="direction">Holds x and y input information.</param>
+    /// <returns>float targetAngle that the player should move towards.</returns>
+    private float DetermineAimMoveAngle()
+    {
+        // Set the target angle to move at to be based on only the input.
+        float targetAngle = Mathf.Atan2(rawMoveDirection.x, rawMoveDirection.z) * Mathf.Rad2Deg + transform.eulerAngles.y;
+        return targetAngle;
     }
 }
