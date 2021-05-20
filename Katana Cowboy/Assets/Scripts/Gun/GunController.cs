@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Handles shooting with the gun.
+/// </summary>
 public class GunController : MonoBehaviour
 {
     // Configurables.
@@ -13,45 +16,32 @@ public class GunController : MonoBehaviour
     [SerializeField] private Transform camTrans = null;
     // Reference to the player's inventory.
     [SerializeField] private Inventory inventory = null;
+    // Reference to the visuals for the gun
+    [SerializeField] private GameObject gunVisuals = null;
 
-    // If shoot is being held down.
-    private bool isShootHeld;
     // Layermask int to shoot at.
-    private int shootLayerMask;
+    private int shootLayerMask = 1 << 0;
 
 
     // Start is called before the first frame update
     private void Start()
     {
-        isShootHeld = false;
         shootLayerMask = LayerMask.GetMask(Shootable.SHOOT_LAYER_NAME);
-    }
-    // Update is called once per frame
-    private void Update()
-    {
-        // Get shoot input.
-        bool shouldShoot = Input.GetAxisRaw("Shoot") != 0f;
-        if (shouldShoot)
-        {
-            // If shoot isn't being held down and instead was pressed again, then actually fire again.
-            if (!isShootHeld)
-            {
-                Shoot();
-                isShootHeld = true;
-            }
-        }
-        // Reset shoot held when it is released
-        else
-        {
-            isShootHeld = false;
-        }
     }
 
 
     /// <summary>
+    /// Toggles if the gun is active or inactive.
+    /// </summary>
+    /// <param name="shouldActive">Active if true. Inactive if false.</param>
+    public void ToggleActive(bool shouldActive)
+    {
+        gunVisuals.SetActive(shouldActive);
+    }
+    /// <summary>
     /// Shoots a bullet.
     /// </summary>
-    private void Shoot()
+    public void Shoot()
     {
         // Get the amount of bullets we have.
         int amountBullets = inventory.GetAmount(InventoryItem.BULLET);
