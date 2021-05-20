@@ -9,7 +9,7 @@ public class SwordController : MonoBehaviour
     private Animator swordAnim = null;
     /// <summary> Reference tot he third person controller script on the player. </summary>
     [SerializeField]
-    private ThirdPersonMovement playerMoveRef = null;
+    private PlayerController playerMoveRef = null;
 
     /// <summary>
     /// Called by third person movement script to begin the swing animation of the sword.

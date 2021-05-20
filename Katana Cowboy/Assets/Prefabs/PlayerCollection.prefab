@@ -60,8 +60,8 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1326993436587885992}
-        m_TargetAssemblyTypeName: ThirdPersonMovement, Assembly-CSharp
+      - m_Target: {fileID: 7164132544804962792}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
         m_MethodName: OnMovement
         m_Mode: 0
         m_Arguments:
@@ -76,8 +76,8 @@ MonoBehaviour:
     m_ActionName: ThirdPersonMovement/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1326993436587885992}
-        m_TargetAssemblyTypeName: ThirdPersonMovement, Assembly-CSharp
+      - m_Target: {fileID: 7164132544804962792}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
         m_MethodName: OnSprint
         m_Mode: 0
         m_Arguments:
@@ -92,8 +92,8 @@ MonoBehaviour:
     m_ActionName: ThirdPersonMovement/Sprint[/Keyboard/leftShift]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1326993436587885992}
-        m_TargetAssemblyTypeName: ThirdPersonMovement, Assembly-CSharp
+      - m_Target: {fileID: 7164132544804962792}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
         m_MethodName: OnJump
         m_Mode: 0
         m_Arguments:
@@ -108,8 +108,8 @@ MonoBehaviour:
     m_ActionName: ThirdPersonMovement/Jump[/Keyboard/space]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1326993436587885992}
-        m_TargetAssemblyTypeName: ThirdPersonMovement, Assembly-CSharp
+      - m_Target: {fileID: 7164132544804962792}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
         m_MethodName: OnAttack
         m_Mode: 0
         m_Arguments:
@@ -124,8 +124,8 @@ MonoBehaviour:
     m_ActionName: ThirdPersonMovement/Attack[/Mouse/leftButton]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1326993434883745120}
-        m_TargetAssemblyTypeName: CameraController, Assembly-CSharp
+      - m_Target: {fileID: 7164132544804962792}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
         m_MethodName: OnAim
         m_Mode: 0
         m_Arguments:
@@ -140,56 +140,8 @@ MonoBehaviour:
     m_ActionName: Standard/Aim[/Mouse/rightButton]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1326993436587885992}
-        m_TargetAssemblyTypeName: ThirdPersonMovement, Assembly-CSharp
-        m_MethodName: OnMovement
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: f8c5b9fa-bcdd-4779-be04-a2a6252a1ebf
-    m_ActionName: Aim/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1326993436587885992}
-        m_TargetAssemblyTypeName: ThirdPersonMovement, Assembly-CSharp
-        m_MethodName: OnSprint
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 782dcd1d-760a-4ecf-8d8e-2950f9588a81
-    m_ActionName: Aim/Sprint[/Keyboard/leftShift]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1326993436587885992}
-        m_TargetAssemblyTypeName: ThirdPersonMovement, Assembly-CSharp
-        m_MethodName: OnJump
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 9ad42ee7-301f-46e2-922b-0d40d47c8e59
-    m_ActionName: Aim/Jump[/Keyboard/space]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1326993436587885992}
-        m_TargetAssemblyTypeName: ThirdPersonMovement, Assembly-CSharp
+      - m_Target: {fileID: 7164132544804962792}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
         m_MethodName: OnAimLook
         m_Mode: 0
         m_Arguments:
@@ -200,8 +152,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_ActionId: 9918aa8e-5b10-4b61-bd85-bf23b792b019
-    m_ActionName: Aim/AimLook[/Mouse/delta/x]
+    m_ActionId: 2209243d-e6cd-4f03-8ab9-9ee97bb09580
+    m_ActionName: Standard/AimLook[/Mouse/delta/x]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Standard
@@ -452,7 +404,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326993434844261576}
-  m_LocalRotation: {x: 0.18674427, y: 0.00000001763808, z: -0.0000000033527905, w: 0.9824086}
+  m_LocalRotation: {x: 0.18674427, y: 0.00000001548079, z: -0.0000000029427154, w: 0.9824086}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -669,10 +621,7 @@ MonoBehaviour:
   aimCamera: {fileID: 1326993435379051879}
   standardObjects: []
   aimObjects:
-  - {fileID: 1326993435005120917}
   - {fileID: 6942264096795003590}
-  thirdPersonMove: {fileID: 1326993436587885992}
-  aimInputMapName: Aim
 --- !u!1 &1326993435005120917
 GameObject:
   m_ObjectHideFlags: 0
@@ -689,7 +638,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1326993435005120916
 Transform:
   m_ObjectHideFlags: 0
@@ -722,6 +671,7 @@ MonoBehaviour:
   damage: 1
   camTrans: {fileID: 1326993435379051877}
   inventory: {fileID: 1326993436587885997}
+  gunVisuals: {fileID: 1326993436433434364}
 --- !u!1 &1326993435170298975
 GameObject:
   m_ObjectHideFlags: 0
@@ -889,7 +839,7 @@ MonoBehaviour:
   m_StreamingVersion: 20170927
   m_Priority: 10
   m_StandbyUpdate: 2
-  m_LookAt: {fileID: 1326993436587885993}
+  m_LookAt: {fileID: 0}
   m_Follow: {fileID: 1326993436587885993}
   m_Lens:
     FieldOfView: 40
@@ -945,7 +895,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326993435514883138}
-  m_LocalRotation: {x: 0.20453587, y: -0.000000018830624, z: 0.000000003934722, w: 0.9788591}
+  m_LocalRotation: {x: 0.20453587, y: 0.000000017433404, z: -0.0000000036427679, w: 0.9788591}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1145,7 +1095,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326993435632172918}
-  m_LocalRotation: {x: 0.22230698, y: -2.620085e-15, z: 6.1694116e-16, w: 0.9749767}
+  m_LocalRotation: {x: 0.22230698, y: 2.620085e-15, z: -6.1694116e-16, w: 0.9749767}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1481,7 +1431,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   swordAnim: {fileID: 1326993435726054993}
-  playerMoveRef: {fileID: 1326993436587885992}
+  playerMoveRef: {fileID: 7164132544804962792}
 --- !u!1 &1326993435895543666
 GameObject:
   m_ObjectHideFlags: 0
@@ -1731,12 +1681,12 @@ GameObject:
   m_Component:
   - component: {fileID: 1326993436433434355}
   m_Layer: 0
-  m_Name: Graphics
+  m_Name: GunGraphics
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1326993436433434355
 Transform:
   m_ObjectHideFlags: 0
@@ -1925,7 +1875,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1326993436587885993}
   - component: {fileID: 1326993436587885999}
+  - component: {fileID: 6441816366486249559}
+  - component: {fileID: 7164132544804962792}
   - component: {fileID: 1326993436587885992}
+  - component: {fileID: 5007177718830076464}
   - component: {fileID: 1326993436587885998}
   - component: {fileID: 1326993436587885997}
   m_Layer: 0
@@ -1971,6 +1924,44 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6441816366486249559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326993436587885994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c822c238a08fc87479bb1eb89b951521, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 6
+  sprintSpeed: 12
+  gravity: -28
+  groundDistance: 0.4
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 1
+  jumpHeight: 1
+  groundCheck: {fileID: 1326993435658649883}
+--- !u!114 &7164132544804962792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326993436587885994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f1765d25a50eae4ea3ce517a6a2955f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aimRotateSpeedX: 2
+  aimRotateSpeedY: 10
+  camContRef: {fileID: 1326993434883745120}
+  swordContRef: {fileID: 1326993435726054992}
+  gunContRef: {fileID: 1326993435005120907}
 --- !u!114 &1326993436587885992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1983,20 +1974,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 618e66bd360a60c4b8be255b6a48c6fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 6
-  sprintSpeed: 12
   turnSmoothTime: 0.1
-  gravity: -29.43
-  groundDistance: 0.4
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 256
-  jumpHeight: 1
-  aimRotateSpeedX: 2
-  aimRotateSpeedY: 300
   camTrans: {fileID: 1326993434883745122}
-  groundCheck: {fileID: 1326993435658649883}
-  swordContRef: {fileID: 1326993435726054992}
+--- !u!114 &5007177718830076464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326993436587885994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18ea79bbf2896b647b0f0469f93d671e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1326993436587885998
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,13 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Cinemachine;
-using UnityEngine;
-using UnityEngine.InputSystem;
+﻿using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
     // Camera types.
-    public enum CameraTypes { STANDARD, AIM };
+    public enum CameraTypes { Standard, Aim };
+
 
     // References to the different cameras.
     // Standard third person camera.
@@ -21,14 +18,8 @@ public class CameraController : MonoBehaviour
     // UI and objects that should be active when swapping to aim.
     [SerializeField] private GameObject[] aimObjects = new GameObject[0];
 
-    // Reference to the player's movement controller script.
-    [SerializeField] private ThirdPersonMovement thirdPersonMove = null;
-
-    // Name of the input map to switch to when aiming
-    [SerializeField] private string aimInputMapName = "Aim";
-
     // Current camera that is active.
-    private CameraTypes activeCam;
+    private CameraTypes activeCam = CameraTypes.Standard;
 
 
     // Called before the first frame.
@@ -37,39 +28,6 @@ public class CameraController : MonoBehaviour
         // Initialially, be at a normal camera.
         ActivateDefaultCamera();
     }
-    //// Called once every frame.
-    //private void Update()
-    //{
-    //    // If the player is holding down aim, then aim.
-    //    float aim = Input.GetAxisRaw("Aim");
-    //    if (aim >= 0.01f)
-    //    {
-    //        // If we aren't already aiming.
-    //        if (activeCam != CameraTypes.AIM)
-    //        {
-    //            ChangeCamera(ThirdPersonMovement.ControlType.AIM, CameraTypes.AIM);
-    //        }
-    //    }
-    //    // If aim is not being held down and we aren't standard, change to standard.
-    //    else if (activeCam != CameraTypes.STANDARD)
-    //    {
-    //        ChangeCamera(ThirdPersonMovement.ControlType.STANDARD, CameraTypes.STANDARD);
-    //    }
-    //}
-
-
-
-    public void OnAim(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            ActivateAimCamera();
-        }
-        else if (context.canceled)
-        {
-            ActivateDefaultCamera();
-        }
-    }
 
 
     /// <summary>
@@ -77,16 +35,16 @@ public class CameraController : MonoBehaviour
     /// </summary>
     public void ActivateDefaultCamera()
     {
-        ChangeCamera(ThirdPersonMovement.ControlType.STANDARD, CameraTypes.STANDARD);
+        ChangeCamera(PlayerController.ControlType.Standard, CameraTypes.Standard);
     }
-
     /// <summary>
     /// Activates the Aim Camera and sets the rotation type for the player controller.
     /// </summary>
     public void ActivateAimCamera()
     {
-        ChangeCamera(ThirdPersonMovement.ControlType.AIM, CameraTypes.AIM);
+        ChangeCamera(PlayerController.ControlType.Aim, CameraTypes.Aim);
     }
+
 
     /// <summary>
     /// Helper function for the activate camera functions.
@@ -94,7 +52,7 @@ public class CameraController : MonoBehaviour
     /// </summary>
     /// <param name="controlType">Type of control type to give the player.</param>
     /// <param name="activeCamType">Type of comera type to use.</param>
-    private void ChangeCamera(ThirdPersonMovement.ControlType controlType, CameraTypes activeCamType)
+    private void ChangeCamera(PlayerController.ControlType controlType, CameraTypes activeCamType)
     {
         // First disable all the cameras.
         DisableAllCameras();
@@ -103,12 +61,12 @@ public class CameraController : MonoBehaviour
         // Enable the one active cam and its UI.
         switch (activeCamType)
         {
-            case (CameraTypes.STANDARD):
+            case (CameraTypes.Standard):
                 thirdPersonCamera.SetActive(true);
                 foreach (GameObject obj in standardObjects)
                     obj.SetActive(true);
                 break;
-            case (CameraTypes.AIM):
+            case (CameraTypes.Aim):
                 aimCamera.SetActive(true);
                 foreach (GameObject obj in aimObjects)
                     obj.SetActive(true);
@@ -119,11 +77,7 @@ public class CameraController : MonoBehaviour
         }
         // Set which camera is active.
         activeCam = activeCamType;
-
-        // Set the player's rotation type.
-        thirdPersonMove.SetRotationType(controlType);
     }
-
     /// <summary>
     /// Helper function for ChangeCamera.
     /// Disables all the cameras.
@@ -133,7 +87,6 @@ public class CameraController : MonoBehaviour
         thirdPersonCamera.SetActive(false);
         aimCamera.SetActive(false);
     }
-
     /// <summary>
     /// Helper function for ChangeCamera.
     /// Turns off all UI tied to all cameras.

@@ -44,6 +44,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "AimLook",
+                    "type": "Value",
+                    "id": "2209243d-e6cd-4f03-8ab9-9ee97bb09580",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -145,127 +153,10 @@
                     "action": "Aim",
                     "isComposite": false,
                     "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Aim",
-            "id": "532cc75d-5e8c-4cf6-8edb-9e39b61b7cc5",
-            "actions": [
-                {
-                    "name": "Movement",
-                    "type": "Value",
-                    "id": "f8c5b9fa-bcdd-4779-be04-a2a6252a1ebf",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Sprint",
-                    "type": "Button",
-                    "id": "782dcd1d-760a-4ecf-8d8e-2950f9588a81",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Jump",
-                    "type": "Button",
-                    "id": "9ad42ee7-301f-46e2-922b-0d40d47c8e59",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "AimLook",
-                    "type": "Value",
-                    "id": "9918aa8e-5b10-4b61-bd85-bf23b792b019",
-                    "expectedControlType": "Axis",
-                    "processors": "",
-                    "interactions": ""
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "2D Vector",
-                    "id": "babf99c5-7fa3-4904-8648-a982c309ad0f",
-                    "path": "2DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Movement",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "3aefa5d9-98df-4b8d-9ec2-ee04e57ef9f2",
-                    "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Movement",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "c163d5ff-40be-4317-b9d0-e5f23d27aeb6",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Movement",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "79cda609-1c0d-427b-a570-d5972e39510d",
-                    "path": "<Keyboard>/a",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Movement",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "b7660493-9739-471c-8607-29c8a570f48a",
-                    "path": "<Keyboard>/d",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Movement",
-                    "isComposite": false,
-                    "isPartOfComposite": true
                 },
                 {
                     "name": "",
-                    "id": "4f0ac016-43a9-4a49-ada7-3317891f85a3",
-                    "path": "<Keyboard>/leftShift",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Sprint",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "930443f7-08c1-41c4-b2fb-c4a2f7534bdb",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Jump",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "5835ab2b-0b8f-47ad-b11a-16dbfd0d4737",
+                    "id": "8cea86e9-6ccf-4628-bda0-18e9e6262349",
                     "path": "<Mouse>/delta/x",
                     "interactions": "",
                     "processors": "",
