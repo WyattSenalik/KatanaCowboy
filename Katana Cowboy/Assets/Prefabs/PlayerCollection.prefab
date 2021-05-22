@@ -154,6 +154,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 2209243d-e6cd-4f03-8ab9-9ee97bb09580
     m_ActionName: Standard/AimLook[/Mouse/delta/x]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1326993435379051876}
+        m_TargetAssemblyTypeName: AimCameraController, Assembly-CSharp
+        m_MethodName: OnAimLookVertical
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 4694f272-18cc-4d5f-b12e-798a6e6260ff
+    m_ActionName: Standard/AimLookVertical[/Mouse/delta/y]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Standard
@@ -404,7 +420,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326993434844261576}
-  m_LocalRotation: {x: 0.18674427, y: 0.00000001548079, z: -0.0000000029427154, w: 0.9824086}
+  m_LocalRotation: {x: 0.18674427, y: -0.00000001548079, z: 0.0000000029427154, w: 0.9824086}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -895,7 +911,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326993435514883138}
-  m_LocalRotation: {x: 0.20453587, y: 0.000000017433404, z: -0.0000000036427679, w: 0.9788591}
+  m_LocalRotation: {x: 0.20453587, y: 0.000000019549036, z: -0.0000000040848365, w: 0.9788591}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1095,7 +1111,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326993435632172918}
-  m_LocalRotation: {x: 0.22230698, y: 2.620085e-15, z: -6.1694116e-16, w: 0.9749767}
+  m_LocalRotation: {x: 0.22230697, y: -0.000000014528284, z: 0.0000000033126317, w: 0.9749767}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1409,7 +1425,7 @@ Animator:
   m_GameObject: {fileID: 1326993435726055006}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b83e529ea2e73824e992c9c2637d294a, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1938,11 +1954,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 6
   sprintSpeed: 12
-  gravity: -28
+  gravity: 25
   groundDistance: 0.4
   groundMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 256
   jumpHeight: 1
   groundCheck: {fileID: 1326993435658649883}
 --- !u!114 &7164132544804962792
@@ -1957,7 +1973,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f1765d25a50eae4ea3ce517a6a2955f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimRotateSpeedX: 2
   aimRotateSpeedY: 10
   camContRef: {fileID: 1326993434883745120}
   swordContRef: {fileID: 1326993435726054992}
