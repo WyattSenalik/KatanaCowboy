@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Listens for player input and controls what happens to the player character based on those inputs.
+/// Interfaces between the CharacterMovement, CameraController, SwordController, and GunController.
+/// </summary>
 [RequireComponent(typeof(ThirdPersonMoveAngleDeterminer))]
 [RequireComponent(typeof(OverShoulderMoveAngleDeterminer))]
 [RequireComponent(typeof(CharacterController))]
@@ -11,7 +15,6 @@ public class PlayerController : MonoBehaviour
 
     
     // Speed to rotate camera while aiming.
-    [SerializeField] private float aimRotateSpeedX = 2f;
     [SerializeField] private float aimRotateSpeedY = 300f;
 
     // References
@@ -182,6 +185,10 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void UpdateControlType()
     {
+        // For each control type:
+        // 1. Swap the angle determiner
+        // 2. Toggle the weapon active
+        // 3. Activate the corresponding camera
         switch (CurrentControlType)
         {
             case ControlType.Standard:

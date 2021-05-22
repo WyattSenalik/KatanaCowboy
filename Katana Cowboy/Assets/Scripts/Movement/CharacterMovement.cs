@@ -6,17 +6,17 @@
 public class CharacterMovement : MonoBehaviour
 {
     // Speed the character will move at.
-    [SerializeField] private float speed = 6f;
+    [SerializeField] [Min(0.0f)] private float speed = 6f;
     // Speed the character will sprint at.
-    [SerializeField] private float sprintSpeed = 12f;
+    [SerializeField] [Min(0.0f)] private float sprintSpeed = 12f;
     // Acceleration due to gravity.
-    [SerializeField] private float gravity = -9.81f;
+    [SerializeField] [Min(0.0f)] private float gravity = 9.81f;
     // Radius of the sphere created for the ground check.
-    [SerializeField] private float groundDistance = 0.4f;
+    [SerializeField] [Min(0.0f)] private float groundDistance = 0.4f;
     // Mask to check for ground.
     [SerializeField] private LayerMask groundMask = 1 << 0;
     // Height to reach on a jump.
-    [SerializeField] private float jumpHeight = 3f;
+    [SerializeField] [Min(0.0f)] private float jumpHeight = 3f;
 
     // References
     // Reference to the ground check.
@@ -99,7 +99,7 @@ public class CharacterMovement : MonoBehaviour
     {
         if (isGrounded)
         {
-            gravityVelocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            gravityVelocity.y = Mathf.Sqrt(jumpHeight * 2f * gravity);
         }
     }
 
@@ -123,11 +123,11 @@ public class CharacterMovement : MonoBehaviour
         // Check if the player is on the ground.
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         // Update velocity due to gravity.
-        gravityVelocity.y += gravity * Time.deltaTime;
+        gravityVelocity.y -= gravity * Time.deltaTime;
         // Check if we should reset velocity.
         if (isGrounded && gravityVelocity.y < 0)
         {
-            gravityVelocity.y = -2f;
+            gravityVelocity.y = 0.0f;
         }
     }
     /// <summary>
