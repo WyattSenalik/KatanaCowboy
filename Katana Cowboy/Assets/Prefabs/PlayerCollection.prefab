@@ -60,9 +60,9 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7164132544804962792}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: OnMovement
+      - m_Target: {fileID: 11400000, guid: 36028c9932ad6fd4591d254a3f46e481, type: 2}
+        m_TargetAssemblyTypeName: InputGameEvent, Assembly-CSharp
+        m_MethodName: InvokeEvent
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -76,9 +76,9 @@ MonoBehaviour:
     m_ActionName: ThirdPersonMovement/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7164132544804962792}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: OnSprint
+      - m_Target: {fileID: 11400000, guid: b7c9f0f82f4170c43a0178ffc26b6de4, type: 2}
+        m_TargetAssemblyTypeName: InputGameEvent, Assembly-CSharp
+        m_MethodName: InvokeEvent
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -92,9 +92,9 @@ MonoBehaviour:
     m_ActionName: ThirdPersonMovement/Sprint[/Keyboard/leftShift]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7164132544804962792}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: OnJump
+      - m_Target: {fileID: 11400000, guid: 92468c395c4347e42952897de18af63c, type: 2}
+        m_TargetAssemblyTypeName: InputGameEvent, Assembly-CSharp
+        m_MethodName: InvokeEvent
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -108,9 +108,9 @@ MonoBehaviour:
     m_ActionName: ThirdPersonMovement/Jump[/Keyboard/space]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7164132544804962792}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: OnAttack
+      - m_Target: {fileID: 11400000, guid: 48aca12678d633f478d1d6120110eb21, type: 2}
+        m_TargetAssemblyTypeName: InputGameEvent, Assembly-CSharp
+        m_MethodName: InvokeEvent
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -124,9 +124,9 @@ MonoBehaviour:
     m_ActionName: ThirdPersonMovement/Attack[/Mouse/leftButton]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7164132544804962792}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: OnAim
+      - m_Target: {fileID: 11400000, guid: 0f4350b44b9f42e4894b2457023b9809, type: 2}
+        m_TargetAssemblyTypeName: InputGameEvent, Assembly-CSharp
+        m_MethodName: InvokeEvent
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -140,9 +140,9 @@ MonoBehaviour:
     m_ActionName: Standard/Aim[/Mouse/rightButton]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7164132544804962792}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: OnAimLook
+      - m_Target: {fileID: 11400000, guid: 6d34aba229b72694d89386fda1cef0ac, type: 2}
+        m_TargetAssemblyTypeName: InputGameEvent, Assembly-CSharp
+        m_MethodName: InvokeEvent
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -156,9 +156,9 @@ MonoBehaviour:
     m_ActionName: Standard/AimLook[/Mouse/delta/x]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1326993435379051876}
-        m_TargetAssemblyTypeName: AimCameraController, Assembly-CSharp
-        m_MethodName: OnAimLookVertical
+      - m_Target: {fileID: 11400000, guid: 6a6aa9d589bf0d948807c2142b91f539, type: 2}
+        m_TargetAssemblyTypeName: InputGameEvent, Assembly-CSharp
+        m_MethodName: InvokeEvent
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -420,7 +420,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326993434844261576}
-  m_LocalRotation: {x: 0.18674427, y: -0.00000001548079, z: 0.0000000029427154, w: 0.9824086}
+  m_LocalRotation: {x: 0.18674427, y: -0.000000019945677, z: 0.000000003791438, w: 0.9824086}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -498,7 +498,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326993434883745134}
-  m_LocalRotation: {x: 0.20987459, y: -0.000000017536996, z: 0.000000003764409, w: 0.9777283}
+  m_LocalRotation: {x: 0.20987457, y: 0.000000017536996, z: -0.000000003764409, w: 0.9777283}
   m_LocalPosition: {x: 13.53, y: 5.659849, z: 3.312849}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -911,7 +911,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326993435514883138}
-  m_LocalRotation: {x: 0.20453587, y: 0.000000019549036, z: -0.0000000040848365, w: 0.9788591}
+  m_LocalRotation: {x: 0.20453587, y: -0.000000021793047, z: 0.00000000455373, w: 0.9788591}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1111,7 +1111,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326993435632172918}
-  m_LocalRotation: {x: 0.22230697, y: -0.000000014528284, z: 0.0000000033126317, w: 0.9749767}
+  m_LocalRotation: {x: 0.22230698, y: -1.7130617e-15, z: 4.959448e-16, w: 0.9749767}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1977,6 +1977,12 @@ MonoBehaviour:
   camContRef: {fileID: 1326993434883745120}
   swordContRef: {fileID: 1326993435726054992}
   gunContRef: {fileID: 1326993435005120907}
+  movementEventID: {fileID: 11400000, guid: 421cb7e050a3ec749a2c727ab6acb4b1, type: 2}
+  sprintEventID: {fileID: 11400000, guid: 8e83936b716dcbe46b317a6f38e35eaa, type: 2}
+  jumpEventID: {fileID: 11400000, guid: 90f6e20cb081c434d962a02f1d9b4934, type: 2}
+  attackEventID: {fileID: 11400000, guid: f01ad790bb648e24f892046622f90a9f, type: 2}
+  aimEventID: {fileID: 11400000, guid: b6cdd32283a9992479684fa13c68c52b, type: 2}
+  aimLookEventID: {fileID: 11400000, guid: e7498e49cde7d334b8ef7f1bcce9bc18, type: 2}
 --- !u!114 &1326993436587885992
 MonoBehaviour:
   m_ObjectHideFlags: 0

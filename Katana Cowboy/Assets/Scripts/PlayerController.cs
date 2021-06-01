@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using GameEventSystem;
 
 /// <summary>
 /// Listens for player input and controls what happens to the player character based on those inputs.
@@ -47,6 +48,15 @@ public class PlayerController : MonoBehaviour
     // If the player is attacking with their sword right now, we don't want them to be able to move.
     private bool isAttacking = false;
 
+    // Events
+    // Input Events
+    [SerializeField] private GameEventIdentifier movementEventID = null;
+    [SerializeField] private GameEventIdentifier sprintEventID = null;
+    [SerializeField] private GameEventIdentifier jumpEventID = null;
+    [SerializeField] private GameEventIdentifier attackEventID = null;
+    [SerializeField] private GameEventIdentifier aimEventID = null;
+    [SerializeField] private GameEventIdentifier aimLookEventID = null;
+
 
     // Called 0th
     // Set references
@@ -60,6 +70,9 @@ public class PlayerController : MonoBehaviour
     // Initialization
     private void Start()
     {
+        // Subscribe to events
+        movementEventID.Subscribe(OnMovement);
+
         // Default control sceme is third person
         charMoveRef.SetMoveAngleDeterminer(thirdPersonMoveRef);
         CurrentControlType = ControlType.Standard;
@@ -70,8 +83,9 @@ public class PlayerController : MonoBehaviour
     /// Gives the player a direction to move in and sets if the player is moving or not.
     /// Called by the unity input events.
     /// </summary>
-    public void OnMovement(InputAction.CallbackContext context)
+    private void OnMovement(GameEventData eventData)
     {
+        InputAction.CallbackContext context = eventData.ReadValue<InputAction.CallbackContext>();
         // If we pressed down and are not currently attacking
         if (context.performed && !isAttacking)
         {
