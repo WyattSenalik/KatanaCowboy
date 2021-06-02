@@ -10,68 +10,80 @@ namespace GameEventSystem
     public class InputEventControllerEditor : Editor
     {
         private PlayerInput playerInput = null;
+        private SerializedProperty inputEventIDs = null;
 
 
         public override void OnInspectorGUI()
         {
-            SerializedProperty inputEvents = serializedObject.FindProperty("inputEvents");
+            serializedObject.Update();
+
+            inputEventIDs = serializedObject.FindProperty("inputEventIDs");
             InputEventController inputEventController = target as InputEventController;
             playerInput = inputEventController.GetComponent<PlayerInput>();
 
             int actionEventCount = playerInput.actionEvents.Count;
-            inputEventController.SetInputEventLength(actionEventCount);
+            if (actionEventCount != inputEventController.GetInputEventsAmount())
+            {
+                string[] eventLabels = new string[actionEventCount];
+                for (int i = 0; i < actionEventCount; ++i)
+                {
+                    string label = GetNameFromArrayIndex(i);
+                    eventLabels[i] = label;
+                }
+                inputEventController.SetInputEventsAmount(actionEventCount, eventLabels);
+            }
 
-            bool shouldContinue = true;
+            // List header
+            Rect myRect = GUILayoutUtility.GetRect(0.0f, 18.0f);
+            bool showChildren = EditorGUI.PropertyField(myRect, inputEventIDs, new GUIContent("Input Events"));
+            EditorGUILayout.Space(2.0f);
+            bool shouldContinue = inputEventIDs.NextVisible(showChildren);
+            // Get rid of the size box
+            if (shouldContinue)
+            {
+                myRect = GUILayoutUtility.GetRect(0.0f, 0.0f);
+                showChildren = EditorGUI.PropertyField(myRect, inputEventIDs, GUIContent.none);
+                shouldContinue = inputEventIDs.NextVisible(showChildren);
+            }
+
             int counter = 0;
             while (shouldContinue)
             {
-                bool showChildren = true;
-                if (counter != 1)
+                EditorGUI.indentLevel = 1;
+                myRect = GUILayoutUtility.GetRect(0.0f, 18.0f);
+                string name = GetNameFromArrayIndex(counter);
+                showChildren = EditorGUI.PropertyField(myRect, inputEventIDs, new GUIContent(name));
+                EditorGUILayout.Space(2.0f);
+                shouldContinue = inputEventIDs.NextVisible(showChildren);
+                // The direct child of the thing
+                if (showChildren && shouldContinue)
                 {
-                    Rect myRect = GUILayoutUtility.GetRect(0.0f, 18.0f);
-                    string name = GetNameFromIndex(counter);
-                    showChildren = EditorGUI.PropertyField(myRect, inputEvents, new GUIContent(name));
-                }
-                else
-                {
-                    EditorGUI.PropertyField(GUILayoutUtility.GetRect(0.0f, 0.0f), inputEvents, GUIContent.none);
-                }
-                shouldContinue = inputEvents.NextVisible(showChildren);
-                if (counter != 1)
-                {
+                    EditorGUI.indentLevel = 2;
+                    myRect = GUILayoutUtility.GetRect(0.0f, 18.0f);
+                    showChildren = EditorGUI.PropertyField(myRect, inputEventIDs, new GUIContent("Event Identifier"));
                     EditorGUILayout.Space(2.0f);
+                    shouldContinue = inputEventIDs.NextVisible(showChildren);
                 }
                 ++counter;
             }
+
+            serializedObject.ApplyModifiedProperties();
         }
 
 
-
-        private string GetNameFromIndex(int index)
+        private string GetNameFromArrayIndex(int index)
         {
-            if (index == 0)
+            int actionEventCount = playerInput.actionEvents.Count;
+            if (index < actionEventCount)
             {
-                return "Input Events";
-            }
-            else if (index == 1)
-            {
-                return "Size";
+                string eventName = playerInput.actionEvents[index].actionName;
+                int shortLength = eventName.IndexOf('[');
+                string shortenedName = eventName.Substring(0, shortLength);
+                return shortenedName;
             }
             else
             {
-                int actionEventCount = playerInput.actionEvents.Count;
-                int curIndex = index - 2;
-                if (curIndex - 2 < actionEventCount)
-                {
-                    string eventName = playerInput.actionEvents[curIndex].actionName;
-                    int shortLength = eventName.IndexOf('[');
-                    string shortenedName = eventName.Substring(0, shortLength);
-                    return shortenedName;
-                }
-                else
-                {
-                    return "Null";//
-                }
+                return "Null";
             }
         }
     }

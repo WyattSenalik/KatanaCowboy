@@ -50,6 +50,8 @@ public class PlayerController : MonoBehaviour
 
     // Events
     // Input Events
+    [Space]
+    [Header("Input Events")]
     [SerializeField] private GameEventIdentifier movementEventID = null;
     [SerializeField] private GameEventIdentifier sprintEventID = null;
     [SerializeField] private GameEventIdentifier jumpEventID = null;
@@ -58,27 +60,51 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameEventIdentifier aimLookEventID = null;
 
 
+    // Functions called by unity messages (ex: Start, Awake, Update, etc.)
+    #region UnityEvents
     // Called 0th
-    // Set references
+    // Domestic Initialization
     private void Awake()
     {
+        // Set references
         thirdPersonMoveRef = GetComponent<ThirdPersonMoveAngleDeterminer>();
         overShoulderMoveRef = GetComponent<OverShoulderMoveAngleDeterminer>();
         charMoveRef = GetComponent<CharacterMovement>();
-    }
-    // Called 1st
-    // Initialization
-    private void Start()
-    {
-        // Subscribe to events
-        movementEventID.Subscribe(OnMovement);
 
-        // Default control sceme is third person
-        charMoveRef.SetMoveAngleDeterminer(thirdPersonMoveRef);
+        // Default control scheme is standard third person
         CurrentControlType = ControlType.Standard;
     }
+    // Called 1st
+    // Foreign Initialization
+    private void Start()
+    {
+        // Default control sceme is third person
+        charMoveRef.SetMoveAngleDeterminer(thirdPersonMoveRef);
+
+        // Subscribe to events
+        movementEventID.Subscribe(OnMovement);
+        sprintEventID.Subscribe(OnSprint);
+        jumpEventID.Subscribe(OnJump);
+        attackEventID.Subscribe(OnAttack);
+        aimEventID.Subscribe(OnAim);
+        aimLookEventID.Subscribe(OnAimLook);
+    }
+    // Called when the component is disabled
+    private void OnDisable()
+    {
+        // Unubscribe from events
+        movementEventID.Unsubscribe(OnMovement);
+        sprintEventID.Unsubscribe(OnSprint);
+        jumpEventID.Unsubscribe(OnJump);
+        attackEventID.Unsubscribe(OnAttack);
+        aimEventID.Unsubscribe(OnAim);
+        aimLookEventID.Unsubscribe(OnAimLook);
+    }
+    #endregion UnityEvents
 
 
+    // Functions called by the event system
+    #region EventCallbacks
     /// <summary>
     /// Gives the player a direction to move in and sets if the player is moving or not.
     /// Called by the unity input events.
@@ -105,8 +131,9 @@ public class PlayerController : MonoBehaviour
     /// Sets is sprinting to true or false.
     /// Called by the unity input events.
     /// </summary>
-    public void OnSprint(InputAction.CallbackContext context)
+    private void OnSprint(GameEventData eventData)
     {
+        InputAction.CallbackContext context = eventData.ReadValue<InputAction.CallbackContext>();
         // Set if the player is sprinting
         charMoveRef.ToggleSprinting(context.performed);
     }
@@ -114,8 +141,9 @@ public class PlayerController : MonoBehaviour
     /// Starts jumping if the player is on the ground.
     /// Called by the unity input events.
     /// </summary>
-    public void OnJump(InputAction.CallbackContext context)
+    private void OnJump(GameEventData eventData)
     {
+        InputAction.CallbackContext context = eventData.ReadValue<InputAction.CallbackContext>();
         if (context.performed)
         {
             // Have the player try to jump
@@ -126,8 +154,9 @@ public class PlayerController : MonoBehaviour
     /// Starts the attacking animation and sets is attacking to true.
     /// Called by the unity input events.
     /// </summary>
-    public void OnAttack(InputAction.CallbackContext context)
+    private void OnAttack(GameEventData eventData)
     {
+        InputAction.CallbackContext context = eventData.ReadValue<InputAction.CallbackContext>();
         if (context.performed)
         {
             switch (CurrentControlType)
@@ -151,8 +180,9 @@ public class PlayerController : MonoBehaviour
     /// Swaps the player to and from aiming.
     /// Called by the unity input events.
     /// </summary>
-    public void OnAim(InputAction.CallbackContext context)
+    private void OnAim(GameEventData eventData)
     {
+        InputAction.CallbackContext context = eventData.ReadValue<InputAction.CallbackContext>();
         // Aim pressed
         if (context.performed)
         {
@@ -168,8 +198,9 @@ public class PlayerController : MonoBehaviour
     /// Updates the player's rotation based on camera view input.
     /// Called by the unity input events.
     /// </summary>
-    public void OnAimLook(InputAction.CallbackContext context)
+    private void OnAimLook(GameEventData eventData)
     {
+        InputAction.CallbackContext context = eventData.ReadValue<InputAction.CallbackContext>();
         if (context.performed && CurrentControlType == ControlType.Aim)
         {
             // Get the raw input.
@@ -181,6 +212,7 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Euler(eulerRot);
         }
     }
+    #endregion EventCallbacks
 
 
     /// <summary>
