@@ -80,7 +80,10 @@ public class PlayerController : MonoBehaviour
     {
         // Default control sceme is third person
         charMoveRef.SetMoveAngleDeterminer(thirdPersonMoveRef);
-
+    }
+    // Called when the component is enabled
+    private void OnEnable()
+    {
         // Subscribe to events
         movementEventID.Subscribe(OnMovement);
         sprintEventID.Subscribe(OnSprint);

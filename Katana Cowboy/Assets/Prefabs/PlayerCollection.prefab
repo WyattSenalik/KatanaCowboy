@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4305779818213762702}
   - component: {fileID: 2155093888541627668}
   - component: {fileID: 1369258437975215215}
-  - component: {fileID: 7849340148480890230}
+  - component: {fileID: 5103027660848966214}
   m_Layer: 0
   m_Name: InputManager
   m_TagString: Untagged
@@ -60,117 +60,41 @@ MonoBehaviour:
       m_Calls: []
   m_ActionEvents:
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InputGameEvent, Assembly-CSharp
-        m_MethodName: InvokeEvent
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 7773db73-78df-44ea-8847-62be745f5327
     m_ActionName: ThirdPersonMovement/Movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InputGameEvent, Assembly-CSharp
-        m_MethodName: InvokeEvent
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 23fe90d3-2ede-4710-8cc2-b52ce44cf210
     m_ActionName: ThirdPersonMovement/Sprint[/Keyboard/leftShift]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InputGameEvent, Assembly-CSharp
-        m_MethodName: InvokeEvent
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 9277f3ba-2bba-4416-bb1f-394015884bb4
     m_ActionName: ThirdPersonMovement/Jump[/Keyboard/space]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InputGameEvent, Assembly-CSharp
-        m_MethodName: InvokeEvent
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: d6387c61-502a-4026-b036-cdbaca2c9fbb
     m_ActionName: ThirdPersonMovement/Attack[/Mouse/leftButton]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InputGameEvent, Assembly-CSharp
-        m_MethodName: InvokeEvent
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 181b40c7-c260-4c40-86f8-5401dd490bd9
     m_ActionName: Standard/Aim[/Mouse/rightButton]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InputGameEvent, Assembly-CSharp
-        m_MethodName: InvokeEvent
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 2209243d-e6cd-4f03-8ab9-9ee97bb09580
     m_ActionName: Standard/AimLook[/Mouse/delta/x]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: InputGameEvent, Assembly-CSharp
-        m_MethodName: InvokeEvent
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 4694f272-18cc-4d5f-b12e-798a6e6260ff
     m_ActionName: Standard/AimLookVertical[/Mouse/delta/y]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c4424260-3881-4df4-b630-e776d9c7e542
+    m_ActionName: Standard/asdsad[/Mouse/forwardButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: da5d8e4c-5093-4c35-b60f-72fd32501b59
+    m_ActionName: Standard/bbb
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Standard
@@ -190,7 +114,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerInputRef: {fileID: 2155093888541627668}
   defaultMapName: Standard
---- !u!114 &7849340148480890230
+--- !u!114 &5103027660848966214
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -199,17 +123,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 1302060376538761930}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68c0b2992f9b5b84b94f30a88f482d46, type: 3}
+  m_Script: {fileID: 11500000, guid: 4f994e4242ff231428151109575bd05e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputEventIDs:
-  - eventID: {fileID: 11400000, guid: 421cb7e050a3ec749a2c727ab6acb4b1, type: 2}
-  - eventID: {fileID: 11400000, guid: 8e83936b716dcbe46b317a6f38e35eaa, type: 2}
-  - eventID: {fileID: 11400000, guid: 90f6e20cb081c434d962a02f1d9b4934, type: 2}
-  - eventID: {fileID: 11400000, guid: f01ad790bb648e24f892046622f90a9f, type: 2}
-  - eventID: {fileID: 11400000, guid: b6cdd32283a9992479684fa13c68c52b, type: 2}
-  - eventID: {fileID: 11400000, guid: e7498e49cde7d334b8ef7f1bcce9bc18, type: 2}
-  - eventID: {fileID: 11400000, guid: d154d4de8e6395c43af592d51da22064, type: 2}
+  labeledEvents:
+  - label: ThirdPersonMovement/Movement
+    identifier: {fileID: 11400000, guid: 421cb7e050a3ec749a2c727ab6acb4b1, type: 2}
+  - label: ThirdPersonMovement/Sprint
+    identifier: {fileID: 11400000, guid: 8e83936b716dcbe46b317a6f38e35eaa, type: 2}
+  - label: ThirdPersonMovement/Jump
+    identifier: {fileID: 11400000, guid: 90f6e20cb081c434d962a02f1d9b4934, type: 2}
+  - label: ThirdPersonMovement/Attack
+    identifier: {fileID: 11400000, guid: f01ad790bb648e24f892046622f90a9f, type: 2}
+  - label: Standard/Aim
+    identifier: {fileID: 11400000, guid: b6cdd32283a9992479684fa13c68c52b, type: 2}
+  - label: Standard/AimLook
+    identifier: {fileID: 11400000, guid: e7498e49cde7d334b8ef7f1bcce9bc18, type: 2}
+  - label: Standard/AimLookVertical
+    identifier: {fileID: 11400000, guid: d154d4de8e6395c43af592d51da22064, type: 2}
+  - label: Standard/asdsad
+    identifier: {fileID: 0}
+  - label: Standard/bbb
+    identifier: {fileID: 0}
 --- !u!1 &1326993434627919309
 GameObject:
   m_ObjectHideFlags: 0
@@ -441,7 +376,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326993434844261576}
-  m_LocalRotation: {x: 0.18674427, y: 0.000000016904407, z: -0.000000003213328, w: 0.9824086}
+  m_LocalRotation: {x: 0.18674427, y: 0.000000016903694, z: -0.0000000032131928, w: 0.9824086}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

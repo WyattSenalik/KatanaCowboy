@@ -19,7 +19,7 @@ namespace GameEventSystem
         /// </summary>
         /// <param name="eventID">Identifier for the event that will be used to subscribe to it.</param>
         /// <param name="eventToCall">Reference to the event.</param>
-        public static void CreateEvent(GameEventIdentifier eventID, IGameEvent eventToCall)
+        public static void CreateEvent(GameEventIdentifier eventID, GameEvent eventToCall)
         {
             if (!eventsHash.ContainsKey(eventID.GetID()))
             {
@@ -27,7 +27,18 @@ namespace GameEventSystem
             }
             else
             {
-                Debug.LogError("Event with ID " + eventID + " already exists");
+                if (eventsHash[eventID.GetID()].IsRealEvent())
+                {
+                    Debug.LogError("Event with ID " + eventID + " already exists");
+                }
+                else
+                {
+                    //Debug.LogWarning("Creating event " + eventID + " from fake event");
+                    FakeGameEvent fakeEvent = eventsHash[eventID.GetID()] as FakeGameEvent;
+                    eventToCall.CreateFromFakeEvent(fakeEvent);
+                    eventsHash.Remove(eventID.GetID());
+                    eventsHash.Add(eventID.GetID(), eventToCall);
+                }
             }
         }
         /// <summary>
@@ -45,7 +56,11 @@ namespace GameEventSystem
             }
             else
             {
-                Debug.LogError("No event of name " + eventID + " exists");
+                FakeGameEvent fakeEvent = new FakeGameEvent();
+                fakeEvent.Subscribe(action);
+                eventsHash.Add(eventID.GetID(), fakeEvent);
+                
+                //Debug.LogWarning("No event of name " + eventID + " exists. FakeEvent was created.");
                 return false;
             }
         }

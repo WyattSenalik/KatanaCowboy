@@ -22,5 +22,10 @@ namespace GameEventSystem
         /// </summary>
         /// <param name="actionToRemoveFromEvent">Listener function to no longer call when the event is invoked.</param>
         void Unsubscribe(Action<GameEventData> actionToRemoveFromEvent);
+        /// <summary>
+        /// If the event is a real event or a fake one.
+        /// </summary>
+        /// <returns>If the event is a real event.</returns>
+        bool IsRealEvent();
     }
 }

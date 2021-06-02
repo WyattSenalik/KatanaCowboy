@@ -8,85 +8,161 @@ namespace GameEventSystem
     [RequireComponent(typeof(PlayerInput))]
     public class InputEventController : MonoBehaviour
     {
-        [SerializeField] private InputEventWithLabel[] inputEventIDs = new InputEventWithLabel[0];
+        private PlayerInput playerInput = null;
 
-        private GameEventWrapper[] eventWrappers = new GameEventWrapper[0];
+        [SerializeField] private List<EventIDWithLabel> labeledEvents = new List<EventIDWithLabel>();
+        private List<InputGameEvent> inputGameEvents = new List<InputGameEvent>();
 
 
-        private void Awake()
+        private void Start()
         {
-            PlayerInput playerInput = GetComponent<PlayerInput>();
-            eventWrappers = new GameEventWrapper[inputEventIDs.Length];
-            for (int i = 0; i < eventWrappers.Length; ++i)
-            {
-                InputEventWithLabel inputEvent = inputEventIDs[i];
-                GameEventWrapper wrapper = new GameEventWrapper(inputEvent.EventID);
-                eventWrappers[i] = wrapper;
-                eventWrappers[i].CreateEvent();
+            UpdateInputEvents();
+            CreateGameEvents();
+        }
 
-                playerInput.actionEvents[i].AddListener((InputAction.CallbackContext context) => { wrapper.Invoke(context); });
+
+        public void UpdateInputEvents()
+        {
+            playerInput = GetComponent<PlayerInput>();
+            if (HasEventListChanged())
+            {
+                UpdateEventList();
             }
         }
 
 
-        public int GetInputEventsAmount()
+        private bool HasEventListChanged()
         {
-            return inputEventIDs.Length;
-        }
-        public void SetInputEventsAmount(int newLength, string[] labels)
-        {
-            int oldLength = inputEventIDs.Length;
-            InputEventWithLabel[] oldInputEvents = new InputEventWithLabel[oldLength];
-            for (int i = 0; i < oldLength; ++i)
+            if (playerInput.actionEvents.Count != labeledEvents.Count)
             {
-                oldInputEvents[i] = new InputEventWithLabel(inputEventIDs[i]);
+                return true;
             }
 
-            inputEventIDs = new InputEventWithLabel[newLength];
-            for (int i = 0; i < newLength; ++i)
+            for (int i = 0; i < labeledEvents.Count; ++i)
             {
-                inputEventIDs[i] = new InputEventWithLabel(labels[i]);
-            }
-
-            for (int newIndex = 0; newIndex < newLength; ++newIndex)
-            {
-                string newLabel = inputEventIDs[newIndex].Label;
-                for (int oldIndex = 0; oldIndex < oldLength; ++oldIndex)
+                if (playerInput.actionEvents[i].actionName != labeledEvents[i].Label)
                 {
-                    string oldLabel = oldInputEvents[oldIndex].Label;
-                    if (oldLabel.Equals(newLabel))
-                    {
-                        inputEventIDs[newIndex].EventID = oldInputEvents[oldIndex].EventID;
-                        break;
-                    }
+                    return true;
                 }
             }
+
+            return false;
+        }
+        private void UpdateEventList()
+        {
+            List<string> alreadyFoundLabels = new List<string>();
+            // Remove old events that don't exist
+            for (int i = 0; i < labeledEvents.Count; ++i)
+            {
+                bool exists = false;
+                for (int k = 0; k < playerInput.actionEvents.Count; ++k)
+                {
+                    string actionName = ShortenInputActionName(playerInput.actionEvents[k].actionName);
+                    if (labeledEvents[i].Label == actionName)
+                    {
+                        exists = true;
+                    }
+                }
+                if (!exists || alreadyFoundLabels.Contains(labeledEvents[i].Label))
+                {
+                    labeledEvents.RemoveAt(i);
+                }
+                else
+                {
+                    alreadyFoundLabels.Add(labeledEvents[i].Label);
+                }
+            }
+            // Add new events that don't exist yet
+            for (int i = 0; i < playerInput.actionEvents.Count; ++i)
+            {
+                bool exists = false;
+                string actionName = ShortenInputActionName(playerInput.actionEvents[i].actionName);
+                for (int k = 0; k < labeledEvents.Count; ++k)
+                {
+                    if (actionName == labeledEvents[k].Label)
+                    {
+                        exists = true;
+                    }
+                }
+                if (!exists)
+                {
+                    labeledEvents.Add(new EventIDWithLabel(actionName));
+                }
+            }
+        }
+        private string ShortenInputActionName(string rawActionName)
+        {
+            int endIndex = rawActionName.IndexOf('[');
+            if (endIndex == -1)
+            {
+                return rawActionName;
+            }
+            else
+            {
+                return rawActionName.Substring(0, endIndex);
+            }
+        }
+        private void CreateGameEvents()
+        {
+            inputGameEvents = new List<InputGameEvent>();
+            foreach (EventIDWithLabel eventWithLabel in labeledEvents)
+            {
+                GameEventIdentifier id = eventWithLabel.ID;
+                PlayerInput.ActionEvent actionEvent = GetInputEventWithLabel(eventWithLabel.Label);
+                InputGameEvent inputEvent = new InputGameEvent(id, actionEvent);
+                inputGameEvents.Add(inputEvent);
+            }
+        }
+        private PlayerInput.ActionEvent GetInputEventWithLabel(string label)
+        {
+            for (int i = 0; i < playerInput.actionEvents.Count; ++i)
+            {
+                string actionLabel = ShortenInputActionName(playerInput.actionEvents[i].actionName);
+                if (actionLabel == label)
+                {
+                    return playerInput.actionEvents[i];
+                }
+            }
+            Debug.LogError("Could not find event with label " + label);
+            return null;
         }
     }
 
     [System.Serializable]
-    internal class InputEventWithLabel
+    internal class EventIDWithLabel
     {
-        [SerializeField] private GameEventIdentifier eventID = null;
-        public GameEventIdentifier EventID
+        public string Label => label;
+        [HideInInspector] [SerializeField] private string label = "";
+        public GameEventIdentifier ID => identifier;
+        [SerializeField] private GameEventIdentifier identifier = null;
+
+
+        public EventIDWithLabel(string eventLabel)
         {
-            get { return eventID; }
-            set { eventID = value; }
+            label = eventLabel;
+        }
+    }
+
+    internal class InputGameEvent
+    {
+        private GameEventWrapper eventWrapper = null;
+
+
+        public InputGameEvent(GameEventIdentifier id, PlayerInput.ActionEvent actionEvent)
+        {
+            if (id == null)
+            {
+                return;
+            }
+            eventWrapper = new GameEventWrapper(id);
+            actionEvent.AddListener(Invoke);
+            eventWrapper.CreateEvent();
         }
 
-        private string eventLabel = "";
-        public string Label => eventLabel;
 
-
-        public InputEventWithLabel(string label)
+        private void Invoke(InputAction.CallbackContext context)
         {
-            eventID = null;
-            eventLabel = label;
-        }
-        public InputEventWithLabel(InputEventWithLabel objToCopy)
-        {
-            eventID = objToCopy.eventID;
-            eventLabel = objToCopy.eventLabel;
+            eventWrapper.Invoke(context);
         }
     }
 }

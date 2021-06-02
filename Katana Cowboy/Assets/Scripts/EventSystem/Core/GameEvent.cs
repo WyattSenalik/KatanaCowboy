@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace GameEventSystem
 {
@@ -9,6 +10,19 @@ namespace GameEventSystem
     {
         // The actual event action. Takes GameEventData as its parameter.
         public event Action<GameEventData> OnEvent;
+
+
+        public void CreateFromFakeEvent(FakeGameEvent fakeEvent)
+        {
+            Action<GameEventData> action = fakeEvent.GetCallback();
+            while (action != null)
+            {
+                this.Subscribe(action);
+                fakeEvent.Unsubscribe(action);
+
+                action = fakeEvent.GetCallback();
+            }
+        }
 
 
         public void Invoke(GameEventData data)
@@ -22,6 +36,10 @@ namespace GameEventSystem
         public void Unsubscribe(Action<GameEventData> actionToRemoveFromEvent)
         {
             OnEvent -= actionToRemoveFromEvent;
+        }
+        public bool IsRealEvent()
+        {
+            return true;
         }
     }
 }
