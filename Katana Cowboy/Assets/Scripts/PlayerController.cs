@@ -14,10 +14,6 @@ public class PlayerController : MonoBehaviour
     // For what kind of controls the player should be using.
     public enum ControlType { Standard, Aim };
 
-    
-    // Speed to rotate camera while aiming.
-    [SerializeField] private float aimRotateSpeedY = 300f;
-
     // References
     // Reference to the camera controller for handling swapping between cameras.
     [SerializeField] private CameraController camContRef = null;
@@ -25,6 +21,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private SwordController swordContRef = null;
     // Reference to the gun controller for handling shooting when aimed.
     [SerializeField] private GunController gunContRef = null;
+
+    // Aim controller
+    // Speed to rotate camera while aiming.
+    [SerializeField] private float aimRotateSpeedY = 50.0f;
+    // Smoothing the turning.
+    [SerializeField] private float turnSmoothTime = 0.1f;
+    // Holds the turn velocity to smooth the turn.
+    // Should never be changed by this script.
+    private float turnSmoothVelocity = 0.0f;
 
     // Reference to the player's character movement script
     private CharacterMovement charMoveRef = null;
@@ -213,8 +218,11 @@ public class PlayerController : MonoBehaviour
             float rotVal = context.ReadValue<float>();
 
             // Change the rotation of the character.
+            float curAngle = transform.eulerAngles.y;
+            float targetAngle = curAngle + rotVal * aimRotateSpeedY * Time.deltaTime;
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
             Vector3 eulerRot = transform.eulerAngles;
-            eulerRot.y += rotVal * aimRotateSpeedY * Time.deltaTime;
+            eulerRot.y = angle;
             transform.rotation = Quaternion.Euler(eulerRot);
         }
     }
