@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -24,6 +23,7 @@ namespace GameEventSystem
         public void UpdateInputEvents()
         {
             playerInput = GetComponent<PlayerInput>();
+            playerInput.notificationBehavior = PlayerNotifications.InvokeUnityEvents;
             if (HasEventListChanged())
             {
                 UpdateEventList();

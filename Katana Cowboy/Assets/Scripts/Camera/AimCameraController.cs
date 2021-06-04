@@ -4,11 +4,13 @@ using GameEventSystem;
 
 public class AimCameraController : MonoBehaviour
 {
-    // Camera to rotate.
-    [SerializeField] private Transform headTrans = null;
-
+    // Camera's look at target that will be moved up and down
+    [SerializeField] private Transform lookAtTarget = null;
     // Speed the camera will look up.
     [SerializeField] private float rotateSpeed = 2f;
+    [SerializeField] private float targetDefaultYPos = 1.25f;
+    [SerializeField] private float targetMaxYPos = 2.3f;
+    [SerializeField] private float targetMinYPos = 0.5f;
 
     // If the input axis should be inverted.
     [SerializeField] private bool invertAxis = true;
@@ -45,10 +47,26 @@ public class AimCameraController : MonoBehaviour
             float axis = context.ReadValue<float>();
             // Invert the axis if needed
             axis = invertAxis ? -axis : axis;
+
+            // Move the look at target within the bounds
+            float yValue = lookAtTarget.localPosition.y + axis * rotateSpeed * Time.deltaTime;
+            if (yValue > targetMaxYPos)
+            {
+                yValue = targetMaxYPos;
+            }
+            else if (yValue < targetMinYPos)
+            {
+                yValue = targetMinYPos;
+            }
+            Vector3 pos = lookAtTarget.localPosition;
+            pos.y = yValue;
+            lookAtTarget.localPosition = pos;
+            /*
             // Update rotation
-            Vector3 eulerRot = headTrans.transform.eulerAngles;
+            Vector3 eulerRot = lookAtTarget.transform.eulerAngles;
             eulerRot.x += axis * rotateSpeed * Time.deltaTime;
-            headTrans.transform.rotation = Quaternion.Euler(eulerRot);
+            lookAtTarget.transform.rotation = Quaternion.Euler(eulerRot);
+            */
         }
     }
 }
