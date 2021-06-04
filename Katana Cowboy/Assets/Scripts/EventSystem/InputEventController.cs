@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 namespace GameEventSystem
 {
     /// <summary>
+    /// DEPRECATED/BROKEN
     /// Creates events for each of the player input events.
     /// Takes control of the player input to help the player attach event IDs to the
     /// input events.
