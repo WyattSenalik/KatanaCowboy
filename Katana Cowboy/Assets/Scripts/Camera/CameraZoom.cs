@@ -4,6 +4,11 @@ using Cinemachine;
 
 public class CameraZoom : MonoBehaviour
 {
+    // References
+    // Reference to Cimemachine Free Look.
+    [SerializeField]
+    private CinemachineFreeLook camFreeLook = null;
+
     // Customization.
     // Speed to zoom in and out.
     [SerializeField]
@@ -17,11 +22,6 @@ public class CameraZoom : MonoBehaviour
     // Speed of smoothing for zooming.
     [SerializeField]
     private float zoomSmoothTime = 0.1f;
-
-    // References.
-    // Reference to Cimemachine Free Look.
-    [SerializeField]
-    private CinemachineFreeLook camFreeLook = null;
 
     // Starting orbit values.
     private CinemachineFreeLook.Orbit[] startingOrbits;

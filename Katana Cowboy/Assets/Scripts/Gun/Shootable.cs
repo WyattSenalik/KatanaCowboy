@@ -2,13 +2,13 @@
 
 public abstract class Shootable : MonoBehaviour
 {
+    // Name of the layer that can be shot.
+    public static readonly string SHOOT_LAYER_NAME = "Shootable";
+
     // Customizables.
     // Maximum health the shootable has.
     [SerializeField]
     protected float maxHealth = 1f;
-
-    // Name of the layer that can be shot.
-    public static readonly string SHOOT_LAYER_NAME = "Shootable";
 
     // The current health of the shootable.
     protected float curHealth;
