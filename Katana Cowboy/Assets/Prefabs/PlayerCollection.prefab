@@ -458,7 +458,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326993434883745134}
-  m_LocalRotation: {x: 0.20987459, y: 0.000000008795423, z: -0.0000000018879844, w: 0.9777283}
+  m_LocalRotation: {x: 0.20987459, y: -0.000000017536996, z: 0.000000003764409, w: 0.9777283}
   m_LocalPosition: {x: 13.53, y: 5.659849, z: 3.312849}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -884,7 +884,7 @@ Animator:
   m_GameObject: {fileID: 1326993435726055006}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ea245fc0387ccf348b5694135fb6ecd3, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1390,7 +1390,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f1765d25a50eae4ea3ce517a6a2955f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimRotateSpeedY: 10
+  aimRotateSpeedY: 1
   camContRef: {fileID: 1417024093653614303}
   swordContRef: {fileID: 1326993435726054992}
   gunContRef: {fileID: 1326993435005120907}
@@ -1426,6 +1426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18ea79bbf2896b647b0f0469f93d671e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  turnSmoothTime: 0.1
 --- !u!114 &1326993436587885998
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2182,7 +2183,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7103760777090099520}
-  m_LocalRotation: {x: 0.18674427, y: 0.00000001706376, z: -0.0000000032436194, w: 0.9824086}
+  m_LocalRotation: {x: 0.18674427, y: 0.000000016813011, z: -0.0000000031959548, w: 0.9824086}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2256,7 +2257,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7543287295690163947}
-  m_LocalRotation: {x: 0.20453587, y: 0.000000018830624, z: -0.000000003934722, w: 0.9788591}
+  m_LocalRotation: {x: 0.20453587, y: -0.000000018830624, z: 0.000000003934722, w: 0.9788591}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

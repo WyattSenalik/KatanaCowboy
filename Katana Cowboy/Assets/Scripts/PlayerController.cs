@@ -166,8 +166,11 @@ public class PlayerController : MonoBehaviour
             {
                 // Start attacking with the sword
                 case ControlType.Standard:
-                    swordContRef.StartSwingAnimation();
-                    isAttacking = true;
+                    if (!isAttacking)
+                    {
+                        swordContRef.StartSwingAnimation();
+                        isAttacking = true;
+                    }
                     break;
                 // Shoot with the gun will be handled in gun controller
                 case ControlType.Aim:
