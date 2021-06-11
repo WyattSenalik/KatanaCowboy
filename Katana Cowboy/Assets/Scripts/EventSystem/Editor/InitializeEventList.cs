@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using UnityEditor;
 
-namespace GameEventSystem
+namespace GameEventSystem.CustomEditor
 {
     /// <summary>
     /// Initializes the event list when the unity editor loads up.

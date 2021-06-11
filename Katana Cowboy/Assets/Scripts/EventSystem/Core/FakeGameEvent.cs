@@ -1,15 +1,25 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using GameEventSystem.Internal;
+
 namespace GameEventSystem
 {
+    /// <summary>
+    /// Fake event to help avoid race conditions when subscribing to and creating events.
+    /// Temporarily holds the callbacks for the event.
+    /// </summary>
     public class FakeGameEvent : IGameEvent
     {
+        // Callbacks for the real event when its created
         private List<Action<GameEventData>> callbacks = new List<Action<GameEventData>>();
 
         
+        /// <summary>
+        /// Gets the last callback in the list of callbacks.
+        /// </summary>
+        /// <returns></returns>
         public Action<GameEventData> GetCallback()
         {
             if (callbacks.Count > 0)
@@ -18,6 +28,7 @@ namespace GameEventSystem
             }
             return null;
         }
+
 
         public void Invoke(GameEventData data)
         {

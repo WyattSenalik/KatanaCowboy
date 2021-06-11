@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+
+using GameEventSystem.Internal;
 
 namespace GameEventSystem
 {
@@ -12,6 +13,10 @@ namespace GameEventSystem
         public event Action<GameEventData> OnEvent;
 
 
+        /// <summary>
+        /// Creates an event from a fake event which is holding the listeners.
+        /// </summary>
+        /// <param name="fakeEvent">Fake event holding listeners for the event.</param>
         public void CreateFromFakeEvent(FakeGameEvent fakeEvent)
         {
             Action<GameEventData> action = fakeEvent.GetCallback();

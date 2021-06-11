@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using GameEventSystem.Internal;
+
 namespace GameEventSystem
 {
     /// <summary>
@@ -31,6 +33,7 @@ namespace GameEventSystem
                 {
                     Debug.LogError("Event with ID " + eventID + " already exists");
                 }
+                // If the event is a fake event, then create a real event from the fake event.
                 else
                 {
                     //Debug.LogWarning("Creating event " + eventID + " from fake event");
@@ -66,6 +69,7 @@ namespace GameEventSystem
                 eventsHash[eventID].Subscribe(action);
                 return true;
             }
+            // If the event does not exist yet, create a fake event temporarily
             else
             {
                 FakeGameEvent fakeEvent = new FakeGameEvent();

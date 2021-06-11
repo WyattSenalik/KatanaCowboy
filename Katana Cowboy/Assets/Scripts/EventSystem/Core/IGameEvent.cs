@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GameEventSystem
+namespace GameEventSystem.Internal
 {
     /// <summary>
     /// Interface for a GameEvent to be used by the EventSystem.

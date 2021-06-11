@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 
+using GameEventSystem.Internal;
+
 namespace GameEventSystem
 {
     /// <summary>

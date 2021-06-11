@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
+using GameEventSystem.Internal;
+
 namespace GameEventSystem
 {
     /// <summary>
@@ -45,7 +47,13 @@ namespace GameEventSystem
             {
                 return (T)eventParams[typeof(T)];
             }
-            Debug.LogError("No parameter of type " + typeof(T) + " has been specified.");
+            string paramNames = "";
+            foreach (System.Type type in eventParams.Keys)
+            {
+                paramNames += type + "; ";
+            }
+            Debug.LogError("No parameter of type " + typeof(T) + " has been specified. " + "\n" +
+                "The specified paramater types are: " + paramNames);
             return default;
         }
     }

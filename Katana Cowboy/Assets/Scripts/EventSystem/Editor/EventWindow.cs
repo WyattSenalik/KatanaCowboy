@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEditor;
 
 
-namespace GameEventSystem
+namespace GameEventSystem.CustomEditor
 {
     /// <summary>
     /// Custom EditorWindow to create events and generate a script called EventIDList.

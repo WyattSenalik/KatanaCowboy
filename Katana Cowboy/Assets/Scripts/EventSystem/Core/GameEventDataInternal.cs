@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace GameEventSystem
+namespace GameEventSystem.Internal
 {
     /// <summary>
     /// Internal version of the GameEventData class.
@@ -42,15 +42,15 @@ namespace GameEventSystem
         /// <param name="addVal">Parameter to add.</param>
         public void AddValue<T>(T addVal)
         {
-            if (eventParams.ContainsKey(addVal.GetType()))
+            if (eventParams.ContainsKey(typeof(T)))
             {
-                Debug.LogError("Tried to add parameters of type " + addVal.GetType() + ". " +
+                Debug.LogError("Tried to add parameters of type " + typeof(T) + ". " +
                         "GameEventData cannot have multiple parameters of the same type. Consider " +
                         "using a wrapper class to house the parameters instead.");
             }
             else
             {
-                eventParams.Add(addVal.GetType(), addVal);
+                eventParams.Add(typeof(T), addVal);
             }
         }
         /// <summary>
@@ -61,13 +61,13 @@ namespace GameEventSystem
         /// <param name="newValue">Parameter to add or replace if already existing.</param>
         public void AddOrReplaceValue<T>(T newValue)
         {
-            if (eventParams.ContainsKey(newValue.GetType()))
+            if (eventParams.ContainsKey(typeof(T)))
             {
-                eventParams[newValue.GetType()] = newValue;
+                eventParams[typeof(T)] = newValue;
             }
             else
             {
-                eventParams.Add(newValue.GetType(), newValue);
+                eventParams.Add(typeof(T), newValue);
             }
         }
     }

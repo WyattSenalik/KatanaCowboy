@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace GameEventSystem
+namespace GameEventSystem.CustomEditor
 {
     /// <summary>
     /// Class that holds much of the constant information about where to save the EventIDList.cs file.
@@ -28,10 +28,14 @@ namespace GameEventSystem
         /// <returns>List of event names from the file system.</returns>
         public static string[] GetListOfEventNames()
         {
-            string[] rawFileNames = Directory.GetFiles(EVENT_SAVE_PATH);
-            string[] rawNonMetaFileNames = RemoveMetaFiles(rawFileNames);
-            string[] fileNames = RemovePathsFromRawFileNames(rawNonMetaFileNames);
-            return RemoveExtensionsFromFileNames(fileNames);
+            if (Directory.Exists(EVENT_SAVE_PATH))
+            {
+                string[] rawFileNames = Directory.GetFiles(EVENT_SAVE_PATH);
+                string[] rawNonMetaFileNames = RemoveMetaFiles(rawFileNames);
+                string[] fileNames = RemovePathsFromRawFileNames(rawNonMetaFileNames);
+                return RemoveExtensionsFromFileNames(fileNames);
+            }
+            return new string[0];
         }
         /// <summary>
         /// Gets the path to the event asset with the given name.
