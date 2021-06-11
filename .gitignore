@@ -58,3 +58,7 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 ProjectSettings/QualitySettings.asset
+
+# Ignore the unity generated custom event system files
+EventIDList.cs
+EventIDList.cs.meta

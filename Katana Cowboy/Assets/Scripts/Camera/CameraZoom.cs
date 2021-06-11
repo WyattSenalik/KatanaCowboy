@@ -10,13 +10,6 @@ public class CameraZoom : MonoBehaviour
     // Reference to Cimemachine Free Look.
     [SerializeField] private CinemachineFreeLook camFreeLook = null;
 
-    // Events
-    // Input Events
-    [Space]
-    [Header("Input Events")]
-    [SerializeField] private GameEventIdentifier zoomEventID = null;
-    [Space]
-
     // Customization.
     // Speed to zoom in and out.
     [SerializeField] private float zoomSpeed = 2.0f;
@@ -58,15 +51,36 @@ public class CameraZoom : MonoBehaviour
     private void OnEnable()
     {
         // Subscribe to events
-        zoomEventID.Subscribe(OnZoom);
+        SubscribeToEvents();
     }
     // Called when this component is disabled
     private void OnDisable()
     {
         // Unsubscribe from events
-        zoomEventID.Unsubscribe(OnZoom);
+        UnsubscribeFromEvents();
     }
     #endregion UnityEvents
+
+
+    // Functions that subscribe and unsubscribe from the events this script listens to
+    #region EventSubscriptions
+    /// <summary>
+    /// Subscribes to events this script listens to.
+    /// </summary>
+    private void SubscribeToEvents()
+    {
+        // Input events
+        EventSystem.SubscribeToEvent(EventIDList.Zoom, OnZoom);
+    }
+    /// <summary>
+    /// Unsubscribes from events this listens to.
+    /// </summary>
+    private void UnsubscribeFromEvents()
+    {
+        // Input events
+        EventSystem.UnsubscribeFromEvent(EventIDList.Zoom, OnZoom);
+    }
+    #endregion EventSubscriptions
 
 
     // Functions called by the event system

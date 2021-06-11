@@ -6,11 +6,10 @@ namespace GameEventSystem
     /// Wrapper class for the GameEvent that makes it more convenient to create a GameEvent.
     /// Any references to an instance of GameEventWrapper should only be in the class that created it.
     /// </summary>
-    [System.Serializable]
     public class GameEventWrapper
     {
         // Identifier for the GameEvent
-        [SerializeField] private GameEventIdentifier eventID = null;
+        private string eventID = "";
         // Actual GameEvent to be called
         private GameEvent gameEvent = new GameEvent();
         // Data for the GameEvent
@@ -20,14 +19,18 @@ namespace GameEventSystem
 
 
         /// <summary>
-        /// Constructs a GameEventWrapper with the given identifier.
-        /// Use when this is not used with SerializeField.
+        /// Constructs a GameEventWrapper with the given string hash (id).
         /// </summary>
-        /// <param name="gameEventID">Identifier for the GameEvent.</param>
-        public GameEventWrapper(GameEventIdentifier gameEventID)
+        /// <param name="gameEventID">string hash (id) for the GameEvent.</param>
+        public GameEventWrapper(string gameEventID)
         {
             eventID = gameEventID;
         }
+        /// <summary>
+        /// Constructs a GameEventWrapper with the given identifier.
+        /// </summary>
+        /// <param name="gameEventID">Identifier for the GameEvent.</param>
+        public GameEventWrapper(GameEventIdentifier gameEventID) : this(gameEventID.GetID()) { }
 
 
         /// <summary>
