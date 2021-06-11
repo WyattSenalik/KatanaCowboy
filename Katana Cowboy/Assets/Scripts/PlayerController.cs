@@ -90,7 +90,6 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         // Subscribe to events
-        string randomTest = EventIDList.Alan;
         movementEventID.Subscribe(OnMovement);
         sprintEventID.Subscribe(OnSprint);
         jumpEventID.Subscribe(OnJump);
