@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using GameEventSystem;
 
@@ -53,17 +53,6 @@ public class PlayerController : MonoBehaviour
     // If the player is attacking with their sword right now, we don't want them to be able to move.
     private bool isAttacking = false;
 
-    // Events
-    // Input Events
-    [Space]
-    [Header("Input Events")]
-    [SerializeField] private GameEventIdentifier movementEventID = null;
-    [SerializeField] private GameEventIdentifier sprintEventID = null;
-    [SerializeField] private GameEventIdentifier jumpEventID = null;
-    [SerializeField] private GameEventIdentifier attackEventID = null;
-    [SerializeField] private GameEventIdentifier aimEventID = null;
-    [SerializeField] private GameEventIdentifier aimLookEventID = null;
-
 
     // Functions called by unity messages (ex: Start, Awake, Update, etc.)
     #region UnityEvents
@@ -90,25 +79,46 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         // Subscribe to events
-        movementEventID.Subscribe(OnMovement);
-        sprintEventID.Subscribe(OnSprint);
-        jumpEventID.Subscribe(OnJump);
-        attackEventID.Subscribe(OnAttack);
-        aimEventID.Subscribe(OnAim);
-        aimLookEventID.Subscribe(OnAimLook);
+        SubscribeToEvents();
     }
     // Called when the component is disabled
     private void OnDisable()
     {
         // Unubscribe from events
-        movementEventID.Unsubscribe(OnMovement);
-        sprintEventID.Unsubscribe(OnSprint);
-        jumpEventID.Unsubscribe(OnJump);
-        attackEventID.Unsubscribe(OnAttack);
-        aimEventID.Unsubscribe(OnAim);
-        aimLookEventID.Unsubscribe(OnAimLook);
+        UnsubscribeFromEvents();
     }
     #endregion UnityEvents
+
+
+    // Functions that subscribe and unsubscribe from the events this script listens to
+    #region EventSubscriptions
+    /// <summary>
+    /// Subscribes to events this script listens to.
+    /// </summary>
+    private void SubscribeToEvents()
+    {
+        // Input events
+        EventSystem.SubscribeToEvent(EventIDList.Movement, OnMovement);
+        EventSystem.SubscribeToEvent(EventIDList.Sprint, OnSprint);
+        EventSystem.SubscribeToEvent(EventIDList.Jump, OnJump);
+        EventSystem.SubscribeToEvent(EventIDList.Attack, OnAttack);
+        EventSystem.SubscribeToEvent(EventIDList.Aim, OnAim);
+        EventSystem.SubscribeToEvent(EventIDList.AimLook, OnAimLook);
+    }
+    /// <summary>
+    /// Unsubscribes from events this listens to.
+    /// </summary>
+    private void UnsubscribeFromEvents()
+    {
+        // Input events
+        EventSystem.UnsubscribeFromEvent(EventIDList.Movement, OnMovement);
+        EventSystem.UnsubscribeFromEvent(EventIDList.Sprint, OnSprint);
+        EventSystem.UnsubscribeFromEvent(EventIDList.Jump, OnJump);
+        EventSystem.UnsubscribeFromEvent(EventIDList.Attack, OnAttack);
+        EventSystem.UnsubscribeFromEvent(EventIDList.Aim, OnAim);
+        EventSystem.UnsubscribeFromEvent(EventIDList.AimLook, OnAimLook);
+    }
+    #endregion EventSubscriptions
 
 
     // Functions called by the event system

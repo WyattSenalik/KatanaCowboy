@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace GameEventSystem
+namespace GameEventSystem.Extension
 {
     /// <summary>
     /// Holds an input event created from the given ID.
