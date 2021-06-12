@@ -8,7 +8,7 @@ namespace GameEventSystem.CustomEditor
     /// For this reason, it is highly recommended that the file be placed in the .gitignore.
     /// </summary>
     [InitializeOnLoad]
-    public class InitializeEventList
+    public static class InitializeEventList
     {
         /// <summary>
         /// Called on unity load. Creates the file.
@@ -22,6 +22,7 @@ namespace GameEventSystem.CustomEditor
         /// <summary>
         /// Creates/updates the const static file with the event id's saved as const ints.
         /// </summary>
+        [InitializeOnLoadMethod]
         public static void CreateFile()
         {
             // Beginning and end of the file
