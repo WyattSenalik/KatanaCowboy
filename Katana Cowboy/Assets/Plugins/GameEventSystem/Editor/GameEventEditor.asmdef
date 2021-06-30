@@ -1,0 +1,17 @@
+{
+    "name": "GameEventEditor",
+    "references": [
+        "GUID:4e981577252b62f40b386e9342862e71"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
