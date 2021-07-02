@@ -4,22 +4,21 @@ using GameEventSystem;
 
 /// <summary>
 /// Listens for player input and controls what happens to the player character based on those inputs.
-/// Interfaces between the CharacterMovement, CameraController, SwordController, and GunController.
+/// Interfaces between the CharacterMovement, CharacterRotator, CameraController, SwordController, and GunController.
 /// </summary>
-[RequireComponent(typeof(ThirdPersonMoveAngleDeterminer))]
-[RequireComponent(typeof(OverShoulderMoveAngleDeterminer))]
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterRotator))]
 public class PlayerController : MonoBehaviour
 {
     // For what kind of controls the player should be using.
     public enum ControlType { Standard, Aim };
 
     // References
-    // Reference to the camera controller for handling swapping between cameras.
+    // Camera controller for handling swapping between cameras.
     [SerializeField] private CameraController camContRef = null;
-    // Reference to the sword controller for handling animation and such on the sword.
+    // Sword controller for handling animation and such on the sword.
     [SerializeField] private SwordController swordContRef = null;
-    // Reference to the gun controller for handling shooting when aimed.
+    // Gun controller for handling shooting when aimed.
     [SerializeField] private GunController gunContRef = null;
 
     // Aim controller
@@ -27,16 +26,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float aimRotateSpeedY = 50.0f;
     // Smoothing the turning.
     [SerializeField] private float turnSmoothTime = 0.1f;
-    // Holds the turn velocity to smooth the turn.
-    // Should never be changed by this script.
-    private float turnSmoothVelocity = 0.0f;
 
-    // Reference to the player's character movement script
+    // Reference to the player character movement script
     private CharacterMovement charMoveRef = null;
-    // Third person movement reference for standard controls
-    private ThirdPersonMoveAngleDeterminer thirdPersonMoveRef = null;
-    // Over the shoulder movement reference for aim controls
-    private OverShoulderMoveAngleDeterminer overShoulderMoveRef = null;
+    // Reference to the player character's rotator script
+    private CharacterRotator charRotatorRef = null;
     // If the player should follow its movement with rotation or follow the camera with its rotation
     private ControlType contType = ControlType.Standard;
     private ControlType CurrentControlType
@@ -61,19 +55,11 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         // Set references
-        thirdPersonMoveRef = GetComponent<ThirdPersonMoveAngleDeterminer>();
-        overShoulderMoveRef = GetComponent<OverShoulderMoveAngleDeterminer>();
         charMoveRef = GetComponent<CharacterMovement>();
+        charRotatorRef = GetComponent<CharacterRotator>();
 
         // Default control scheme is standard third person
         CurrentControlType = ControlType.Standard;
-    }
-    // Called 1st
-    // Foreign Initialization
-    private void Start()
-    {
-        // Default control sceme is third person
-        charMoveRef.SetMoveAngleDeterminer(thirdPersonMoveRef);
     }
     // Called when the component is enabled
     private void OnEnable()
@@ -86,6 +72,16 @@ public class PlayerController : MonoBehaviour
     {
         // Unubscribe from events
         UnsubscribeFromEvents();
+    }
+    // Called every frame
+    private void Update()
+    {
+        // Handle aiming rotation behavior
+        if (CurrentControlType == ControlType.Aim)
+        {
+            Vector3 aimDirection = gunContRef.GetAimDirection();
+            charRotatorRef.RotateCharacter(aimDirection);
+        }
     }
     #endregion UnityEvents
 
@@ -222,18 +218,9 @@ public class PlayerController : MonoBehaviour
     private void OnAimLook(GameEventData eventData)
     {
         InputAction.CallbackContext context = eventData.ReadValue<InputAction.CallbackContext>();
-        if (context.performed && CurrentControlType == ControlType.Aim)
+        if (context.performed)
         {
-            // Get the raw input.
-            float rotVal = context.ReadValue<float>();
-
-            // Change the rotation of the character.
-            float curAngle = transform.eulerAngles.y;
-            float targetAngle = curAngle + rotVal * aimRotateSpeedY * Time.deltaTime;
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-            Vector3 eulerRot = transform.eulerAngles;
-            eulerRot.y = angle;
-            transform.rotation = Quaternion.Euler(eulerRot);
+            
         }
     }
     #endregion EventCallbacks
@@ -256,18 +243,18 @@ public class PlayerController : MonoBehaviour
     private void UpdateControlType()
     {
         // For each control type:
-        // 1. Swap the angle determiner
+        // 1. Change the rotator
         // 2. Toggle the weapon active
         // 3. Activate the corresponding camera
         switch (CurrentControlType)
         {
             case ControlType.Standard:
-                charMoveRef.SetMoveAngleDeterminer(thirdPersonMoveRef);
+                charRotatorRef.ToggleRotationFollowsMovement(true);
                 gunContRef.ToggleActive(false);
                 camContRef.ActivateDefaultCamera();
                 break;
             case ControlType.Aim:
-                charMoveRef.SetMoveAngleDeterminer(overShoulderMoveRef);
+                charRotatorRef.ToggleRotationFollowsMovement(false);
                 gunContRef.ToggleActive(true);
                 camContRef.ActivateAimCamera();
                 break;
