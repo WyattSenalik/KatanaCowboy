@@ -9,7 +9,7 @@ namespace GameEventSystem.CustomEditor
     public static class EventListFileManager
     {
         // Folder to save the EventIDList.cs file in
-        public const string LIST_SAVE_PATH = "Assets/EventWindow_DO_NOT_EDIT";
+        public const string LIST_SAVE_PATH = "Assets/Plugins/GameEventSystem/EventWindow_DO_NOT_EDIT";
         // Folder to save the scriptable objects in
         public const string EVENT_SAVE_PATH = LIST_SAVE_PATH + "/Events";
 
