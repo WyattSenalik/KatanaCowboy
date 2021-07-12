@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEditor;
 
-
 namespace GameEventSystem.CustomEditor
 {
     /// <summary>
@@ -219,7 +218,7 @@ namespace GameEventSystem.CustomEditor
         /// An event name is invalid if:
         ///     1. It is "".
         ///     2. It starts with a number.
-        ///     3. It contains non-alphanumeric characters.
+        ///     3. It contains non-alphanumeric (and non-underscore) characters.
         ///     4. Another event already has that name.
         /// </summary>
         /// <param name="eventName">Event name to check validity.</param>
@@ -236,10 +235,14 @@ namespace GameEventSystem.CustomEditor
             {
                 return false;
             }
-            // Check if the event name contains non-alphanumeric characters
-            if (!eventName.All(char.IsLetterOrDigit))
+            // Check if the event name contains non-alphanumeric (and non-underscore) characters
+            for (int i = 0; i < eventName.Length; ++i)
             {
-                return false;
+                char curChar = eventName[i];
+                if (!char.IsLetterOrDigit(curChar) && curChar != '_')
+                {
+                    return false;
+                }
             }
             // Check if any events share the same name
             for (int k = 0; k < eventList.Count; ++k)
