@@ -112,6 +112,15 @@ namespace GameEventSystem
             AddOrReplaceParameter(param0);
             Invoke(param1, param2, param3, param4, param5, param6);
         }
+        /// <summary>
+        /// Adds the given paramter to the event data.
+        /// </summary>
+        /// <typeparam name="T">Type of the parameter.</typeparam>
+        /// <param name="param">Paramter to add.</param>
+        public void AddOrReplaceParameter<T>(T param)
+        {
+            eventData.AddOrReplaceValue(param);
+        }
 
 
         /// <summary>
@@ -149,15 +158,6 @@ namespace GameEventSystem
                 eventData.ResetParameters();
                 areParametersReset = true;
             }
-        }
-        /// <summary>
-        /// Adds the given paramter to the event data.
-        /// </summary>
-        /// <typeparam name="T">Type of the parameter.</typeparam>
-        /// <param name="param">Paramter to add.</param>
-        private void AddOrReplaceParameter<T>(T param)
-        {
-            eventData.AddOrReplaceValue(param);
         }
     }
 }
