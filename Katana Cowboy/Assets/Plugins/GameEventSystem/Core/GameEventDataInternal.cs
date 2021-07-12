@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameEventSystem.Internal
@@ -12,7 +13,7 @@ namespace GameEventSystem.Internal
         /// <summary>
         /// Iterator of the parameter dictionary.
         /// </summary>
-        public Dictionary<System.Type, object>.Enumerator ParamEnumerator => eventParams.GetEnumerator();
+        public Dictionary<Type, object>.Enumerator ParamEnumerator => eventParams.GetEnumerator();
 
 
         /// <summary>
@@ -69,6 +70,13 @@ namespace GameEventSystem.Internal
             {
                 eventParams.Add(typeof(T), newValue);
             }
+        }
+        /// <summary>
+        /// Clears the event parameter dictionary.
+        /// </summary>
+        public void ResetParameters()
+        {
+            eventParams.Clear();
         }
     }
 }

@@ -10,6 +10,8 @@ public class GunController : MonoBehaviour
     [SerializeField] private float range = 100f;
     // The damage a gunshot does.
     [SerializeField] private float damage = 1f;
+    // Smoothing the turning.
+    [SerializeField] private RotateSmoother rotateSmoother = null;
 
     // References.
     // Reference to the camera's transform.
@@ -27,6 +29,11 @@ public class GunController : MonoBehaviour
     private void Start()
     {
         shootLayerMask = LayerMask.GetMask(Shootable.SHOOT_LAYER_NAME);
+    }
+    // Called once every frame
+    private void Update()
+    {
+        RotateGunTowardsTarget();
     }
 
 
@@ -50,10 +57,9 @@ public class GunController : MonoBehaviour
             inventory.LoseItem(InventoryItem.BULLET, 1);
             Debug.Log("Shoot");
 
-            RaycastHit hit;
-            if (Physics.Raycast(camTrans.position, camTrans.forward, out hit, range, shootLayerMask))
+            if (Physics.Raycast(camTrans.position, camTrans.forward, out RaycastHit hit, range, shootLayerMask))
             {
-                Debug.Log(hit.transform.name);
+                Debug.Log("Shot " + hit.transform.name);
                 // Pull Shootable off object.
                 Shootable shotThing = hit.transform.GetComponent<Shootable>();
                 if (shotThing != null)
@@ -65,6 +71,48 @@ public class GunController : MonoBehaviour
                     shotThing.GetShot(damage, info);
                 }
             }
+        }
+    }
+    /// <summary>
+    /// Returns if a target was hit and the position of that target.
+    /// </summary>
+    /// <param name="targetPosition">Position of the current target that would be hit.</param>
+    /// <returns>If a target was hit.</returns>
+    public bool GetTargetPosition(out Vector3 targetPosition)
+    {
+        if (Physics.Raycast(camTrans.position, camTrans.forward, out RaycastHit hit, range, shootLayerMask))
+        {
+            targetPosition = hit.point;
+            return true;
+        }
+        targetPosition = Vector3.zero;
+        return false;
+    }
+    /// <summary>
+    /// Returns the direction the gun is being pointed in.
+    /// </summary>
+    /// <returns>Direction the gun is currently being aimed in.</returns>
+    public Vector3 GetAimDirection()
+    {
+        return camTrans.forward;
+    }
+
+
+    /// <summary>
+    /// Rotates teh gun towards the current target.
+    /// </summary>
+    private void RotateGunTowardsTarget()
+    {
+        // Rotate to face the aim target
+        if (GetTargetPosition(out Vector3 aimTarget))
+        {
+            transform.rotation = rotateSmoother.StepRotationFromLookAt(aimTarget, transform.position, transform.rotation);
+        }
+        // If we have no target, rotate in the camera's direction
+        else
+        {
+            Vector3 aimDirection = GetAimDirection();
+            transform.rotation = rotateSmoother.StepRotationFromHeading(aimDirection, transform.rotation);
         }
     }
 }

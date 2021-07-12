@@ -21,7 +21,6 @@ namespace GameEventSystem.Extension
         {
             // Create the event
             inputWrapper = new GameEventWrapper(inputEventID);
-            inputWrapper.CreateEvent();
         }
 
 
