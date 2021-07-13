@@ -17,7 +17,6 @@ namespace GameEventSystem.CustomEditor
         private static int curFrequency = 0;
         // Record of what was last in the file system
         private static List<string> previousEvents = new List<string>();
-        private static bool creatingFile = false;
 
 
         /// <summary>
@@ -47,22 +46,18 @@ namespace GameEventSystem.CustomEditor
         /// </summary>
         private static void Update()
         {
-            // If we are not currently creating the file
-            if (!creatingFile)
+            // Re-create the file if it has changed since last time
+            string[] curEvents = EventListFileManager.GetListOfEventNames();
+            foreach (string eventName in curEvents)
             {
-                // Re-create the file if it has changed since last time
-                string[] curEvents = EventListFileManager.GetListOfEventNames();
-                foreach (string eventName in curEvents)
+                if (!previousEvents.Contains(eventName))
                 {
-                    if (!previousEvents.Contains(eventName))
-                    {
-                        CreateFile();
-                        break;
-                    }
+                    CreateFile();
+                    break;
                 }
-
-                previousEvents = new List<string>(curEvents);
             }
+
+            previousEvents = new List<string>(curEvents);
         }
 
 
@@ -72,7 +67,6 @@ namespace GameEventSystem.CustomEditor
         /// </summary>
         public static void CreateFile()
         {
-            creatingFile = true;
             UnityEngine.Debug.Log("CreatingFile");
 
             // Beginning and end of the file
@@ -102,8 +96,6 @@ namespace GameEventSystem.CustomEditor
 
             // Write to the file
             File.WriteAllLines(EventListFileManager.GetFullFilePath(), writeLines);
-
-            creatingFile = false;
         }
 
         /// <summary>
