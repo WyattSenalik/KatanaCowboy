@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 
 
 namespace GameEventSystem.CustomEditor
@@ -129,6 +130,9 @@ namespace GameEventSystem.CustomEditor
 
             // Write to the file
             File.WriteAllLines(GetFullFilePath(), writeLines);
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
 
             isBeingCreated = false;
         }
