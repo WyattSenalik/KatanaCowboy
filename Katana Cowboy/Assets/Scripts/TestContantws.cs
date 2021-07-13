@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class TestContantws
 {
-    public static int TEST_1 = 1;
-    public static int TEST_2 = 2;
-    public static int TEST_3 = 3;
+    public const int TEST_1 = 1;
+    public const int TEST_2 = 2;
+    public const int TEST_3 = 3;
 }
