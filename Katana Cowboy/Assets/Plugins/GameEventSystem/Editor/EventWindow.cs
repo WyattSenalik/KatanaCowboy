@@ -61,6 +61,7 @@ namespace GameEventSystem.CustomEditor
         {
             Debug.Log("OnProjectChange");
 
+            /*
             // Also recreate the file if we have pulled from github. To check if we pulled from github,
             // check if there exist files that we don't have in the event list.
             if (WereEventsAddedFromExternalProgram())
@@ -78,10 +79,10 @@ namespace GameEventSystem.CustomEditor
                 justHitSave = true;
                 ApplySavedChanges();
             }
+            */
             // If we are auto saving or we have just hit the save button, recreate the file.
-            else if (isAutoSave || justHitSave)
+            if (isAutoSave || justHitSave)
             {
-                Debug.Log("CreatingFile");
                 InitializeEventList.CreateFile();
                 // Reset that we just hit the save button
                 justHitSave = false;
