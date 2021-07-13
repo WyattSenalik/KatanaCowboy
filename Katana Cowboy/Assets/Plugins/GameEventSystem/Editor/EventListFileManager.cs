@@ -55,7 +55,12 @@ namespace GameEventSystem.CustomEditor
         {
             return LIST_SAVE_PATH + "/" + EVENTID_LIST_CLASS_NAME + EVENTID_LIST_FILE_EXTENSION;
         }
-
+        public static void DeleteOldIDListFiles()
+        {
+            // Search for the event id list in the file system and delete any files that are not
+            // where they should be.
+            
+        }
 
         /// <summary>
         /// Returns a copy of the given array, but with any meta files missing.
@@ -97,7 +102,6 @@ namespace GameEventSystem.CustomEditor
             }
             return shorterNames;
         }
-
         /// <summary>
         /// Removes any extensions from the given file names. If a file has multiple extensions
         /// like .cs.meta it will only remove the .meta.
