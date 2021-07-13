@@ -34,8 +34,11 @@ namespace GameEventSystem.CustomEditor
         private bool isAutoSave = true;
         // Bool to hold if auto sync is on
         private bool isAutoSync = true;
+
         // If we just hit the save button
         private bool justHitSave = false;
+        // If we just found out events were added from source control
+        private bool justAddedExternalEvents = false;
 
 
         /// <summary>
@@ -65,12 +68,21 @@ namespace GameEventSystem.CustomEditor
                 // Reset that we just hit the save button
                 justHitSave = false;
             }
+
             // Also recreate the file if we have pulled from github. To check if we pulled from github,
             // check if there exist files that we don't have in the event list.
             if (WereEventsAddedFromExternalProgram())
             {
                 Debug.Log("Events were added from external program");
+                justAddedExternalEvents = true;
                 ResyncEvents();
+                AssetDatabase.Refresh();
+            }
+            // This will happen after the AssetDatabase refresh in the were wevents added from external program above.
+            else if (justAddedExternalEvents)
+            {
+                Debug.Log("Apply saved");
+                justHitSave = true;
                 ApplySavedChanges();
             }
         }
