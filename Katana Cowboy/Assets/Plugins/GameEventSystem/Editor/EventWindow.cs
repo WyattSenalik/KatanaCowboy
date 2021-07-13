@@ -313,9 +313,8 @@ namespace GameEventSystem.CustomEditor
 
             // Check against each name. If the file system contains a name that the event list doesn't have,
             // then events were added from somewhere else.
-            for (int i = 0; i < fileEventNames.Length; ++i)
+            foreach (string curFileEventName in fileEventNames)
             {
-                string curFileEventName = fileEventNames[i];
                 if (!eventList.Contains(curFileEventName))
                 {
                     Debug.Log("True");
