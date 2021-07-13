@@ -4,6 +4,7 @@ using UnityEngine;
 
 public static class TestContantws
 {
-    public const int BLUE = 4;
-    public const int INDIGO = 7;
+    public const int TEST_1 = 1;
+    public const int TEST_2 = 2;
+    public const int TEST_3 = 3;
 }
