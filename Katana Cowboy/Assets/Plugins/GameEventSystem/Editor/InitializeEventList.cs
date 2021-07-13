@@ -50,7 +50,7 @@ namespace GameEventSystem.CustomEditor
             string prevPrintStr = "Prev=(";
             foreach (string eventNAme in previousEvents)
             {
-                prevPrintStr += eventNAme;
+                prevPrintStr += eventNAme + "; ";
             }
             prevPrintStr += ")";
             UnityEngine.Debug.Log(prevPrintStr);
