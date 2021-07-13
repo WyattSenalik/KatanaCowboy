@@ -62,7 +62,7 @@ namespace GameEventSystem.CustomEditor
             // If we are auto saving or we have just hit the save button, recreate the file.
             if (isAutoSave || justHitSave)
             {
-                InitializeEventList.CreateFile();
+                EventListFileManager.CreateFile();
                 // Reset that we just hit the save button
                 justHitSave = false;
             }
