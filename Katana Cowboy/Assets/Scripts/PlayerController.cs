@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
 
     private bool isSubscribed = false;
 
-    private string testVariable = EventIDList.TestEvent30;
+    private string testVariable = EventIDList.TestEvent40;
 
 
     // Functions called by unity messages (ex: Start, Awake, Update, etc.)

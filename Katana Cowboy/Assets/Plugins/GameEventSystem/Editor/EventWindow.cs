@@ -60,14 +60,6 @@ namespace GameEventSystem.CustomEditor
         private void OnProjectChange()
         {
             Debug.Log("OnProjectChange");
-            // If we are auto saving or we have just hit the save button, recreate the file.
-            if (isAutoSave || justHitSave)
-            {
-                Debug.Log("CreatingFile");
-                InitializeEventList.CreateFile();
-                // Reset that we just hit the save button
-                justHitSave = false;
-            }
 
             // Also recreate the file if we have pulled from github. To check if we pulled from github,
             // check if there exist files that we don't have in the event list.
@@ -76,6 +68,7 @@ namespace GameEventSystem.CustomEditor
                 Debug.Log("Events were added from external program");
                 justAddedExternalEvents = true;
                 ResyncEvents();
+                AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
             }
             // This will happen after the AssetDatabase refresh in the were wevents added from external program above.
@@ -84,6 +77,14 @@ namespace GameEventSystem.CustomEditor
                 Debug.Log("Apply saved");
                 justHitSave = true;
                 ApplySavedChanges();
+            }
+            // If we are auto saving or we have just hit the save button, recreate the file.
+            else if (isAutoSave || justHitSave)
+            {
+                Debug.Log("CreatingFile");
+                InitializeEventList.CreateFile();
+                // Reset that we just hit the save button
+                justHitSave = false;
             }
         }
         // Called every GUI repaint call
