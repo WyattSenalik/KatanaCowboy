@@ -59,6 +59,7 @@ namespace GameEventSystem.CustomEditor
             // check if there exist files that we don't have in the event list.
             if (isAutoSave || justHitSave || WereEventsAddedFromExternalProgram())
             {
+                Debug.Log("CreatingFile");
                 InitializeEventList.CreateFile();
                 // Reset that we just hit the save button
                 justHitSave = false;
@@ -299,6 +300,7 @@ namespace GameEventSystem.CustomEditor
         /// <returns>If events were added using a method other than the event window.</returns>
         private bool WereEventsAddedFromExternalProgram()
         {
+            Debug.Log("WereEventsAddedFromExternalProgram");
             string[] fileEventNames = EventListFileManager.GetListOfEventNames();
 
             // Check against each name. If the file system contains a name that the event list doesn't have,
@@ -308,10 +310,12 @@ namespace GameEventSystem.CustomEditor
                 string curFileEventName = fileEventNames[i];
                 if (!eventList.Contains(curFileEventName))
                 {
+                    Debug.Log("True");
                     return true;
                 }
             }
 
+            Debug.Log("False");
             // If there were no extra events in the file system, no events were added from an external program
             return false;
         }
