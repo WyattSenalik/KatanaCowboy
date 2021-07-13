@@ -46,6 +46,7 @@ namespace GameEventSystem.CustomEditor
         /// </summary>
         private static void Update()
         {
+            UnityEngine.Debug.Log("Update");
             // Re-create the file if it has changed since last time
             string[] curEvents = EventListFileManager.GetListOfEventNames();
             foreach (string eventName in curEvents)
