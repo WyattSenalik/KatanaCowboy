@@ -59,27 +59,6 @@ namespace GameEventSystem.CustomEditor
         // Called when creating, renaming, or reparenting assets, as well as moving or renaming folders in the project
         private void OnProjectChange()
         {
-            Debug.Log("OnProjectChange");
-
-            /*
-            // Also recreate the file if we have pulled from github. To check if we pulled from github,
-            // check if there exist files that we don't have in the event list.
-            if (WereEventsAddedFromExternalProgram())
-            {
-                Debug.Log("Events were added from external program");
-                justAddedExternalEvents = true;
-                ResyncEvents();
-                AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh();
-            }
-            // This will happen after the AssetDatabase refresh in the were wevents added from external program above.
-            else if (justAddedExternalEvents)
-            {
-                Debug.Log("Apply saved");
-                justHitSave = true;
-                ApplySavedChanges();
-            }
-            */
             // If we are auto saving or we have just hit the save button, recreate the file.
             if (isAutoSave || justHitSave)
             {
@@ -339,48 +318,6 @@ namespace GameEventSystem.CustomEditor
 
             // If they are the same size and the event list contains all the file event names, they match
             return true;
-        }
-        /// <summary>
-        /// Checks if events were added using not the event window. Returns true if some where added, false otherwise.
-        /// </summary>
-        /// <returns>If events were added using a method other than the event window.</returns>
-        private bool WereEventsAddedFromExternalProgram()
-        {
-            Debug.Log("WereEventsAddedFromExternalProgram");
-            string[] fileEventNames = EventListFileManager.GetListOfEventNames();
-
-            // Check against each name. If the file system contains a name that the event list doesn't have,
-            // then events were added from somewhere else.
-            foreach (string curFileEventName in fileEventNames)
-            {
-                if (!eventList.Contains(curFileEventName))
-                {
-                    Debug.Log("True");
-                    return true;
-                }
-            }
-
-            Debug.Log("False");
-            // If there were no extra events in the file system, no events were added from an external program
-            return false;
-        }
-        /// <summary>
-        /// Adds the events that are in the file system to the list of events.
-        /// </summary>
-        private void UpdateEventListWithExternallyAddedEvents()
-        {
-            string[] fileEventNames = EventListFileManager.GetListOfEventNames();
-
-            // Check against each name. If the file system contains a name that the event list doesn't have,
-            // add it to the event list
-            for (int i = 0; i < fileEventNames.Length; ++i)
-            {
-                string curFileEventName = fileEventNames[i];
-                if (!eventList.Contains(curFileEventName))
-                {
-                    eventList.Add(curFileEventName);
-                }
-            }
         }
 
         /// <summary>
