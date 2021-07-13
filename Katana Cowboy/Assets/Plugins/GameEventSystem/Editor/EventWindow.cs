@@ -54,6 +54,7 @@ namespace GameEventSystem.CustomEditor
         // Called when creating, renaming, or reparenting assets, as well as moving or renaming folders in the project
         private void OnProjectChange()
         {
+            Debug.Log("OnProjectChange");
             // If we are auto saving or we have just hit the save button, recreate the file.
             // Also recreate the file if we have pulled from github. To check if we pulled from github,
             // check if there exist files that we don't have in the event list.
