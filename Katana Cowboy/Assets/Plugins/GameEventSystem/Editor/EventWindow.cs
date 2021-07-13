@@ -70,9 +70,8 @@ namespace GameEventSystem.CustomEditor
             if (WereEventsAddedFromExternalProgram())
             {
                 Debug.Log("Events were added from external program");
-                InitializeEventList.CreateFile();
-                // Add those event to the list
-                UpdateEventListWithExternallyAddedEvents();
+                ResyncEvents();
+                ApplySavedChanges();
             }
         }
         // Called every GUI repaint call
