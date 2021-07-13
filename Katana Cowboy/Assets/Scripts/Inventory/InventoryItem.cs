@@ -7,15 +7,16 @@ public class InventoryItem
     // The amount of the item.
     public int Amount { set; get; }
 
+
     /// <summary>
     /// Constructs an Inventory Item with the given name and amount.
     /// </summary>
-    /// <param name="_name_">Name of the item.</param>
-    /// <param name="_initialAmount_">Initial amount of the item.</param>
-    public InventoryItem(string _name_, int _initialAmount_)
+    /// <param name="name">Name of the item.</param>
+    /// <param name="initialAmount">Initial amount of the item.</param>
+    public InventoryItem(string name, int initialAmount)
     {
-        Name = _name_;
-        Amount = _initialAmount_;
+        Name = name;
+        Amount = initialAmount;
     }
 
     // Names of all the inventory items.
