@@ -47,16 +47,28 @@ namespace GameEventSystem.CustomEditor
         private static void Update()
         {
             UnityEngine.Debug.Log("Update");
+            string prevPrintStr = "Prev=(";
+            foreach (string eventNAme in previousEvents)
+            {
+                prevPrintStr += eventNAme;
+            }
+            prevPrintStr += ")";
+            UnityEngine.Debug.Log(prevPrintStr);
+
+            string fileSysPrintStr = "FileSys=(";
             // Re-create the file if it has changed since last time
             string[] curEvents = EventListFileManager.CurrentEvents;
             foreach (string eventName in curEvents)
             {
+                fileSysPrintStr += eventName + "; ";
                 if (!previousEvents.Contains(eventName))
                 {
                     EventListFileManager.CreateFile();
                     break;
                 }
             }
+            fileSysPrintStr += ")";
+            UnityEngine.Debug.Log(fileSysPrintStr);
 
             previousEvents = new List<string>(curEvents);
         }
