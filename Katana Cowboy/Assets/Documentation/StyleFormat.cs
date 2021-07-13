@@ -47,7 +47,7 @@ namespace ExampleNamespace
         {
             myInt = styleHelper.AmountBehaviours;
         }
-        #endregion
+        #endregion UnityMessages
 
 
         #region Public
@@ -71,7 +71,7 @@ namespace ExampleNamespace
                 AnotherHelperMethod();
             }
         }
-        #endregion
+        #endregion Public
 
 
         #region Private (Helpers)
