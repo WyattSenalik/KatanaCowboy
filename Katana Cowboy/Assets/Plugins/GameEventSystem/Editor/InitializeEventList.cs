@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using UnityEditor;
 
 
@@ -15,8 +15,6 @@ namespace GameEventSystem.CustomEditor
         // How often to update
         private static int updateFrequency = 100;
         private static int curFrequency = 0;
-        // Record of what was last in the file system
-        private static List<string> previousEvents = new List<string>();
 
 
         /// <summary>
@@ -48,7 +46,8 @@ namespace GameEventSystem.CustomEditor
         {
             UnityEngine.Debug.Log("Update");
             string prevPrintStr = "Prev=(";
-            foreach (string eventNAme in previousEvents)
+            string[] listedEvents = EventListFileManager.CurrentEvents;
+            foreach (string eventNAme in listedEvents)
             {
                 prevPrintStr += eventNAme + "; ";
             }
@@ -57,11 +56,11 @@ namespace GameEventSystem.CustomEditor
 
             string fileSysPrintStr = "FileSys=(";
             // Re-create the file if it has changed since last time
-            string[] curEvents = EventListFileManager.CurrentEvents;
-            foreach (string eventName in curEvents)
+            string[] filSysEvents = EventListFileManager.GetListOfEventNames();
+            foreach (string eventName in filSysEvents)
             {
                 fileSysPrintStr += eventName + "; ";
-                if (!previousEvents.Contains(eventName))
+                if (!listedEvents.Contains(eventName))
                 {
                     EventListFileManager.CreateFile();
                     break;
@@ -69,8 +68,6 @@ namespace GameEventSystem.CustomEditor
             }
             fileSysPrintStr += ")";
             UnityEngine.Debug.Log(fileSysPrintStr);
-
-            previousEvents = new List<string>(curEvents);
         }
     }
 }
