@@ -26,6 +26,8 @@ namespace GameEventSystem.CustomEditor
         // Events that are currently in the EventIDList
         public static string[] CurrentEvents => currentEventsInTheList;
         private static string[] currentEventsInTheList = new string[0];
+        // If the EventIDList is currently being constructed
+        private static bool isBeingCreated = false;
 
 
         /// <summary>
@@ -91,6 +93,12 @@ namespace GameEventSystem.CustomEditor
         /// </summary>
         public static void CreateFile()
         {
+            if (isBeingCreated)
+            {
+                return;
+            }
+            isBeingCreated = true;
+
             UnityEngine.Debug.Log("CreatingFile");
 
             // Beginning and end of the file
@@ -100,7 +108,8 @@ namespace GameEventSystem.CustomEditor
             const string FILE_END_TEXT = "}";
 
             // Generate lines to write for each event
-            string[] eventConstLines = GenerateEventConstantLines();
+            currentEventsInTheList = GetListOfEventNames();
+            string[] eventConstLines = GenerateEventConstantLines(currentEventsInTheList);
             string[] writeLines = new string[eventConstLines.Length + 2];
             // First line is the begin text
             writeLines[0] = FILE_BEGIN_TEXT;
@@ -120,6 +129,8 @@ namespace GameEventSystem.CustomEditor
 
             // Write to the file
             File.WriteAllLines(GetFullFilePath(), writeLines);
+
+            isBeingCreated = false;
         }
 
 
@@ -128,13 +139,12 @@ namespace GameEventSystem.CustomEditor
         /// generated script to be public const ints.
         /// </summary>
         /// <returns>Array of strings that can be used as lines in the generated script.</returns>
-        private static string[] GenerateEventConstantLines()
+        private static string[] GenerateEventConstantLines(string[] eventNames)
         {
-            currentEventsInTheList = GetListOfEventNames();
-            string[] eventLines = new string[currentEventsInTheList.Length];
+            string[] eventLines = new string[eventNames.Length];
             for (int i = 0; i < eventLines.Length; ++i)
             {
-                string eventName = currentEventsInTheList[i];
+                string eventName = eventNames[i];
                 string eventID = eventName;
                 eventLines[i] = "public const string " + eventName + " = \"" + eventID + "\";";
             }

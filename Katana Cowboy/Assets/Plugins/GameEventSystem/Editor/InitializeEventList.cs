@@ -24,7 +24,7 @@ namespace GameEventSystem.CustomEditor
         /// </summary>
         static InitializeEventList()
         {
-            CreateFile();
+            EventListFileManager.CreateFile();
 
             EditorApplication.update += UpdateCheck;
         }
