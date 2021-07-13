@@ -54,8 +54,10 @@ namespace GameEventSystem.CustomEditor
         // Called when creating, renaming, or reparenting assets, as well as moving or renaming folders in the project
         private void OnProjectChange()
         {
-            // If we are auto saving or we have just hit the save button, recreate the file
-            if (isAutoSave || justHitSave)
+            // If we are auto saving or we have just hit the save button, recreate the file.
+            // Also recreate the file if we have pulled from github. To check if we pulled from github,
+            // check if there exist files that we don't have in the event list.
+            if (isAutoSave || justHitSave || WereEventsAddedFromExternalProgram())
             {
                 InitializeEventList.CreateFile();
                 // Reset that we just hit the save button
@@ -290,6 +292,28 @@ namespace GameEventSystem.CustomEditor
 
             // If they are the same size and the event list contains all the file event names, they match
             return true;
+        }
+        /// <summary>
+        /// Checks if events were added using not the event window. Returns true if some where added, false otherwise.
+        /// </summary>
+        /// <returns>If events were added using a method other than the event window.</returns>
+        private bool WereEventsAddedFromExternalProgram()
+        {
+            string[] fileEventNames = EventListFileManager.GetListOfEventNames();
+
+            // Check against each name. If the file system contains a name that the event list doesn't have,
+            // then events were added from somewhere else.
+            for (int i = 0; i < fileEventNames.Length; ++i)
+            {
+                string curFileEventName = fileEventNames[i];
+                if (!eventList.Contains(curFileEventName))
+                {
+                    return true;
+                }
+            }
+
+            // If there were no extra events in the file system, no events were added from an external program
+            return false;
         }
 
         /// <summary>

@@ -47,6 +47,8 @@ public class PlayerController : MonoBehaviour
     // If the player is attacking with their sword right now, we don't want them to be able to move.
     private bool isAttacking = false;
 
+    private string testVariable = EventIDList.TestEvent;
+
 
     // Functions called by unity messages (ex: Start, Awake, Update, etc.)
     #region UnityEvents
