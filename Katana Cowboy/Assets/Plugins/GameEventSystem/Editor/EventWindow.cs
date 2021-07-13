@@ -56,14 +56,21 @@ namespace GameEventSystem.CustomEditor
         {
             Debug.Log("OnProjectChange");
             // If we are auto saving or we have just hit the save button, recreate the file.
-            // Also recreate the file if we have pulled from github. To check if we pulled from github,
-            // check if there exist files that we don't have in the event list.
-            if (isAutoSave || justHitSave || WereEventsAddedFromExternalProgram())
+            if (isAutoSave || justHitSave)
             {
                 Debug.Log("CreatingFile");
                 InitializeEventList.CreateFile();
                 // Reset that we just hit the save button
                 justHitSave = false;
+            }
+            // Also recreate the file if we have pulled from github. To check if we pulled from github,
+            // check if there exist files that we don't have in the event list.
+            if (WereEventsAddedFromExternalProgram())
+            {
+                Debug.Log("Events were added from external program");
+                InitializeEventList.CreateFile();
+                // Add those event to the list
+                UpdateEventListWithExternallyAddedEvents();
             }
         }
         // Called every GUI repaint call
@@ -319,6 +326,24 @@ namespace GameEventSystem.CustomEditor
             Debug.Log("False");
             // If there were no extra events in the file system, no events were added from an external program
             return false;
+        }
+        /// <summary>
+        /// Adds the events that are in the file system to the list of events.
+        /// </summary>
+        private void UpdateEventListWithExternallyAddedEvents()
+        {
+            string[] fileEventNames = EventListFileManager.GetListOfEventNames();
+
+            // Check against each name. If the file system contains a name that the event list doesn't have,
+            // add it to the event list
+            for (int i = 0; i < fileEventNames.Length; ++i)
+            {
+                string curFileEventName = fileEventNames[i];
+                if (!eventList.Contains(curFileEventName))
+                {
+                    eventList.Add(curFileEventName);
+                }
+            }
         }
 
         /// <summary>
