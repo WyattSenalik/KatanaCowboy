@@ -63,6 +63,12 @@ public class CharacterMovement : MonoBehaviour
         // Apply the velocities to the actual character
         charContRef.Move((moveVelocity + gravityVelocity) * Time.deltaTime);
     }
+    // Testing for ground check
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(groundCheck.position, groundDistance);
+    }
     #endregion UnityMessages
 
 
@@ -127,7 +133,7 @@ public class CharacterMovement : MonoBehaviour
         // Check if we should reset velocity.
         if (isGrounded && gravityVelocity < 0)
         {
-            gravityVelocity = 0.0f;
+            gravityVelocity = 0;
         }
 
         return gravityVelocity;
