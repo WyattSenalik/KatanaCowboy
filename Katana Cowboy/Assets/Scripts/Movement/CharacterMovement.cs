@@ -21,15 +21,18 @@ public class CharacterMovement : MonoBehaviour
     // References
     // Reference to the ground check.
     [SerializeField] private Transform groundCheck = null;
+    // Reference to the camera that will determine our forward direction.
+    [SerializeField] private Transform camTrans = null;
+
     // Reference to the character controller attached to this object.
     private CharacterController charContRef = null;
-    // Reference to the move angle determiner specified by a player controller
-    private CharacterMoveAngleDeterminer moveAngleDeterminer = null;
 
     // Raw input direction for movement
     private Vector3 rawMoveDirection = Vector3.zero;
     // Current velocity due to gravity
     private Vector3 gravityVelocity = Vector3.zero;
+    // Current movement direction
+    private Vector3 movementDirection = Vector3.zero;
     // If the player is moving
     private bool isMoving = false;
     // If the player is sprinting
@@ -38,6 +41,8 @@ public class CharacterMovement : MonoBehaviour
     private bool isGrounded = true;
 
 
+    // Unity functions like Awake and Update
+    #region UnityMessages
     // Called 0th
     // Set references
     protected virtual void Awake()
@@ -48,22 +53,23 @@ public class CharacterMovement : MonoBehaviour
     // Used for physics calculations
     protected virtual void FixedUpdate()
     {
-        // Quick check to make sure
-        if (moveAngleDeterminer == null)
-        {
-            Debug.LogError("A CharacterMoveAngleDeterminer must be set for "
-                + this.name + "'s CharacterMovement script");
-        }
-
         // Apply gravity velocity and handle if we are grounded
-        ApplyGravityVelocity();
-        // Apply rotation to the character so they are facing towards where they are walking and
-        // apply a movement velocity towards the direction the camera is facing
-        Vector3 moveVelocity = DetermineMovementVelocity();
+        gravityVelocity.y = DetermineGravityVelocity(gravityVelocity.y);
+
+        // Get the movement direction and velocity
+        movementDirection = DetermineMovementDirection();
+        Vector3 moveVelocity = DetermineMovementVelocity(movementDirection);
 
         // Apply the velocities to the actual character
         charContRef.Move((moveVelocity + gravityVelocity) * Time.deltaTime);
     }
+    // Testing for ground check
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(groundCheck.position, groundDistance);
+    }
+    #endregion UnityMessages
 
 
     /// <summary>
@@ -103,14 +109,14 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
-
     /// <summary>
-    /// Sets the move angle determiner that determines what angle to move at.
+    /// Returns the character's current movement direction.
+    /// Returns Vector3.zero when there is no current movement direction.
     /// </summary>
-    /// <param name="angleDet">Angle determiner to use to decide which direction to move in.</param>
-    public void SetMoveAngleDeterminer(CharacterMoveAngleDeterminer angleDet)
+    /// <returns>Current movement direction.</returns>
+    public Vector3 GetMovementDirection()
     {
-        moveAngleDeterminer = angleDet;
+        return movementDirection;
     }
 
 
@@ -118,40 +124,62 @@ public class CharacterMovement : MonoBehaviour
     /// Check if the player is grounded and apply gravity to gravityVelocity accordingly.
     /// Causes the player to fall due to gravity.
     /// </summary>
-    private void ApplyGravityVelocity()
+    private float DetermineGravityVelocity(float currentGravityVel)
     {
         // Check if the player is on the ground.
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
         // Update velocity due to gravity.
-        gravityVelocity.y -= gravity * Time.deltaTime;
+        float gravityVelocity = currentGravityVel - gravity * Time.deltaTime;
         // Check if we should reset velocity.
-        if (isGrounded && gravityVelocity.y < 0)
+        if (isGrounded && gravityVelocity < 0)
         {
-            gravityVelocity.y = 0.0f;
+            gravityVelocity = 0;
         }
+
+        return gravityVelocity;
     }
     /// <summary>
-    /// Calculates the direction and speed at which the player should move
-    /// by walking/running. Returns the result.
+    /// Calculates the direction at which the player should move.
     /// </summary>
-    /// <returns>Movement vector the player should walk/run using.</returns>
-    private Vector3 DetermineMovementVelocity()
+    /// <returns>Direction the player should walk/run using.</returns>
+    private Vector3 DetermineMovementDirection()
     {
         if (isMoving)
         {
             // Determine the target angle from the move angle determiner
-            float targetAngle = moveAngleDeterminer.DetermineTargetMovementAngle(rawMoveDirection);
-            // Determine speed based on if sprinting
-            float curSpeed = DetermineSpeed();
+            float targetAngle = DetermineTargetMovementAngle(rawMoveDirection);
 
-            // Move the character based on the target angle.
-            Vector3 moveDirection = (Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward).normalized;
-            return moveDirection * curSpeed;
+            // Have the move direciton ot match the target angle.
+            return (Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward).normalized;
         }
         else
         {
             return Vector3.zero;
         }
+    }
+    /// <summary>
+    /// Applies the current speed to the given movement direction whether sprinting or walking.
+    /// </summary>
+    /// <param name="movementDirection">Direction to move the character in.</param>
+    /// <returns>Velocity to move the character in the given direction.</returns>
+    private Vector3 DetermineMovementVelocity(Vector3 movementDirection)
+    {
+        // Determine speed based on if sprinting
+        float curSpeed = DetermineSpeed();
+        // Apply the speed
+        return movementDirection * curSpeed;
+    }
+    /// <summary>
+    /// Determines which direction the character should move.
+    /// </summary>
+    /// <param name="rawMoveDir">Raw movement input axis.</param>
+    /// <returns>Angle (Degrees) to move the character at.</returns>
+    private float DetermineTargetMovementAngle(Vector3 rawMoveDir)
+    {
+        // Set the target angle to move at to be based on input and the camera's angle.
+        float targetAngle = Mathf.Atan2(rawMoveDir.x, rawMoveDir.z) * Mathf.Rad2Deg + camTrans.eulerAngles.y;
+        // Return the previously calculated target angle.
+        return targetAngle;
     }
     /// <summary>
     /// Helper function to determine if the player should move at sprint speed or walking speed.

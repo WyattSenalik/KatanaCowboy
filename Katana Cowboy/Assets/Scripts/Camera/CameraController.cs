@@ -1,16 +1,19 @@
 ﻿using UnityEngine;
 
+using Cinemachine;
+
 public class CameraController : MonoBehaviour
 {
     // Camera types.
     public enum CameraTypes { Standard, Aim };
 
-
+    // Reference to the main camera's transform.
+    [SerializeField] private Transform mainCamTrans = null;
     // References to the different cameras.
     // Standard third person camera.
-    [SerializeField] private GameObject thirdPersonCamera = null;
+    [SerializeField] private CinemachineFreeLook thirdPersonCamera = null;
     // Camera for aiming in third person
-    [SerializeField] private GameObject aimCamera = null;
+    [SerializeField] private CinemachineFreeLook aimCamera = null;
 
     // References to ui that needs to be turned on per camera.
     // UI and objects that should be active when swapping to standard.
@@ -19,6 +22,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private GameObject[] aimObjects = new GameObject[0];
 
     // Current camera that is active.
+    private CinemachineFreeLook activeCamera = null;
     private CameraTypes activeCam = CameraTypes.Standard;
 
 
@@ -62,14 +66,10 @@ public class CameraController : MonoBehaviour
         switch (activeCamType)
         {
             case (CameraTypes.Standard):
-                thirdPersonCamera.SetActive(true);
-                foreach (GameObject obj in standardObjects)
-                    obj.SetActive(true);
+                ActivateCamera(ref thirdPersonCamera, ref standardObjects);
                 break;
             case (CameraTypes.Aim):
-                aimCamera.SetActive(true);
-                foreach (GameObject obj in aimObjects)
-                    obj.SetActive(true);
+                ActivateCamera(ref aimCamera, ref aimObjects);
                 break;
             default:
                 Debug.LogError("Unkown CameraType " + activeCamType);
@@ -79,13 +79,33 @@ public class CameraController : MonoBehaviour
         activeCam = activeCamType;
     }
     /// <summary>
+    /// Activates the given camera and its associated objects.
+    /// </summary>
+    /// <param name="camera">Camera to activate.</param>
+    /// <param name="cameraObjs">Object to activate along with the camera.</param>
+    private void ActivateCamera(ref CinemachineFreeLook camera, ref GameObject[] cameraObjs)
+    {
+        if (activeCamera != null)
+        {
+            camera.m_XAxis.Value = activeCamera.m_XAxis.Value;
+            camera.m_YAxis.Value = activeCamera.m_YAxis.Value;
+        }
+        camera.gameObject.SetActive(true);
+        foreach (GameObject obj in cameraObjs)
+        {
+            obj.SetActive(true);
+        }
+
+        activeCamera = camera;
+    }
+    /// <summary>
     /// Helper function for ChangeCamera.
     /// Disables all the cameras.
     /// </summary>
     private void DisableAllCameras()
     {
-        thirdPersonCamera.SetActive(false);
-        aimCamera.SetActive(false);
+        thirdPersonCamera.gameObject.SetActive(false);
+        aimCamera.gameObject.SetActive(false);
     }
     /// <summary>
     /// Helper function for ChangeCamera.

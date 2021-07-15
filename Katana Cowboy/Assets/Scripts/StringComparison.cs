@@ -1,26 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class StringComparison
+﻿
+/// <summary>
+/// Collection of helpful string functions.
+/// </summary>
+public static class StringComparison
 {
     /// <summary>
     /// Compares if two strings are equal.
     /// </summary>
-    /// <param name="_str0_">String to compare.</param>
-    /// <param name="_str1_">Other string to compare.</param>
+    /// <param name="str0">String to compare.</param>
+    /// <param name="str1">Other string to compare.</param>
     /// <returns>bool - true if both strings are equal</returns>
-    public static bool Equals(string _str0_, string _str1_)
+    public static bool Equals(string str0, string str1)
     {
         // See if the strings are the same size.
-        if (_str0_.Length != _str1_.Length)
+        if (str0.Length != str1.Length)
+        {
             return false;
+        }
 
         // Compare each character of the strings.
-        for (int i = 0; i < _str0_.Length; ++i)
+        for (int i = 0; i < str0.Length; ++i)
         {
-            if (_str0_[i] != _str1_[i])
+            if (str0[i] != str1[i])
+            {
                 return false;
+            }
         }
 
         return true;
@@ -28,12 +32,12 @@ public class StringComparison
     /// <summary>
     /// Compares if two strings are equal, ignoring case.
     /// </summary>
-    /// <param name="_str0_">String to compare.</param>
-    /// <param name="_str1_">Other string to compare.</param>
+    /// <param name="str0">String to compare.</param>
+    /// <param name="str1">Other string to compare.</param>
     /// <returns>bool - true if both strings are equal</returns>
-    public static bool EqualsIgnoreCase(string _str0_, string _str1_)
+    public static bool EqualsIgnoreCase(this string str0, string str1)
     {
-        return StringComparison.Equals(_str0_.ToLower(), _str1_.ToLower());
+        return Equals(str0.ToLower(), str1.ToLower());
     }
 
     /// <summary>
@@ -41,41 +45,51 @@ public class StringComparison
     /// Z is greater than A.
     /// A longer string will be considered greater.
     /// </summary>
-    /// <param name="_left_">Left string to compare.</param>
-    /// <param name="_right_">Right string to compare.</param>
+    /// <param name="leftStr">Left string to compare.</param>
+    /// <param name="rightStr">Right string to compare.</param>
     /// <returns>bool - true if left is greater than right</returns>
-    public static bool GreaterThan(string _left_, string _right_)
+    public static bool GreaterThan(this string leftStr, string rightStr)
     {
         // Determine the shorter string
         bool leftIsShort = true;
-        string shorter = _left_;
-        if (_right_.Length < _left_.Length)
+        string shorter = leftStr;
+        if (rightStr.Length < leftStr.Length)
         {
             leftIsShort = false;
-            shorter = _right_;
+            shorter = rightStr;
         }
 
         // Compare each character of the strings.
         for (int i = 0; i < shorter.Length; ++i)
         {
             // If the current character of left is greater than the current character of right, left is greater.
-            if (_left_[i] > _right_[i])
+            if (leftStr[i] > rightStr[i])
+            {
                 return true;
+            }
             // If the current character of left is less than the current character of right, right is greater.
-            else if (_left_[i] < _right_[i])
+            else if (leftStr[i] < rightStr[i])
+            {
                 return false;
+            }
             // Otherwise, they are equal, so keep checking.
         }
 
         // If we reach the end of the for loop, that means the strings are equal or one of the strings is a substring of the other.
         // First check if the strings are equal, if they are, left is not greater than right.
-        if (_left_.Length == _right_.Length)
+        if (leftStr.Length == rightStr.Length)
+        {
             return false;
+        }
         // A longer string is considered greater, so if left is longer, return true. if shorter false.
         if (leftIsShort)
+        {
             return false;
+        }
         else
+        {
             return true;
+        }
     }
 
     /// <summary>
@@ -83,12 +97,12 @@ public class StringComparison
     /// Z is greater than A.
     /// A longer string will be considered greater.
     /// </summary>
-    /// <param name="_left_">Left string to compare.</param>
-    /// <param name="_right_">Right string to compare.</param>
+    /// <param name="leftStr">Left string to compare.</param>
+    /// <param name="rightStr">Right string to compare.</param>
     /// <returns>bool - true if left is greater than right</returns>
-    public static bool GreaterThanIgnoreCase(string _left_, string _right_)
+    public static bool GreaterThanIgnoreCase(this string leftStr, string rightStr)
     {
-        return GreaterThan(_left_.ToLower(), _right_.ToLower());
+        return  leftStr.ToLower().GreaterThan(rightStr.ToLower());
     }
 
     /// <summary>
@@ -96,12 +110,12 @@ public class StringComparison
     /// A is less than Z.
     /// A shorter string will be considered lesser.
     /// </summary>
-    /// <param name="_left_">Left string to compare.</param>
-    /// <param name="_right_">Right string to compare.</param>
+    /// <param name="leftStr">Left string to compare.</param>
+    /// <param name="rightStr">Right string to compare.</param>
     /// <returns>bool - true if left is less than right</returns>
-    public static bool LessThan(string _left_, string _right_)
+    public static bool LessThan(this string leftStr, string rightStr)
     {
-        return GreaterThan(_right_, _left_);
+        return rightStr.GreaterThan(leftStr);
     }
 
     /// <summary>
@@ -109,12 +123,12 @@ public class StringComparison
     /// A is less than Z.
     /// A shorter string will be considered lesser.
     /// </summary>
-    /// <param name="_left_">Left string to compare.</param>
-    /// <param name="_right_">Right string to compare.</param>
+    /// <param name="leftStr">Left string to compare.</param>
+    /// <param name="rightStr">Right string to compare.</param>
     /// <returns>bool - true if left is less than right</returns>
-    public static bool LessThanIgnoreCase(string _left_, string _right_)
+    public static bool LessThanIgnoreCase(this string leftStr, string rightStr)
     {
-        return LessThan(_left_.ToLower(), _right_.ToLower());
+        return leftStr.ToLower().LessThan(rightStr.ToLower());
     }
 
     /// <summary>
@@ -122,12 +136,12 @@ public class StringComparison
     /// Z is greater than A.
     /// A longer string will be considered greater.
     /// </summary>
-    /// <param name="_left_">Left string to compare.</param>
-    /// <param name="_right_">Right string to compare.</param>
+    /// <param name="leftStr">Left string to compare.</param>
+    /// <param name="rightStr">Right string to compare.</param>
     /// <returns>bool - true if left is greater than or equal to the right</returns>
-    public static bool GreaterThanEqualTo(string _left_, string _right_)
+    public static bool GreaterThanEqualTo(this string leftStr, string rightStr)
     {
-        return !LessThan(_left_, _right_);
+        return !leftStr.LessThan(rightStr);
     }
 
     /// <summary>
@@ -135,12 +149,12 @@ public class StringComparison
     /// Z is greater than A.
     /// A longer string will be considered greater.
     /// </summary>
-    /// <param name="_left_">Left string to compare.</param>
-    /// <param name="_right_">Right string to compare.</param>
+    /// <param name="leftStr">Left string to compare.</param>
+    /// <param name="rightStr">Right string to compare.</param>
     /// <returns>bool - true if left is greater than or equal to the right</returns>
-    public static bool GreaterThanEqualToIgnoreCase(string _left_, string _right_)
+    public static bool GreaterThanEqualToIgnoreCase(string leftStr, string rightStr)
     {
-        return GreaterThanEqualTo(_left_.ToLower(), _right_.ToLower());
+        return leftStr.ToLower().GreaterThanEqualTo(rightStr.ToLower());
     }
 
     /// <summary>
@@ -148,12 +162,12 @@ public class StringComparison
     /// A is less than Z.
     /// A shorter string will be considered lesser.
     /// </summary>
-    /// <param name="_left_">Left string to compare.</param>
-    /// <param name="_right_">Right string to compare.</param>
+    /// <param name="leftStr">Left string to compare.</param>
+    /// <param name="rightStr">Right string to compare.</param>
     /// <returns>bool - true if left is less than or equal to the right</returns>
-    public static bool LessThanEqualTo(string _left_, string _right_)
+    public static bool LessThanEqualTo(this string leftStr, string rightStr)
     {
-        return !GreaterThan(_left_, _right_);
+        return !leftStr.GreaterThan(rightStr);
     }
 
     /// <summary>
@@ -161,11 +175,11 @@ public class StringComparison
     /// A is less than Z.
     /// A shorter string will be considered lesser.
     /// </summary>
-    /// <param name="_left_">Left string to compare.</param>
-    /// <param name="_right_">Right string to compare.</param>
+    /// <param name="leftStr">Left string to compare.</param>
+    /// <param name="rightStr">Right string to compare.</param>
     /// <returns>bool - true if left is less than or equal to the right</returns>
-    public static bool LessThanEqualToIgnoreCase(string _left_, string _right_)
+    public static bool LessThanEqualToIgnoreCase(this string leftStr, string rightStr)
     {
-        return LessThanEqualTo(_left_.ToLower(), _right_.ToLower());
+        return leftStr.ToLower().LessThanEqualTo(rightStr.ToLower());
     }
 }

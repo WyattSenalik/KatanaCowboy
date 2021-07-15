@@ -18,6 +18,8 @@ namespace GameEventSystem
         private GameEventDataInternal eventData = new GameEventDataInternal();
         // If the event has been created alrady
         private bool wasEventCreated = false;
+        // If the event has already cleared its parameters for the current invocation
+        private bool areParametersReset = false;
 
 
         /// <summary>
@@ -27,6 +29,7 @@ namespace GameEventSystem
         public GameEventWrapper(string gameEventID)
         {
             eventID = gameEventID;
+            CreateEvent();
         }
         /// <summary>
         /// Constructs a GameEventWrapper with the given identifier.
@@ -36,34 +39,21 @@ namespace GameEventSystem
 
 
         /// <summary>
-        /// Initializes and creates the event.
-        /// Will only create the event once even if called multiple times.
-        /// </summary>
-        public void CreateEvent()
-        {
-            if (!wasEventCreated)
-            {
-                Initialize();
-                EventSystem.CreateEvent(eventID, gameEvent);
-                wasEventCreated = true;
-            }
-            else
-            {
-                Debug.LogWarning("Attempted to create GameEvent " + eventID + " multiple times");
-            }
-        }
-        /// <summary>
         /// Invokes the event with no parameters.
         /// </summary>
         public void Invoke()
         {
+            ResetParameters();
             gameEvent?.Invoke(eventData);
+            // Allow parameters to be reset for next time
+            areParametersReset = false;
         }
         /// <summary>
         /// Invokes the event with one parameter.
         /// </summary>
         public void Invoke<T>(T param)
         {
+            ResetParameters();
             AddOrReplaceParameter(param);
             Invoke();
         }
@@ -72,6 +62,7 @@ namespace GameEventSystem
         /// </summary>
         public void Invoke<T, G>(T param0, G param1)
         {
+            ResetParameters();
             AddOrReplaceParameter(param0);
             Invoke(param1);
         }
@@ -80,6 +71,7 @@ namespace GameEventSystem
         /// </summary>
         public void Invoke<T, G, H>(T param0, G param1, H param2)
         {
+            ResetParameters();
             AddOrReplaceParameter(param0);
             Invoke(param1, param2);
         }
@@ -88,6 +80,7 @@ namespace GameEventSystem
         /// </summary>
         public void Invoke<T, G, H, J>(T param0, G param1, H param2, J param3)
         {
+            ResetParameters();
             AddOrReplaceParameter(param0);
             Invoke(param1, param2, param3);
         }
@@ -96,6 +89,7 @@ namespace GameEventSystem
         /// </summary>
         public void Invoke<T, G, H, J, K>(T param0, G param1, H param2, J param3, K param4)
         {
+            ResetParameters();
             AddOrReplaceParameter(param0);
             Invoke(param1, param2, param3, param4);
         }
@@ -104,6 +98,7 @@ namespace GameEventSystem
         /// </summary>
         public void Invoke<T, G, H, J, K, L>(T param0, G param1, H param2, J param3, K param4, L param5)
         {
+            ResetParameters();
             AddOrReplaceParameter(param0);
             Invoke(param1, param2, param3, param4, param5);
         }
@@ -113,6 +108,7 @@ namespace GameEventSystem
         /// </summary>
         public void Invoke<T, G, H, J, K, L, I>(T param0, G param1, H param2, J param3, K param4, L param5, I param6)
         {
+            ResetParameters();
             AddOrReplaceParameter(param0);
             Invoke(param1, param2, param3, param4, param5, param6);
         }
@@ -128,12 +124,40 @@ namespace GameEventSystem
 
 
         /// <summary>
+        /// Initializes and creates the event.
+        /// Will only create the event once even if called multiple times.
+        /// </summary>
+        private void CreateEvent()
+        {
+            if (!wasEventCreated)
+            {
+                Initialize();
+                EventSystem.CreateEvent(eventID, gameEvent);
+                wasEventCreated = true;
+            }
+            else
+            {
+                Debug.LogWarning("Attempted to create GameEvent " + eventID + " multiple times");
+            }
+        }
+        /// <summary>
         /// Initializes the GameEvent and the event data.
         /// </summary>
         private void Initialize()
         {
             gameEvent = new GameEvent();
             eventData = new GameEventDataInternal();
+        }
+        /// <summary>
+        /// Resets parameters for the current invocation if they are not already reset.
+        /// </summary>
+        private void ResetParameters()
+        {
+            if (!areParametersReset)
+            {
+                eventData.ResetParameters();
+                areParametersReset = true;
+            }
         }
     }
 }

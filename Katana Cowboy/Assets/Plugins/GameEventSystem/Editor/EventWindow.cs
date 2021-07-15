@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEditor;
 
-
 namespace GameEventSystem.CustomEditor
 {
     /// <summary>
@@ -33,8 +32,13 @@ namespace GameEventSystem.CustomEditor
         private string textFieldEventName = "";
         // Bool to hold if auto save is on
         private bool isAutoSave = true;
+        // Bool to hold if auto sync is on
+        private bool isAutoSync = true;
+
         // If we just hit the save button
         private bool justHitSave = false;
+        // If we just found out events were added from source control
+        private bool justAddedExternalEvents = false;
 
 
         /// <summary>
@@ -55,10 +59,10 @@ namespace GameEventSystem.CustomEditor
         // Called when creating, renaming, or reparenting assets, as well as moving or renaming folders in the project
         private void OnProjectChange()
         {
-            // If we are auto saving or we have just hit the save button, recreate the file
+            // If we are auto saving or we have just hit the save button, recreate the file.
             if (isAutoSave || justHitSave)
             {
-                InitializeEventList.CreateFile();
+                EventListFileManager.CreateFile();
                 // Reset that we just hit the save button
                 justHitSave = false;
             }
@@ -104,14 +108,37 @@ namespace GameEventSystem.CustomEditor
                 GUI.enabled = true;
 
                 // Auto save checkbox
-                GUILayout.Label("Auto-Save", GUILayout.MinWidth(60), GUILayout.ExpandWidth(false));
+                GUILayout.Label("Auto-Save", GUILayout.ExpandWidth(false));
                 bool prevSaveState = isAutoSave;
                 isAutoSave = EditorGUILayout.Toggle(isAutoSave);
+                // Auto save is automatically enabled if we are auto syncing
+                if (isAutoSync)
+                {
+                    isAutoSave = true;
+                }
                 // If we have just toggled auto save on start by applying any saved changes
                 if (isAutoSave && !prevSaveState)
                 {
                     ApplySavedChanges();
                 }
+
+                // Flexible space to align button on the right
+                GUILayout.FlexibleSpace();
+                // Only have the sync button enabled if auto sync is off and there are changes
+                GUI.enabled = !isAutoSync && !DoesEventListMatchFileSystem();
+                {
+                    // When the button is pressed
+                    if (GUILayout.Button("Resync", GUILayout.MaxWidth(BUTT_MAX_WIDTH)))
+                    {
+                        // Resync events by discarding any changes and just query whats in the file system
+                        ResyncEvents();
+                    }
+                }
+                GUI.enabled = true;
+
+                // Auto sync checkbox
+                GUILayout.Label("Auto-Sync", GUILayout.ExpandWidth(false));
+                isAutoSync = EditorGUILayout.Toggle(isAutoSync, GUILayout.MaxWidth(20));
             }
             GUILayout.EndHorizontal();
         }
@@ -219,7 +246,7 @@ namespace GameEventSystem.CustomEditor
         /// An event name is invalid if:
         ///     1. It is "".
         ///     2. It starts with a number.
-        ///     3. It contains non-alphanumeric characters.
+        ///     3. It contains non-alphanumeric (and non-underscore) characters.
         ///     4. Another event already has that name.
         /// </summary>
         /// <param name="eventName">Event name to check validity.</param>
@@ -236,10 +263,14 @@ namespace GameEventSystem.CustomEditor
             {
                 return false;
             }
-            // Check if the event name contains non-alphanumeric characters
-            if (!eventName.All(char.IsLetterOrDigit))
+            // Check if the event name contains non-alphanumeric (and non-underscore) characters
+            for (int i = 0; i < eventName.Length; ++i)
             {
-                return false;
+                char curChar = eventName[i];
+                if (!char.IsLetterOrDigit(curChar) && curChar != '_')
+                {
+                    return false;
+                }
             }
             // Check if any events share the same name
             for (int k = 0; k < eventList.Count; ++k)
@@ -505,6 +536,16 @@ namespace GameEventSystem.CustomEditor
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+        }
+        /// <summary>
+        /// Gets rid of any current changes and updates the list to contain what is in the file system.
+        /// </summary>
+        private void ResyncEvents()
+        {
+            UpdateEventListFromFileSystem();
+
+            // Get rid of all the renames to reset for next time
+            renames.Clear();
         }
         /// <summary>
         /// Searches all of the files for the original name of the rename and changes all

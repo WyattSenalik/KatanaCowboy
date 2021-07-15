@@ -1,7 +1,7 @@
 {
     "name": "GameEventEditor",
     "references": [
-        "GUID:4e981577252b62f40b386e9342862e71"
+        "GUID:be74d1cd58862df4abf39d2ffd251ac8"
     ],
     "includePlatforms": [
         "Editor"

@@ -1,25 +1,25 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 using GameEventSystem;
 
 /// <summary>
 /// Listens for player input and controls what happens to the player character based on those inputs.
-/// Interfaces between the CharacterMovement, CameraController, SwordController, and GunController.
+/// Interfaces between the CharacterMovement, CharacterRotator, CameraController, SwordController, and GunController.
 /// </summary>
-[RequireComponent(typeof(ThirdPersonMoveAngleDeterminer))]
-[RequireComponent(typeof(OverShoulderMoveAngleDeterminer))]
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterRotator))]
 public class PlayerController : MonoBehaviour
 {
     // For what kind of controls the player should be using.
     public enum ControlType { Standard, Aim };
 
     // References
-    // Reference to the camera controller for handling swapping between cameras.
+    // Camera controller for handling swapping between cameras.
     [SerializeField] private CameraController camContRef = null;
-    // Reference to the sword controller for handling animation and such on the sword.
+    // Sword controller for handling animation and such on the sword.
     [SerializeField] private SwordController swordContRef = null;
-    // Reference to the gun controller for handling shooting when aimed.
+    // Gun controller for handling shooting when aimed.
     [SerializeField] private GunController gunContRef = null;
 
     // Aim controller
@@ -27,16 +27,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float aimRotateSpeedY = 50.0f;
     // Smoothing the turning.
     [SerializeField] private float turnSmoothTime = 0.1f;
-    // Holds the turn velocity to smooth the turn.
-    // Should never be changed by this script.
-    private float turnSmoothVelocity = 0.0f;
 
-    // Reference to the player's character movement script
+    // Reference to the player character movement script
     private CharacterMovement charMoveRef = null;
-    // Third person movement reference for standard controls
-    private ThirdPersonMoveAngleDeterminer thirdPersonMoveRef = null;
-    // Over the shoulder movement reference for aim controls
-    private OverShoulderMoveAngleDeterminer overShoulderMoveRef = null;
+    // Reference to the player character's rotator script
+    private CharacterRotator charRotatorRef = null;
     // If the player should follow its movement with rotation or follow the camera with its rotation
     private ControlType contType = ControlType.Standard;
     private ControlType CurrentControlType
@@ -53,6 +48,10 @@ public class PlayerController : MonoBehaviour
     // If the player is attacking with their sword right now, we don't want them to be able to move.
     private bool isAttacking = false;
 
+    private bool isSubscribed = false;
+
+    private string testVariable = EventIDList.TestEvent13;
+
 
     // Functions called by unity messages (ex: Start, Awake, Update, etc.)
     #region UnityEvents
@@ -61,19 +60,11 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         // Set references
-        thirdPersonMoveRef = GetComponent<ThirdPersonMoveAngleDeterminer>();
-        overShoulderMoveRef = GetComponent<OverShoulderMoveAngleDeterminer>();
         charMoveRef = GetComponent<CharacterMovement>();
+        charRotatorRef = GetComponent<CharacterRotator>();
 
         // Default control scheme is standard third person
         CurrentControlType = ControlType.Standard;
-    }
-    // Called 1st
-    // Foreign Initialization
-    private void Start()
-    {
-        // Default control sceme is third person
-        charMoveRef.SetMoveAngleDeterminer(thirdPersonMoveRef);
     }
     // Called when the component is enabled
     private void OnEnable()
@@ -87,6 +78,16 @@ public class PlayerController : MonoBehaviour
         // Unubscribe from events
         UnsubscribeFromEvents();
     }
+    // Called every frame
+    private void Update()
+    {
+        // Handle aiming rotation behavior
+        if (CurrentControlType == ControlType.Aim)
+        {
+            Vector3 aimDirection = gunContRef.GetAimDirection();
+            charRotatorRef.RotateCharacter(aimDirection);
+        }
+    }
     #endregion UnityEvents
 
 
@@ -97,26 +98,36 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void SubscribeToEvents()
     {
-        // Input events
-        EventSystem.SubscribeToEvent(EventIDList.Movement, OnMovement);
-        EventSystem.SubscribeToEvent(EventIDList.Sprint, OnSprint);
-        EventSystem.SubscribeToEvent(EventIDList.Jump, OnJump);
-        EventSystem.SubscribeToEvent(EventIDList.Attack, OnAttack);
-        EventSystem.SubscribeToEvent(EventIDList.Aim, OnAim);
-        EventSystem.SubscribeToEvent(EventIDList.AimLook, OnAimLook);
+        if (!isSubscribed)
+        {
+            // Input events
+            EventSystem.SubscribeToEvent(EventIDList.Movement, OnMovement);
+            EventSystem.SubscribeToEvent(EventIDList.Sprint, OnSprint);
+            EventSystem.SubscribeToEvent(EventIDList.Jump, OnJump);
+            EventSystem.SubscribeToEvent(EventIDList.Attack, OnAttack);
+            EventSystem.SubscribeToEvent(EventIDList.Aim, OnAim);
+            EventSystem.SubscribeToEvent(EventIDList.AimLook, OnAimLook);
+
+            isSubscribed = true;
+        }
     }
     /// <summary>
     /// Unsubscribes from events this listens to.
     /// </summary>
     private void UnsubscribeFromEvents()
     {
-        // Input events
-        EventSystem.UnsubscribeFromEvent(EventIDList.Movement, OnMovement);
-        EventSystem.UnsubscribeFromEvent(EventIDList.Sprint, OnSprint);
-        EventSystem.UnsubscribeFromEvent(EventIDList.Jump, OnJump);
-        EventSystem.UnsubscribeFromEvent(EventIDList.Attack, OnAttack);
-        EventSystem.UnsubscribeFromEvent(EventIDList.Aim, OnAim);
-        EventSystem.UnsubscribeFromEvent(EventIDList.AimLook, OnAimLook);
+        if (isSubscribed)
+        {
+            // Input events
+            EventSystem.UnsubscribeFromEvent(EventIDList.Movement, OnMovement);
+            EventSystem.UnsubscribeFromEvent(EventIDList.Sprint, OnSprint);
+            EventSystem.UnsubscribeFromEvent(EventIDList.Jump, OnJump);
+            EventSystem.UnsubscribeFromEvent(EventIDList.Attack, OnAttack);
+            EventSystem.UnsubscribeFromEvent(EventIDList.Aim, OnAim);
+            EventSystem.UnsubscribeFromEvent(EventIDList.AimLook, OnAimLook);
+
+            isSubscribed = false;
+        }
     }
     #endregion EventSubscriptions
 
@@ -126,6 +137,8 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Gives the player a direction to move in and sets if the player is moving or not.
     /// Called by the unity input events.
+    /// 
+    /// Parameters: InputAction.CallbackContext
     /// </summary>
     private void OnMovement(GameEventData eventData)
     {
@@ -148,6 +161,8 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Sets is sprinting to true or false.
     /// Called by the unity input events.
+    /// 
+    /// Parameters: InputAction.CallbackContext
     /// </summary>
     private void OnSprint(GameEventData eventData)
     {
@@ -158,6 +173,8 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Starts jumping if the player is on the ground.
     /// Called by the unity input events.
+    /// 
+    /// Parameters: InputAction.CallbackContext
     /// </summary>
     private void OnJump(GameEventData eventData)
     {
@@ -171,6 +188,8 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Starts the attacking animation and sets is attacking to true.
     /// Called by the unity input events.
+    /// 
+    /// Parameters: InputAction.CallbackContext
     /// </summary>
     private void OnAttack(GameEventData eventData)
     {
@@ -200,6 +219,8 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Swaps the player to and from aiming.
     /// Called by the unity input events.
+    /// 
+    /// Parameters: InputAction.CallbackContext
     /// </summary>
     private void OnAim(GameEventData eventData)
     {
@@ -218,22 +239,15 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Updates the player's rotation based on camera view input.
     /// Called by the unity input events.
+    /// 
+    /// Parameters: InputAction.CallbackContext
     /// </summary>
     private void OnAimLook(GameEventData eventData)
     {
         InputAction.CallbackContext context = eventData.ReadValue<InputAction.CallbackContext>();
-        if (context.performed && CurrentControlType == ControlType.Aim)
+        if (context.performed)
         {
-            // Get the raw input.
-            float rotVal = context.ReadValue<float>();
-
-            // Change the rotation of the character.
-            float curAngle = transform.eulerAngles.y;
-            float targetAngle = curAngle + rotVal * aimRotateSpeedY * Time.deltaTime;
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-            Vector3 eulerRot = transform.eulerAngles;
-            eulerRot.y = angle;
-            transform.rotation = Quaternion.Euler(eulerRot);
+            
         }
     }
     #endregion EventCallbacks
@@ -256,18 +270,18 @@ public class PlayerController : MonoBehaviour
     private void UpdateControlType()
     {
         // For each control type:
-        // 1. Swap the angle determiner
+        // 1. Change the rotator
         // 2. Toggle the weapon active
         // 3. Activate the corresponding camera
         switch (CurrentControlType)
         {
             case ControlType.Standard:
-                charMoveRef.SetMoveAngleDeterminer(thirdPersonMoveRef);
+                charRotatorRef.ToggleRotationFollowsMovement(true);
                 gunContRef.ToggleActive(false);
                 camContRef.ActivateDefaultCamera();
                 break;
             case ControlType.Aim:
-                charMoveRef.SetMoveAngleDeterminer(overShoulderMoveRef);
+                charRotatorRef.ToggleRotationFollowsMovement(false);
                 gunContRef.ToggleActive(true);
                 camContRef.ActivateAimCamera();
                 break;
