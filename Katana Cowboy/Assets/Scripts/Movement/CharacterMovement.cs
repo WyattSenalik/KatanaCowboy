@@ -3,11 +3,14 @@
 /// <summary>
 /// Base class for character movement controllers.
 /// </summary>
+[RequireComponent(typeof(CharacterController))]
 public class CharacterMovement : MonoBehaviour
 {
     // Speed the character will move at.
+    public float WalkSpeed => speed;
     [SerializeField] [Min(0.0f)] private float speed = 6f;
     // Speed the character will sprint at.
+    public float RunSpeed => sprintSpeed;
     [SerializeField] [Min(0.0f)] private float sprintSpeed = 12f;
     // Acceleration due to gravity.
     [SerializeField] [Min(0.0f)] private float gravity = 9.81f;
@@ -39,6 +42,8 @@ public class CharacterMovement : MonoBehaviour
     private bool isSprinting = false;
     // If the player is grounded.
     private bool isGrounded = true;
+    public float CurrentSpeed => currentSpeed;
+    private float currentSpeed = 0.0f;
 
 
     // Unity functions like Awake and Update
@@ -165,9 +170,12 @@ public class CharacterMovement : MonoBehaviour
     private Vector3 DetermineMovementVelocity(Vector3 movementDirection)
     {
         // Determine speed based on if sprinting
-        float curSpeed = DetermineSpeed();
+        float moveSpeed = DetermineSpeed();
+
         // Apply the speed
-        return movementDirection * curSpeed;
+        Vector3 movementVelocity = movementDirection * moveSpeed;
+        currentSpeed = movementVelocity.magnitude;
+        return movementVelocity;
     }
     /// <summary>
     /// Determines which direction the character should move.

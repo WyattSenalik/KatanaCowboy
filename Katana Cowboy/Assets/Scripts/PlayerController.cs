@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
     // If the player is attacking with their sword right now, we don't want them to be able to move.
     private bool isAttacking = false;
 
+    // If we are subscribed to enable/disable events
     private bool isSubscribed = false;
 
 
