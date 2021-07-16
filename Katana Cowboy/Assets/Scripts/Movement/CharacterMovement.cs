@@ -35,6 +35,7 @@ public class CharacterMovement : MonoBehaviour
     // Current velocity due to gravity
     private Vector3 gravityVelocity = Vector3.zero;
     // Current movement direction
+    public Vector3 MovementDirection => movementDirection;
     private Vector3 movementDirection = Vector3.zero;
     // If the player is moving
     private bool isMoving = false;
