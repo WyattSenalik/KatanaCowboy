@@ -1,7 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <summary>
+/// Controls the animations of a character.
+/// </summary>
 [RequireComponent(typeof(CharacterMovement))]
 public class CharacterAnimation : MonoBehaviour
 {
@@ -9,30 +10,33 @@ public class CharacterAnimation : MonoBehaviour
     // Animator Parameter Names
     private const string ANIM_VARNAME_FLOAT_HORI_MOVE = "MoveHorizontal";
     private const string ANIM_VARNAME_FLOAT_VERT_MOVE = "MoveVertical";
-    private const string ANIM_VARNAME_BOOL_IS_MOVING = "IsMoving";
 
+
+    // Reference to the animator this controls
     [SerializeField] private Animator _anim = null;
+    // Lerp speed
     [SerializeField] private float _smoothSpeed = 0.1f;
 
+    // Reference to the character movement script to pull movement info from
     private CharacterMovement _charMoveRef = null;
 
 
+    // Called 0th
+    // Domestic Initialization
     private void Awake()
     {
         _charMoveRef = GetComponent<CharacterMovement>();
     }
+    // Called once every frame
     private void Update()
     {
         ApplyMovementAnimation();
     }
 
 
-    private bool CheckIfMoving()
-    {
-        // Get the character's actual movement direction
-        Vector3 moveDir = _charMoveRef.MovementDirection;
-        return moveDir.sqrMagnitude > 0.01f;
-    }
+    /// <summary>
+    /// Updates the animator variables based on the character's current movement.
+    /// </summary>
     private void ApplyMovementAnimation()
     {
         // Get the character's actual movement direction
