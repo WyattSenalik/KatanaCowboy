@@ -1,31 +1,31 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <summary>
+/// Controls when the swords starts and stops attacking.
+/// </summary>
 public class SwordController : MonoBehaviour
 {
-    /// <summary> Reference to the animator on the sword. </summary>
-    [SerializeField]
-    private Animator swordAnim = null;
-    /// <summary> Reference tot he third person controller script on the player. </summary>
-    [SerializeField]
-    private PlayerController playerMoveRef = null;
+    /// <summary> Reference to the character's animator. </summary>
+    [SerializeField] private CharacterAnimation charAnim = null;
+
+    public bool IsAttacking => isAttacking;
+    private bool isAttacking = false;
 
     /// <summary>
     /// Called by third person movement script to begin the swing animation of the sword.
     /// </summary>
     public void StartSwingAnimation()
     {
-        swordAnim.SetBool("isAttacking", true);
+        isAttacking = true;
+        charAnim.StartAttackAnimation();
     }
-
     /// <summary>
-    /// Called by the swing animation to let us know its over.
-    /// Aler the player movement script that we are no longer attacking.
+    /// Stops attacking.
+    /// Called from the attack animation.
     /// </summary>
     public void StopSwingAnimation()
     {
-        swordAnim.SetBool("isAttacking", false);
-        playerMoveRef.FinishAttack();
+        isAttacking = false;
+        charAnim.StopAttackAnimation();
     }
 }

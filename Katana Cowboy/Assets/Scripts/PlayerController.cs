@@ -44,10 +44,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Sword attack control variables.
-    // If the player is attacking with their sword right now, we don't want them to be able to move.
-    private bool isAttacking = false;
-
     // If we are subscribed to enable/disable events
     private bool isSubscribed = false;
 
@@ -143,7 +139,7 @@ public class PlayerController : MonoBehaviour
     {
         InputAction.CallbackContext context = eventData.ReadValue<InputAction.CallbackContext>();
         // If we pressed down and are not currently attacking
-        if (context.performed && !isAttacking)
+        if (context.performed && !swordContRef.IsAttacking)
         {
             // Get movement input
             Vector2 rawAxis = context.ReadValue<Vector2>();
@@ -199,10 +195,10 @@ public class PlayerController : MonoBehaviour
             {
                 // Start attacking with the sword
                 case ControlType.Standard:
-                    if (!isAttacking)
+                    if (!swordContRef.IsAttacking)
                     {
+                        charMoveRef.StopMoving();
                         swordContRef.StartSwingAnimation();
-                        isAttacking = true;
                     }
                     break;
                 // Shoot with the gun will be handled in gun controller
@@ -250,15 +246,6 @@ public class PlayerController : MonoBehaviour
         }
     }
     #endregion EventCallbacks
-
-
-    /// <summary>
-    /// Called by animator to let the controller know it has finished attacking.
-    /// </summary>
-    public void FinishAttack()
-    {
-        isAttacking = false;
-    }
 
 
     /// <summary>

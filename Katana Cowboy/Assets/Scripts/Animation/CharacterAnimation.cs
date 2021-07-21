@@ -10,6 +10,7 @@ public class CharacterAnimation : MonoBehaviour
     // Animator Parameter Names
     private const string ANIM_VARNAME_FLOAT_HORI_MOVE = "MoveHorizontal";
     private const string ANIM_VARNAME_FLOAT_VERT_MOVE = "MoveVertical";
+    private const string ANIM_VARNAME_FLOAT_IS_ATTACKING = "IsAttacking";
 
 
     // Reference to the animator this controls
@@ -21,6 +22,7 @@ public class CharacterAnimation : MonoBehaviour
     private CharacterMovement _charMoveRef = null;
 
 
+    #region UnityMessages
     // Called 0th
     // Domestic Initialization
     private void Awake()
@@ -31,6 +33,23 @@ public class CharacterAnimation : MonoBehaviour
     private void Update()
     {
         ApplyMovementAnimation();
+    }
+    #endregion UnityMessages
+
+
+    /// <summary>
+    /// Starts the attacking animation.
+    /// </summary>
+    public void StartAttackAnimation()
+    {
+        _anim.SetBool(ANIM_VARNAME_FLOAT_IS_ATTACKING, true);
+    }
+    /// <summary>
+    /// Stops the attacking animation.
+    /// </summary>
+    public void StopAttackAnimation()
+    {
+        _anim.SetBool(ANIM_VARNAME_FLOAT_IS_ATTACKING, false);
     }
 
 
