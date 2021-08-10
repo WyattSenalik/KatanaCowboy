@@ -7,8 +7,7 @@ public abstract class Shootable : MonoBehaviour
 
     // Customizables.
     // Maximum health the shootable has.
-    [SerializeField]
-    protected float maxHealth = 1f;
+    [SerializeField] protected float maxHealth = 1f;
 
     // The current health of the shootable.
     protected float curHealth;
@@ -19,14 +18,14 @@ public abstract class Shootable : MonoBehaviour
     private void Start()
     {
         // If we are changing the layer from some other specified layer, let me know.
-        if (this.gameObject.layer != LayerMask.NameToLayer("Default") &&
-            this.gameObject.layer != LayerMask.NameToLayer(SHOOT_LAYER_NAME))
+        if (gameObject.layer != 0 &&
+            gameObject.layer != LayerMask.NameToLayer(SHOOT_LAYER_NAME))
         {
-            Debug.Log("Changed " + this.gameObject.name + "'s layer from " +
-                LayerMask.LayerToName(this.gameObject.layer) + " to " + SHOOT_LAYER_NAME);
+            Debug.Log("Changed " + gameObject.name + "'s layer from " +
+                LayerMask.LayerToName(gameObject.layer) + " to " + SHOOT_LAYER_NAME);
         }
         // Change the layer of the shootable.
-        this.gameObject.layer = LayerMask.NameToLayer(SHOOT_LAYER_NAME);
+        gameObject.layer = LayerMask.NameToLayer(SHOOT_LAYER_NAME);
 
         // Initialize health.
         curHealth = maxHealth;

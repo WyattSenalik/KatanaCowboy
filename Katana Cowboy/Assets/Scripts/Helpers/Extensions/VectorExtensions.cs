@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public static class VectorHelpers
+public static class VectorExtensions
 {
     public static Vector2 ConvertVectorToBasis(Vector2 convertVector, Vector2 baseA, Vector2 baseB)
     {

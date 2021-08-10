@@ -4,8 +4,7 @@ using UnityEngine;
 public class DestroyAfterDelay : MonoBehaviour
 {
     // The amount of seconds to wait before the object is destroyed.
-    [SerializeField]
-    private float secondsToWait = 1f;
+    [SerializeField] private float secondsToWait = 1f;
 
     // Start is called before the first frame update
     private void Start()
@@ -22,7 +21,7 @@ public class DestroyAfterDelay : MonoBehaviour
     private IEnumerator DeathCoroutine()
     {
         yield return new WaitForSeconds(secondsToWait);
-        Destroy(this.gameObject);
+        Destroy(gameObject);
         yield return null;
     }
 }
