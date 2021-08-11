@@ -3,7 +3,8 @@
 public abstract class Pickup : MonoBehaviour
 {
     // Name of the layer that can be shot.
-    public static readonly string PICKUP_LAYER_NAME = "Pickup";
+    public const string PICKUP_LAYER_NAME = "Pickup";
+
 
     // Called before the first frame.
     private void Start()
@@ -18,6 +19,7 @@ public abstract class Pickup : MonoBehaviour
         // Set the layer for this gameobject.
         this.gameObject.layer = LayerMask.NameToLayer(PICKUP_LAYER_NAME);
     }
+
 
     /// <summary>
     /// Called when the pickup is picked up.

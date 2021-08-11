@@ -3,8 +3,8 @@
 public class BulletPickup : Pickup
 {
     // The amount of bullets to give the gun on pickup.
-    [SerializeField]
-    private int bulletsToGive = 1;
+    [SerializeField] private int bulletsToGive = 1;
+
 
     /// <summary>
     /// Override of Pick.
@@ -21,7 +21,9 @@ public class BulletPickup : Pickup
             invent.GainItem(InventoryItem.BULLET, bulletsToGive);
         }
         else
+        {
             Debug.Log("Could not find a Inventory attached to " + _picker_.name);
+        }
 
         // Destroy the pickup.
         Destroy(this.gameObject);
