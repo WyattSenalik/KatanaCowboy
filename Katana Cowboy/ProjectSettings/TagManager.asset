@@ -16,11 +16,11 @@ TagManager:
   - Ground
   - Shootable
   - Pickup
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Enemy
+  - PlayerWeapon
+  - EnemyWeapon
+  - Hitable
   - 
   - 
   - 

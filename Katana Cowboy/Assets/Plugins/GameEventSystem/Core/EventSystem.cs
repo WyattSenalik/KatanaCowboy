@@ -23,7 +23,8 @@ namespace GameEventSystem
         /// <param name="eventToCall">Reference to the event.</param>
         public static void CreateEvent(string eventID, GameEvent eventToCall)
         {
-            if (!eventsHash.ContainsKey(eventID))
+            // If the event does not exist yet or if it does exist, but is now null, create it
+            if (!eventsHash.ContainsKey(eventID) || eventsHash[eventID] == null)
             {
                 eventsHash.Add(eventID, eventToCall);
             }
@@ -56,6 +57,7 @@ namespace GameEventSystem
             CreateEvent(eventID.GetID(), eventToCall);
         }
 
+        
         /// <summary>
         /// Subscribes the action to the event with the given identifier.
         /// </summary>
@@ -119,6 +121,36 @@ namespace GameEventSystem
         public static bool UnsubscribeFromEvent(GameEventIdentifier eventID, Action<GameEventData> action)
         {
             return UnsubscribeFromEvent(eventID.GetID(), action);
+        }
+
+        /// <summary>
+        /// Toggles if the given action is subscribed or unsubscribed to/from the event with the given identifier.
+        /// </summary>
+        /// <param name="condition">Whether to subscribe (true) or unsubscribe (false) from the given event.</param>
+        /// <param name="eventID">String hash for the event that the action will be subscribed/unsubscribed from.</param>
+        /// <param name="action">Action to associate with the event.</param>
+        /// <returns>True if event is found. False otherwise.</returns>
+        public static bool ToggleSubscriptionToEvent(bool condition, string eventID, Action<GameEventData> action)
+        {
+            if (condition)
+            {
+                return SubscribeToEvent(eventID, action);
+            }
+            else
+            {
+                return UnsubscribeFromEvent(eventID, action);
+            }
+        }
+        /// <summary>
+        /// Toggles if the given action is subscribed or unsubscribed to/from the event with the given identifier.
+        /// </summary>
+        /// <param name="condition">Whether to subscribe (true) or unsubscribe (false) from the given event.</param>
+        /// <param name="eventID">Identifier for the event that the action will be subscribed/unsubscribed from.</param>
+        /// <param name="action">Action to associate with the event.</param>
+        /// <returns>True if event is found. False otherwise.</returns>
+        public static bool ToggleSubscriptionToEvent(bool condition, GameEventIdentifier eventID, Action<GameEventData> action)
+        {
+            return ToggleSubscriptionToEvent(condition, eventID.GetID(), action);
         }
     }
 }

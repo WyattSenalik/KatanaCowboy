@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using UnityEditor;
 
-
 namespace GameEventSystem.CustomEditor
 {
     /// <summary>

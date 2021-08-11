@@ -5,11 +5,10 @@ using UnityEngine;
 public class MoveObjectInfinitly : MonoBehaviour
 {
     // The speed the object should move.
-    [SerializeField]
-    private float speed = 1f;
+    [SerializeField]private float speed = 1f;
     // The direction the object should move locally.
-    [SerializeField]
-    private Vector3 localMoveDirection = Vector3.up; 
+    [SerializeField] private Vector3 localMoveDirection = Vector3.up; 
+
 
     // Start is called before the first frame update
     private void Start()
