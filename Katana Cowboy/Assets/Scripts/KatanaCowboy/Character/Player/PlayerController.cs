@@ -44,6 +44,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private Vector3 moveVector = Vector3.zero;
+
     // If we are subscribed to enable/disable events
     private bool isSubscribed = false;
 
@@ -81,6 +83,18 @@ public class PlayerController : MonoBehaviour
         {
             Vector3 aimDirection = gunContRef.GetAimDirection();
             charRotatorRef.RotateCharacter(aimDirection);
+        }
+
+        if (!swordContRef.IsAttacking)
+        {
+            if (moveVector.sqrMagnitude > 0)
+            {
+                charMoveRef.SetRawMovementInputVector(moveVector);
+            }
+            else
+            {
+                charMoveRef.StopMoving();
+            }
         }
     }
     #endregion UnityEvents
@@ -139,18 +153,18 @@ public class PlayerController : MonoBehaviour
     {
         InputAction.CallbackContext context = eventData.ReadValue<InputAction.CallbackContext>();
         // If we pressed down and are not currently attacking
-        if (context.performed && !swordContRef.IsAttacking)
+        if (context.performed)
         {
             // Get movement input
             Vector2 rawAxis = context.ReadValue<Vector2>();
             Vector3 rawMoveDir = new Vector3(rawAxis.x, 0, rawAxis.y).normalized;
             // Move the character
-            charMoveRef.SetRawMovementInputVector(rawMoveDir);
+            moveVector = rawMoveDir;
         }
         else
         {
             // Stop moving the character if we are no longer giving input
-            charMoveRef.StopMoving();
+            moveVector = Vector3.zero;
         }
     }
     /// <summary>
@@ -197,8 +211,8 @@ public class PlayerController : MonoBehaviour
                 case ControlType.Standard:
                     if (!swordContRef.IsAttacking)
                     {
-                        charMoveRef.StopMoving();
                         swordContRef.StartSwingAnimation();
+                        charMoveRef.StopMoving();
                     }
                     break;
                 // Shoot with the gun will be handled in gun controller
