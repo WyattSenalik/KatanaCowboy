@@ -10,7 +10,7 @@ namespace GameEventSystem.Extension
     public class GameEventContainer
     {
         // Dictionary to hold the event wrappers by their event name/ID
-        private Dictionary<string, GameEventWrapper> _eventMap = null;
+        private Dictionary<string, GameEvent> _eventMap = null;
 
 
         /// <summary>
@@ -19,11 +19,11 @@ namespace GameEventSystem.Extension
         /// <param name="eventNames">Names/IDs of the events to create.</param>
         public GameEventContainer(params string[] eventNames)
         {
-            _eventMap = new Dictionary<string, GameEventWrapper>(eventNames.Length);
+            _eventMap = new Dictionary<string, GameEvent>(eventNames.Length);
 
             foreach (string name in eventNames)
             {
-                GameEventWrapper wrapper = new GameEventWrapper(name);
+                GameEvent wrapper = new GameEvent(name);
                 _eventMap.Add(name, wrapper);
             }
         }
@@ -36,11 +36,11 @@ namespace GameEventSystem.Extension
         /// <param name="eventName">Name/ID of the event to invoke.</param>
         /// <param name="invokeAction">Action used to invoke the event.</param>
         /// <returns>True if an event with the given name/ID is in this container. False if no such event exists.</returns>
-        private bool Invoke(string eventName, Action<GameEventWrapper> invokeAction)
+        private bool Invoke(string eventName, Action<GameEvent> invokeAction)
         {
             if (_eventMap.ContainsKey(eventName))
             {
-                GameEventWrapper wrapper = _eventMap[eventName];
+                GameEvent wrapper = _eventMap[eventName];
                 invokeAction?.Invoke(wrapper);
 
                 return true;
@@ -56,7 +56,7 @@ namespace GameEventSystem.Extension
         /// <returns>True if an event with the given name/ID is in this container. False if no such event exists.</returns>
         public bool Invoke(string eventName)
         {
-            return Invoke(eventName, (GameEventWrapper wrapper) => wrapper.Invoke());
+            return Invoke(eventName, (GameEvent wrapper) => wrapper.Invoke());
         }
         /// <summary>
         /// Invokes the event with the given name/ID with 1 parameter.
@@ -65,7 +65,7 @@ namespace GameEventSystem.Extension
         /// <returns>True if an event with the given name/ID is in this container. False if no such event exists.</returns>
         public bool Invoke<T>(string eventName, T param0)
         {
-            return Invoke(eventName, (GameEventWrapper wrapper) => wrapper.Invoke(param0));
+            return Invoke(eventName, (GameEvent wrapper) => wrapper.Invoke(param0));
         }
         /// <summary>
         /// Invokes the event with the given name/ID with 2 parameters.
@@ -74,7 +74,7 @@ namespace GameEventSystem.Extension
         /// <returns>True if an event with the given name/ID is in this container. False if no such event exists.</returns>
         public bool Invoke<T, G>(string eventName, T param0, G param1)
         {
-            return Invoke(eventName, (GameEventWrapper wrapper) => wrapper.Invoke(param0, param1));
+            return Invoke(eventName, (GameEvent wrapper) => wrapper.Invoke(param0, param1));
         }
         /// <summary>
         /// Invokes the event with the given name/ID with 3 parameters.
@@ -83,7 +83,7 @@ namespace GameEventSystem.Extension
         /// <returns>True if an event with the given name/ID is in this container. False if no such event exists.</returns>
         public bool Invoke<T, G, H>(string eventName, T param0, G param1, H param2)
         {
-            return Invoke(eventName, (GameEventWrapper wrapper) => wrapper.Invoke(param0, param1, param2));
+            return Invoke(eventName, (GameEvent wrapper) => wrapper.Invoke(param0, param1, param2));
         }
         /// <summary>
         /// Invokes the event with the given name/ID with 4 parameters.
@@ -92,7 +92,7 @@ namespace GameEventSystem.Extension
         /// <returns>True if an event with the given name/ID is in this container. False if no such event exists.</returns>
         public bool Invoke<T, G, H, J>(string eventName, T param0, G param1, H param2, J param3)
         {
-            return Invoke(eventName, (GameEventWrapper wrapper) => wrapper.Invoke(param0, param1, param2, param3));
+            return Invoke(eventName, (GameEvent wrapper) => wrapper.Invoke(param0, param1, param2, param3));
         }
         /// <summary>
         /// Invokes the event with the given name/ID with 5 parameters.
@@ -102,7 +102,7 @@ namespace GameEventSystem.Extension
         public bool Invoke<T, G, H, J, K>(string eventName, T param0, G param1, H param2,
             J param3, K param4)
         {
-            return Invoke(eventName, (GameEventWrapper wrapper) => wrapper.Invoke(param0, param1, param2, param3, param4));
+            return Invoke(eventName, (GameEvent wrapper) => wrapper.Invoke(param0, param1, param2, param3, param4));
         }
         /// <summary>
         /// Invokes the event with the given name/ID with 6 parameters.
@@ -112,7 +112,7 @@ namespace GameEventSystem.Extension
         public bool Invoke<T, G, H, J, K, L>(string eventName, T param0, G param1, H param2,
             J param3, K param4, L param5)
         {
-            return Invoke(eventName, (GameEventWrapper wrapper) => wrapper.Invoke(param0, param1, param2, param3, param4, param5));
+            return Invoke(eventName, (GameEvent wrapper) => wrapper.Invoke(param0, param1, param2, param3, param4, param5));
         }
         /// <summary>
         /// Invokes the event with the given name/ID with 7 parameters.
@@ -122,7 +122,7 @@ namespace GameEventSystem.Extension
         public bool Invoke<T, G, H, J, K, L, I>(string eventName, T param0, G param1, H param2,
             J param3, K param4, L param5, I param6)
         {
-            return Invoke(eventName, (GameEventWrapper wrapper) => wrapper.Invoke(param0, param1, param2, param3, param4, param5, param6));
+            return Invoke(eventName, (GameEvent wrapper) => wrapper.Invoke(param0, param1, param2, param3, param4, param5, param6));
         }
         #endregion Invoke
     }

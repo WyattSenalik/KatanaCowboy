@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using GameEventSystem.Internal;
-
-namespace GameEventSystem
+namespace GameEventSystem.Internal
 {
     /// <summary>
     /// Fake event to help avoid race conditions when subscribing to and creating events.
