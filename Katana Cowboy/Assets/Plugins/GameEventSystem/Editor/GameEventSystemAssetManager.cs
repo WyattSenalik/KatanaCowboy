@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
+using UnityEngine;
 
 namespace GameEventSystem.Editor
 {
@@ -26,7 +27,7 @@ namespace GameEventSystem.Editor
         {
             foreach (GameEventEditorElement editorEvent in eventList)
             {
-                GameEventIdentifierScriptableObject soID = new GameEventIdentifierScriptableObject();
+                GameEventIdentifierScriptableObject soID = ScriptableObject.CreateInstance<GameEventIdentifierScriptableObject>();
                 string fileName = EventListFileManager.GetFileNameFromEditorEvent(editorEvent);
                 string path = EventListFileManager.GetEventAssetPath(fileName);
                 AssetDatabase.CreateAsset(soID, path);
