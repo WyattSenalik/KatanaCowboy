@@ -34,3 +34,6 @@ MonoBehaviour:
   - eventName: Zoom
     paramStringList:
     - UnityEngine.InputSystem.InputAction.CallbackContext
+  - eventName: Test1
+    paramStringList:
+    - UnityEngine.InputSystem.InputAction.CallbackContext
