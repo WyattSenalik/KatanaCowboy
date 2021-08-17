@@ -23,6 +23,8 @@ namespace GameEventSystem.Editor
         {
             EventListFileManager.CreateFile();
 
+            AssetDatabase.Refresh();
+
             EditorApplication.update += UpdateCheck;
         }
 
@@ -47,12 +49,13 @@ namespace GameEventSystem.Editor
             // Event names in the EventIDList.cs file
             List<GameEventEditorElement> listedEvents = EventListFileManager.CurrentEvents;
             // Event names in the file system            
-            List<GameEventEditorElement> filSysEvents = EventListFileManager.GetListOfEditorEvents();
-            foreach (GameEventEditorElement eventWithTypes in filSysEvents)
+            List<GameEventEditorElement> fileSysEvents = EventListFileManager.GetListOfEditorEvents();
+            foreach (GameEventEditorElement eventWithTypes in fileSysEvents)
             {
                 if (!listedEvents.Contains(eventWithTypes))
                 {
                     EventListFileManager.CreateFile();
+                    AssetDatabase.Refresh();
                     break;
                 }
             }
