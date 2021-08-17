@@ -13,7 +13,7 @@ namespace GameEventSystem.Internal
         /// <summary>
         /// Iterator of the parameter dictionary.
         /// </summary>
-        public IReadOnlyDictionary<Type, object> GetParameters() => eventParams;
+        public Dictionary<Type, object>.Enumerator ParamEnumerator => eventParams.GetEnumerator();
 
 
         /// <summary>

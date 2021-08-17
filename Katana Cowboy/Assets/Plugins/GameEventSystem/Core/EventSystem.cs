@@ -21,7 +21,7 @@ namespace GameEventSystem
         /// </summary>
         /// <param name="eventID">String hash for the event that will be used to subscribe to it.</param>
         /// <param name="eventToCall">Reference to the event.</param>
-        public static void CreateEvent(string eventID, GameEventInternal eventToCall)
+        public static void CreateEvent(string eventID, GameEvent eventToCall)
         {
             // If the event does not exist yet or if it does exist, but is now null, create it
             if (!eventsHash.ContainsKey(eventID) || eventsHash[eventID] == null)
@@ -52,7 +52,7 @@ namespace GameEventSystem
         /// </summary>
         /// <param name="eventID">Identifier for the event that will be used to subscribe to it.</param>
         /// <param name="eventToCall">Reference to the event.</param>
-        public static void CreateEvent(GameEventIdentifier eventID, GameEventInternal eventToCall)
+        public static void CreateEvent(GameEventIdentifier eventID, GameEvent eventToCall)
         {
             CreateEvent(eventID.GetID(), eventToCall);
         }

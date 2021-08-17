@@ -1,6 +1,5 @@
-﻿using System;
+﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine;
 
 using GameEventSystem.Internal;
 
@@ -14,7 +13,7 @@ namespace GameEventSystem
     public class GameEventData
     {
         // Parameters referenced by the type. This does not allow for multiple parameters of the same type.
-        protected readonly Dictionary<Type, object> eventParams = new Dictionary<Type, object>();
+        protected readonly Dictionary<System.Type, object> eventParams = new Dictionary<System.Type, object>();
 
 
         /// <summary>
@@ -23,8 +22,10 @@ namespace GameEventSystem
         /// <param name="internalEventData">Internal GameEventData to build this GameEventData from.</param>
         public GameEventData(GameEventDataInternal internalEventData)
         {
-            foreach (KeyValuePair<Type, object> pair in internalEventData.GetParameters())
+            Dictionary<System.Type, object>.Enumerator dictEnum = internalEventData.ParamEnumerator;
+            while (dictEnum.MoveNext())
             {
+                KeyValuePair<System.Type, object> pair = dictEnum.Current;
                 eventParams.Add(pair.Key, pair.Value);
             }
         }
@@ -47,7 +48,7 @@ namespace GameEventSystem
                 return (T)eventParams[typeof(T)];
             }
             string paramNames = "";
-            foreach (Type type in eventParams.Keys)
+            foreach (System.Type type in eventParams.Keys)
             {
                 paramNames += type + "; ";
             }

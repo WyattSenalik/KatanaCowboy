@@ -12,7 +12,7 @@ namespace GameEventSystem.Extension
         // ID of the input event
         [SerializeField] private GameEventIdentifier inputEventID = null;
         // Wrapper to create the event
-        private GameEvent inputWrapper = null;
+        private GameEventWrapper inputWrapper = null;
 
 
         // Called 0th
@@ -20,7 +20,7 @@ namespace GameEventSystem.Extension
         private void Awake()
         {
             // Create the event
-            inputWrapper = new GameEvent(inputEventID);
+            inputWrapper = new GameEventWrapper(inputEventID);
         }
 
 
