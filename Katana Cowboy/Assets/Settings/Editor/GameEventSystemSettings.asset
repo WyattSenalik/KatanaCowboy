@@ -31,6 +31,12 @@ MonoBehaviour:
   - eventName: Sprint
     paramStringList:
     - UnityEngine.InputSystem.InputAction.CallbackContext
+  - eventName: Test
+    paramStringList:
+    - UnityEngine.InputSystem.InputAction.CallbackContext
   - eventName: Zoom
+    paramStringList:
+    - UnityEngine.InputSystem.InputAction.CallbackContext
+  - eventName: NewTest
     paramStringList:
     - UnityEngine.InputSystem.InputAction.CallbackContext
