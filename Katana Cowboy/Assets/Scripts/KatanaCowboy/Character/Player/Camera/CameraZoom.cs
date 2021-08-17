@@ -71,7 +71,7 @@ public class CameraZoom : MonoBehaviour
     private void SubscribeToEvents()
     {
         // Input events
-        //EventSystem.SubscribeToEvent(EventIDList.Zoom, OnZoom);
+        EventSystem.SubscribeToEvent(EventIDList.Zoom, OnZoom);
     }
     /// <summary>
     /// Unsubscribes from events this listens to.
@@ -79,7 +79,7 @@ public class CameraZoom : MonoBehaviour
     private void UnsubscribeFromEvents()
     {
         // Input events
-        //EventSystem.UnsubscribeFromEvent(EventIDList.Zoom, OnZoom);
+        EventSystem.UnsubscribeFromEvent(EventIDList.Zoom, OnZoom);
     }
     #endregion EventSubscriptions
 

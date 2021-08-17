@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEditor;
 
-namespace GameEventSystem.CustomEditor
+namespace GameEventSystem.Editor
 {
     /// <summary>
     /// Initializes the event list when the unity editor loads up.
@@ -45,10 +45,10 @@ namespace GameEventSystem.CustomEditor
         {
             // Re-create the file if it has changed since last time
             // Event names in the EventIDList.cs file
-            List<EventWithTypes> listedEvents = EventListFileManager.CurrentEvents;
+            List<GameEventEditorElement> listedEvents = EventListFileManager.CurrentEvents;
             // Event names in the file system            
-            List<EventWithTypes> filSysEvents = EventListFileManager.GetListOfEventsWithTypes();
-            foreach (EventWithTypes eventWithTypes in filSysEvents)
+            List<GameEventEditorElement> filSysEvents = EventListFileManager.GetListOfEditorEvents();
+            foreach (GameEventEditorElement eventWithTypes in filSysEvents)
             {
                 if (!listedEvents.Contains(eventWithTypes))
                 {

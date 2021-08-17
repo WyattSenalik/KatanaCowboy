@@ -1,9 +1,8 @@
 {
-    "name": "GameEventEditor",
+    "name": "Hextant Utilities",
+    "rootNamespace": "Hextant.Editor",
     "references": [
-        "GUID:be74d1cd58862df4abf39d2ffd251ac8",
-        "GUID:5cb2ec59697a4f9438a8f30dc412b4a9",
-        "GUID:6ec20d7bf46e38347a93da7ecf751332"
+        "GUID:5cb2ec59697a4f9438a8f30dc412b4a9"
     ],
     "includePlatforms": [
         "Editor"

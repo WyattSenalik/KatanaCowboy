@@ -110,12 +110,12 @@ public class PlayerController : MonoBehaviour
         if (!isSubscribed)
         {
             // Input events
-            //EventSystem.SubscribeToEvent(EventIDList.Movement, OnMovement);
-            //EventSystem.SubscribeToEvent(EventIDList.Sprint, OnSprint);
-            //EventSystem.SubscribeToEvent(EventIDList.Jump, OnJump);
-            //EventSystem.SubscribeToEvent(EventIDList.Attack, OnAttack);
-            //EventSystem.SubscribeToEvent(EventIDList.Aim, OnAim);
-            //EventSystem.SubscribeToEvent(EventIDList.AimLook, OnAimLook);
+            EventSystem.SubscribeToEvent(EventIDList.Movement, OnMovement);
+            EventSystem.SubscribeToEvent(EventIDList.Sprint, OnSprint);
+            EventSystem.SubscribeToEvent(EventIDList.Jump, OnJump);
+            EventSystem.SubscribeToEvent(EventIDList.Attack, OnAttack);
+            EventSystem.SubscribeToEvent(EventIDList.Aim, OnAim);
+            EventSystem.SubscribeToEvent(EventIDList.AimLook, OnAimLook);
 
             isSubscribed = true;
         }
@@ -128,12 +128,12 @@ public class PlayerController : MonoBehaviour
         if (isSubscribed)
         {
             // Input events
-            //EventSystem.UnsubscribeFromEvent(EventIDList.Movement, OnMovement);
-            //EventSystem.UnsubscribeFromEvent(EventIDList.Sprint, OnSprint);
-            //EventSystem.UnsubscribeFromEvent(EventIDList.Jump, OnJump);
-            //EventSystem.UnsubscribeFromEvent(EventIDList.Attack, OnAttack);
-            //EventSystem.UnsubscribeFromEvent(EventIDList.Aim, OnAim);
-            //EventSystem.UnsubscribeFromEvent(EventIDList.AimLook, OnAimLook);
+            EventSystem.UnsubscribeFromEvent(EventIDList.Movement, OnMovement);
+            EventSystem.UnsubscribeFromEvent(EventIDList.Sprint, OnSprint);
+            EventSystem.UnsubscribeFromEvent(EventIDList.Jump, OnJump);
+            EventSystem.UnsubscribeFromEvent(EventIDList.Attack, OnAttack);
+            EventSystem.UnsubscribeFromEvent(EventIDList.Aim, OnAim);
+            EventSystem.UnsubscribeFromEvent(EventIDList.AimLook, OnAimLook);
 
             isSubscribed = false;
         }

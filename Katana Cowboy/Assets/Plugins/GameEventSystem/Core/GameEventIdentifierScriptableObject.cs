@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 using GameEventSystem.Internal;
@@ -12,7 +11,7 @@ namespace GameEventSystem
     [CreateAssetMenu(fileName = "New GameEventID", menuName = "ScriptableObjects/EventSystem/GameEventIdentifier")]
     public class GameEventIdentifierScriptableObject : ScriptableObject, IGameEventIdentifier
     {
-        public string GetID() => this.name;
+        public string GetID() => GetEventName();
 
         /// <summary>
         /// Subscribes the action to the event identified by this ID.
@@ -29,6 +28,17 @@ namespace GameEventSystem
         public void Unsubscribe(Action<GameEventData> action)
         {
             EventSystem.UnsubscribeFromEvent(this, action);
+        }
+
+
+        /// <summary>
+        /// Gets just the name portion of the scriptable object's name which contains the
+        /// events name and parameters.
+        private string GetEventName()
+        {
+            string fullName = this.name;
+            int nameEndIndex = fullName.IndexOf('$');
+            return fullName.Substring(0, nameEndIndex);
         }
     }
 }
