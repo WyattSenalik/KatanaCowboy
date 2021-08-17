@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 
 namespace GameEventSystem.CustomEditor
@@ -44,12 +45,12 @@ namespace GameEventSystem.CustomEditor
         {
             // Re-create the file if it has changed since last time
             // Event names in the EventIDList.cs file
-            string[] listedEvents = EventListFileManager.CurrentEvents;
+            List<EventWithTypes> listedEvents = EventListFileManager.CurrentEvents;
             // Event names in the file system            
-            string[] filSysEvents = EventListFileManager.GetListOfEventNames();
-            foreach (string eventName in filSysEvents)
+            List<EventWithTypes> filSysEvents = EventListFileManager.GetListOfEventsWithTypes();
+            foreach (EventWithTypes eventWithTypes in filSysEvents)
             {
-                if (!listedEvents.Contains(eventName))
+                if (!listedEvents.Contains(eventWithTypes))
                 {
                     EventListFileManager.CreateFile();
                     break;

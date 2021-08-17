@@ -71,7 +71,7 @@ public class CameraZoom : MonoBehaviour
     private void SubscribeToEvents()
     {
         // Input events
-        EventSystem.SubscribeToEvent(EventIDList.Zoom, OnZoom);
+        //EventSystem.SubscribeToEvent(EventIDList.Zoom, OnZoom);
     }
     /// <summary>
     /// Unsubscribes from events this listens to.
@@ -79,7 +79,7 @@ public class CameraZoom : MonoBehaviour
     private void UnsubscribeFromEvents()
     {
         // Input events
-        EventSystem.UnsubscribeFromEvent(EventIDList.Zoom, OnZoom);
+        //EventSystem.UnsubscribeFromEvent(EventIDList.Zoom, OnZoom);
     }
     #endregion EventSubscriptions
 
@@ -90,10 +90,9 @@ public class CameraZoom : MonoBehaviour
     /// Calls zoom to zoom in/out the free look camera.
     /// Called by the zoom input event.
     /// </summary>
-    /// <param name="data">GameEventData</param>
-    private void OnZoom(GameEventData data)
+    /// <param name="context">Input context.</param>
+    private void OnZoom(InputAction.CallbackContext context)
     {
-        InputAction.CallbackContext context = data.ReadValue<InputAction.CallbackContext>();
         targetZoom = context.ReadValue<float>();
 
         StartZoomCoroutine(targetZoom);

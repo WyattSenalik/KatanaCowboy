@@ -1,153 +1,214 @@
-﻿using UnityEngine;
-
+﻿
 using GameEventSystem.Internal;
 
 namespace GameEventSystem
 {
     /// <summary>
-    /// Wrapper class for the GameEvent that makes it more convenient to create a GameEvent.
-    /// Any references to an instance of GameEventWrapper should only be in the class that created it.
+    /// Base class for GameEvents to extend.
     /// </summary>
-    public class GameEvent
+    public abstract class GameEventBase
     {
         // Identifier for the GameEvent
-        private string eventID = "";
+        private IGameEventIdentifier eventID = null;
         // Actual GameEvent to be called
         private GameEventInternal gameEvent = new GameEventInternal();
         // Data for the GameEvent
         private GameEventDataInternal eventData = new GameEventDataInternal();
-        // If the event has already cleared its parameters for the current invocation
-        private bool areParametersReset = false;
-
 
         /// <summary>
-        /// Constructs a GameEventWrapper with the given string hash (id).
+        /// Constructs a GameEvent with the given string hash (id).
         /// </summary>
-        /// <param name="gameEventID">string hash (id) for the GameEvent.</param>
-        public GameEvent(string gameEventID)
+        /// <param name="gameEventID">Hash (id) for the GameEvent.</param>
+        public GameEventBase(IGameEventIdentifier gameEventID)
         {
             eventID = gameEventID;
-            CreateEvent();
+
+            gameEvent = new GameEventInternal();
+            eventData = new GameEventDataInternal();
+            EventSystem.CreateEvent(eventID, gameEvent);
         }
         /// <summary>
-        /// Constructs a GameEventWrapper with the given identifier.
+        /// Constructs a GameEvent with the given identifier.
         /// </summary>
         /// <param name="gameEventID">Identifier for the GameEvent.</param>
-        public GameEvent(GameEventIdentifier gameEventID) : this(gameEventID.GetID()) { }
+        public GameEventBase(GameEventIdentifierScriptableObject gameEventID) : this(gameEventID as IGameEventIdentifier) { }
 
 
         /// <summary>
-        /// Invokes the event with no parameters.
+        /// Resets parameters for the current invocation if they are not already reset.
         /// </summary>
-        public void Invoke()
+        protected void ResetParameters()
         {
-            ResetParameters();
-            gameEvent?.Invoke(eventData);
-            // Allow parameters to be reset for next time
-            areParametersReset = false;
-        }
-        /// <summary>
-        /// Invokes the event with one parameter.
-        /// </summary>
-        public void Invoke<T>(T param)
-        {
-            ResetParameters();
-            AddOrReplaceParameter(param);
-            Invoke();
-        }
-        /// <summary>
-        /// Invokes the event with two parameters.
-        /// </summary>
-        public void Invoke<T, G>(T param0, G param1)
-        {
-            ResetParameters();
-            AddOrReplaceParameter(param0);
-            Invoke(param1);
-        }
-        /// <summary>
-        /// Invokes the event with three parameters.
-        /// </summary>
-        public void Invoke<T, G, H>(T param0, G param1, H param2)
-        {
-            ResetParameters();
-            AddOrReplaceParameter(param0);
-            Invoke(param1, param2);
-        }
-        /// <summary>
-        /// Invokes the event with four parameters.
-        /// </summary>
-        public void Invoke<T, G, H, J>(T param0, G param1, H param2, J param3)
-        {
-            ResetParameters();
-            AddOrReplaceParameter(param0);
-            Invoke(param1, param2, param3);
-        }
-        /// <summary>
-        /// Invokes the event with five parameters.
-        /// </summary>
-        public void Invoke<T, G, H, J, K>(T param0, G param1, H param2, J param3, K param4)
-        {
-            ResetParameters();
-            AddOrReplaceParameter(param0);
-            Invoke(param1, param2, param3, param4);
-        }
-        /// <summary>
-        /// Invokes the event with six parameters.
-        /// </summary>
-        public void Invoke<T, G, H, J, K, L>(T param0, G param1, H param2, J param3, K param4, L param5)
-        {
-            ResetParameters();
-            AddOrReplaceParameter(param0);
-            Invoke(param1, param2, param3, param4, param5);
-        }
-        /// <summary>
-        /// Invokes the event with seven parameters.
-        /// Why would you ever need this many?
-        /// </summary>
-        public void Invoke<T, G, H, J, K, L, I>(T param0, G param1, H param2, J param3, K param4, L param5, I param6)
-        {
-            ResetParameters();
-            AddOrReplaceParameter(param0);
-            Invoke(param1, param2, param3, param4, param5, param6);
+            eventData.ResetParameters();
         }
         /// <summary>
         /// Adds the given paramter to the event data.
         /// </summary>
         /// <typeparam name="T">Type of the parameter.</typeparam>
         /// <param name="param">Paramter to add.</param>
-        public void AddOrReplaceParameter<T>(T param)
+        protected void AddOrReplaceParameter<T>(T param)
         {
             eventData.AddOrReplaceValue(param);
         }
+        /// <summary>
+        /// Invokes the event with the game event data.
+        /// </summary>
+        protected void Invoke()
+        {
+            gameEvent?.Invoke(eventData);
+        }
+    }
+    /// <summary>
+    /// Wrapper class for the GameEventInternal.
+    /// Any references to an instance of GameEvent should only be in the class that created it.
+    /// </summary>
+    public class GameEvent : GameEventBase
+    {
+        /// <summary>
+        /// Constructs a GameEvent with the given string hash (id).
+        /// </summary>
+        /// <param name="gameEventID">Hash (id) for the GameEvent.</param>
+        public GameEvent(GameEventIdentifier gameEventID) : base(gameEventID) { }
+        /// <summary>
+        /// Constructs a GameEvent for a scriptable object.
+        /// </summary>
+        /// <param name="gameEventID">Hash (id) for the GameEvent.</param>
+        public GameEvent(GameEventIdentifierScriptableObject gameEventID) : base(gameEventID) { }
 
 
         /// <summary>
-        /// Initializes and creates the event.
-        /// Will only create the event once even if called multiple times.
+        /// Invokes the event with no parameters.
         /// </summary>
-        private void CreateEvent()
+        new public void Invoke()
         {
-            Initialize();
-            EventSystem.CreateEvent(eventID, gameEvent);
+            ResetParameters();
+            base.Invoke();
         }
+    }
+    public class GameEvent<T> : GameEventBase
+    {
+        public GameEvent(GameEventIdentifier<T> gameEventID) : base(gameEventID) { }
+        public GameEvent(GameEventIdentifierScriptableObject gameEventID) : base(gameEventID) { }
+
         /// <summary>
-        /// Initializes the GameEvent and the event data.
+        /// Invokes the event with one parameter.
         /// </summary>
-        private void Initialize()
+        public void Invoke(T param)
         {
-            gameEvent = new GameEventInternal();
-            eventData = new GameEventDataInternal();
+            ResetParameters();
+            AddOrReplaceParameter(param);
+            base.Invoke();
         }
+    }
+    public class GameEvent<T, G> : GameEventBase
+    {
+        public GameEvent(GameEventIdentifier<T, G> gameEventID) : base(gameEventID) { }
+        public GameEvent(GameEventIdentifierScriptableObject gameEventID) : base(gameEventID) { }
+
         /// <summary>
-        /// Resets parameters for the current invocation if they are not already reset.
+        /// Invokes the event with one parameter.
         /// </summary>
-        private void ResetParameters()
+        public void Invoke(T param1, G param2)
         {
-            if (!areParametersReset)
-            {
-                eventData.ResetParameters();
-                areParametersReset = true;
-            }
+            ResetParameters();
+            AddOrReplaceParameter(param1);
+            AddOrReplaceParameter(param2);
+            base.Invoke();
+        }
+    }
+    public class GameEvent<T, G, H> : GameEventBase
+    {
+        public GameEvent(GameEventIdentifier<T, G, H> gameEventID) : base(gameEventID) { }
+        public GameEvent(GameEventIdentifierScriptableObject gameEventID) : base(gameEventID) { }
+
+        /// <summary>
+        /// Invokes the event with one parameter.
+        /// </summary>
+        public void Invoke(T param1, G param2, H param3)
+        {
+            ResetParameters();
+            AddOrReplaceParameter(param1);
+            AddOrReplaceParameter(param2);
+            AddOrReplaceParameter(param3);
+            base.Invoke();
+        }
+    }
+    public class GameEvent<T, G, H, J> : GameEventBase
+    {
+        public GameEvent(GameEventIdentifier<T, G, H, J> gameEventID) : base(gameEventID) { }
+        public GameEvent(GameEventIdentifierScriptableObject gameEventID) : base(gameEventID) { }
+
+        /// <summary>
+        /// Invokes the event with one parameter.
+        /// </summary>
+        public void Invoke(T param1, G param2, H param3, J param4)
+        {
+            ResetParameters();
+            AddOrReplaceParameter(param1);
+            AddOrReplaceParameter(param2);
+            AddOrReplaceParameter(param3);
+            AddOrReplaceParameter(param4);
+            base.Invoke();
+        }
+    }
+    public class GameEvent<T, G, H, J, K> : GameEventBase
+    {
+        public GameEvent(GameEventIdentifier<T, G, H, J, K> gameEventID) : base(gameEventID) { }
+        public GameEvent(GameEventIdentifierScriptableObject gameEventID) : base(gameEventID) { }
+
+        /// <summary>
+        /// Invokes the event with one parameter.
+        /// </summary>
+        public void Invoke(T param1, G param2, H param3, J param4, K param5)
+        {
+            ResetParameters();
+            AddOrReplaceParameter(param1);
+            AddOrReplaceParameter(param2);
+            AddOrReplaceParameter(param3);
+            AddOrReplaceParameter(param4);
+            AddOrReplaceParameter(param5);
+            base.Invoke();
+        }
+    }
+    public class GameEvent<T, G, H, J, K, L> : GameEventBase
+    {
+        public GameEvent(GameEventIdentifier<T, G, H, J, K, L> gameEventID) : base(gameEventID) { }
+        public GameEvent(GameEventIdentifierScriptableObject gameEventID) : base(gameEventID) { }
+
+        /// <summary>
+        /// Invokes the event with one parameter.
+        /// </summary>
+        public void Invoke(T param1, G param2, H param3, J param4, K param5, L param6)
+        {
+            ResetParameters();
+            AddOrReplaceParameter(param1);
+            AddOrReplaceParameter(param2);
+            AddOrReplaceParameter(param3);
+            AddOrReplaceParameter(param4);
+            AddOrReplaceParameter(param5);
+            AddOrReplaceParameter(param6);
+            base.Invoke();
+        }
+    }
+    public class GameEvent<T, G, H, J, K, L, I> : GameEventBase
+    {
+        public GameEvent(GameEventIdentifier<T, G, H, J, K, L, I> gameEventID) : base(gameEventID) { }
+        public GameEvent(GameEventIdentifierScriptableObject gameEventID) : base(gameEventID) { }
+
+        /// <summary>
+        /// Invokes the event with one parameter.
+        /// </summary>
+        public void Invoke(T param1, G param2, H param3, J param4, K param5, L param6, I param7)
+        {
+            ResetParameters();
+            AddOrReplaceParameter(param1);
+            AddOrReplaceParameter(param2);
+            AddOrReplaceParameter(param3);
+            AddOrReplaceParameter(param4);
+            AddOrReplaceParameter(param5);
+            AddOrReplaceParameter(param6);
+            AddOrReplaceParameter(param7);
+            base.Invoke();
         }
     }
 }

@@ -10,8 +10,9 @@ namespace GameEventSystem.CustomEditor
     {
         private const string ROOT_SAVE_PATH = "Assets";
         private const string FOLDER_NAME = "EventWindow_DO_NOT_EDIT";
+        private const string GENERATED_FOLDER_PATH = ROOT_SAVE_PATH + "/~_Generated/GameEventSystem";
         // Folder to save the EventIDList.cs file in
-        public const string LIST_SAVE_PATH = ROOT_SAVE_PATH + "/Plugins/GameEventSystem/" + FOLDER_NAME;
+        public const string LIST_SAVE_PATH = GENERATED_FOLDER_PATH + "/" + FOLDER_NAME;
         // Folder to save the scriptable objects in
         public const string EVENT_SAVE_PATH = LIST_SAVE_PATH + "/Events";
 
@@ -25,17 +26,91 @@ namespace GameEventSystem.CustomEditor
 
 
         // Events that are currently in the EventIDList
-        public static string[] CurrentEvents => currentEventsInTheList;
-        private static string[] currentEventsInTheList = new string[0];
+        public static List<EventWithTypes> CurrentEvents => currentEventsInTheList;
+        private static List<EventWithTypes> currentEventsInTheList = new List<EventWithTypes>();
         // If the EventIDList is currently being constructed
         private static bool isBeingCreated = false;
 
 
         /// <summary>
+        /// Get a list of all the EventsWithTypes from the file system.
+        /// </summary>
+        public static List<EventWithTypes> GetListOfEventsWithTypes()
+        {
+            string[] soNames = GetListOfEventFileNames();
+            List<EventWithTypes> events = new List<EventWithTypes>(soNames.Length);
+            foreach (string name in soNames)
+            {
+                events.Add(GetEventWithTypesFromFileName(name));
+            }
+            return events;
+        }
+        /// <summary>
+        /// Converts the given file name (for an event) into an event with types.
+        /// </summary>
+        /// <param name="file">Name of the scriptable object event id.</param>
+        public static EventWithTypes GetEventWithTypesFromFileName(string file)
+        {
+            // Find the amount of breaks ($) there are
+            int nameEndIndex = file.IndexOf('$');
+            nameEndIndex = nameEndIndex != -1 ? nameEndIndex : file.Length;
+            string name = file.Substring(0, nameEndIndex);
+
+            // Find more breaks for each additional parameter
+            List<string> paramStrings = new List<string>();
+            if (nameEndIndex + 1 < file.Length)
+            {
+                file = file.Substring(nameEndIndex + 1);
+
+                int curIndex = file.IndexOf('$');
+                int infinityChecker = 20;
+                int infinityCounter = 0;
+                while (curIndex != -1 && infinityCounter < infinityChecker)
+                {
+                    // Pull off a paramter from the file name
+                    string paramStr = file.Substring(0, curIndex);
+                    paramStrings.Add(paramStr);
+
+                    // Strink the file name to no longer include that pulled off parameter
+                    file = file.Substring(curIndex + 1);
+
+                    curIndex = file.IndexOf('$');
+
+                    ++infinityCounter;
+                }
+                if (infinityCounter >= infinityChecker)
+                {
+                    UnityEngine.Debug.Log("Infinite loop detected");
+                }
+
+                // The file can be 0 here if there are no parameters
+                if (file.Length > 0)
+                {
+                    // Add the last parameter
+                    paramStrings.Add(file);
+                }
+            }
+
+            return new EventWithTypes(name, paramStrings.ToArray());
+        }
+        /// <summary>
+        /// Appends the data of EventWithTypes into a string to serve as the name of the scriptable objects.
+        /// </summary>
+        /// <param name="eventWithTypes">EventWithTypes to pull the name and paramters from.</param>
+        public static string GetFileNameFromEventWithTypes(EventWithTypes eventWithTypes)
+        {
+            string str = eventWithTypes.Name;
+            foreach (string paramName in eventWithTypes.ParamTypeNames)
+            {
+                str += '$' + paramName;
+            }
+            return str;
+        }
+        /// <summary>
         /// Gets a list of event names from the assets in the folder.
         /// </summary>
         /// <returns>List of event names from the file system.</returns>
-        public static string[] GetListOfEventNames()
+        public static string[] GetListOfEventFileNames()
         {
             if (Directory.Exists(EVENT_SAVE_PATH))
             {
@@ -62,12 +137,6 @@ namespace GameEventSystem.CustomEditor
         public static string GetFullFilePath()
         {
             return LIST_SAVE_PATH + "/" + EVENTID_LIST_CLASS_NAME + EVENTID_LIST_FILE_EXTENSION;
-        }
-        public static void DeleteOldIDListFiles()
-        {
-            // Search for the event id list in the file system and delete any files that are not
-            // where they should be.
-
         }
 
         /// <summary>
@@ -100,6 +169,9 @@ namespace GameEventSystem.CustomEditor
             }
             isBeingCreated = true;
 
+            // Delete any old versions of this file
+            DeleteOldIDListFiles();
+
             // Beginning and end of the file
             const string FILE_BEGIN_TEXT = "// DO NOT EDIT DIRECTLY. GENERATED BY InitializeEventList.cs" + "\r\n" +
                 "namespace GameEventSystem" + "\r\n" +
@@ -110,7 +182,7 @@ namespace GameEventSystem.CustomEditor
                 "}";
 
             // Generate lines to write for each event
-            currentEventsInTheList = GetListOfEventNames();
+            currentEventsInTheList = GetListOfEventsWithTypes();
             string[] eventConstLines = GenerateEventConstantLines(currentEventsInTheList);
             string[] writeLines = new string[eventConstLines.Length + 2];
             // First line is the begin text
@@ -144,14 +216,29 @@ namespace GameEventSystem.CustomEditor
         /// generated script to be public const ints.
         /// </summary>
         /// <returns>Array of strings that can be used as lines in the generated script.</returns>
-        private static string[] GenerateEventConstantLines(string[] eventNames)
+        private static string[] GenerateEventConstantLines(IReadOnlyList<EventWithTypes> eventsWithTypes)
         {
-            string[] eventLines = new string[eventNames.Length];
+            string[] eventLines = new string[eventsWithTypes.Count];
             for (int i = 0; i < eventLines.Length; ++i)
             {
-                string eventName = eventNames[i];
-                string eventID = eventName;
-                eventLines[i] = "public const string " + eventName + " = \"" + eventID + "\";";
+                EventWithTypes curEvent = eventsWithTypes[i];
+                string eventID = curEvent.Name;
+                List<string> eventParams = curEvent.ParamTypeNames;
+
+                string eventParamStr = "";
+                if (eventParams.Count > 0)
+                {
+                    eventParamStr += "<";
+                    foreach (string eventP in eventParams)
+                    {
+                        eventParamStr += eventP + ", ";
+                    }
+                    eventParamStr = eventParamStr.Substring(0, eventParamStr.Length - 2);
+                    eventParamStr += ">";
+                }
+
+                eventLines[i] = "public static readonly GameEventIdentifier" + eventParamStr + " " +
+                    eventID + " = new GameEventIdentifier" + eventParamStr + "(\"" + eventID + "\");";
             }
             return eventLines;
         }
@@ -192,6 +279,23 @@ namespace GameEventSystem.CustomEditor
                 shorterNames[i] = curName.Substring(0, extStartIndex);
             }
             return shorterNames;
+        }
+        /// <summary>
+        /// Deletes any old files for EventIDList.
+        /// </summary>
+        private static void DeleteOldIDListFiles()
+        {
+            // Search for the event id list in the file system and delete any files that are not
+            // where they should be.
+            string[] oldFiles = Directory.GetFiles(ROOT_SAVE_PATH, EVENTID_LIST_CLASS_NAME + EVENTID_LIST_FILE_EXTENSION);
+            foreach (string file in oldFiles)
+            {
+                // Make sure it isn't the file in the correct place.
+                if (file != GetFullFilePath())
+                {
+                    File.Delete(file);
+                }
+            }
         }
     }
 }

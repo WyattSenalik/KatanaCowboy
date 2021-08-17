@@ -110,12 +110,12 @@ public class PlayerController : MonoBehaviour
         if (!isSubscribed)
         {
             // Input events
-            EventSystem.SubscribeToEvent(EventIDList.Movement, OnMovement);
-            EventSystem.SubscribeToEvent(EventIDList.Sprint, OnSprint);
-            EventSystem.SubscribeToEvent(EventIDList.Jump, OnJump);
-            EventSystem.SubscribeToEvent(EventIDList.Attack, OnAttack);
-            EventSystem.SubscribeToEvent(EventIDList.Aim, OnAim);
-            EventSystem.SubscribeToEvent(EventIDList.AimLook, OnAimLook);
+            //EventSystem.SubscribeToEvent(EventIDList.Movement, OnMovement);
+            //EventSystem.SubscribeToEvent(EventIDList.Sprint, OnSprint);
+            //EventSystem.SubscribeToEvent(EventIDList.Jump, OnJump);
+            //EventSystem.SubscribeToEvent(EventIDList.Attack, OnAttack);
+            //EventSystem.SubscribeToEvent(EventIDList.Aim, OnAim);
+            //EventSystem.SubscribeToEvent(EventIDList.AimLook, OnAimLook);
 
             isSubscribed = true;
         }
@@ -128,12 +128,12 @@ public class PlayerController : MonoBehaviour
         if (isSubscribed)
         {
             // Input events
-            EventSystem.UnsubscribeFromEvent(EventIDList.Movement, OnMovement);
-            EventSystem.UnsubscribeFromEvent(EventIDList.Sprint, OnSprint);
-            EventSystem.UnsubscribeFromEvent(EventIDList.Jump, OnJump);
-            EventSystem.UnsubscribeFromEvent(EventIDList.Attack, OnAttack);
-            EventSystem.UnsubscribeFromEvent(EventIDList.Aim, OnAim);
-            EventSystem.UnsubscribeFromEvent(EventIDList.AimLook, OnAimLook);
+            //EventSystem.UnsubscribeFromEvent(EventIDList.Movement, OnMovement);
+            //EventSystem.UnsubscribeFromEvent(EventIDList.Sprint, OnSprint);
+            //EventSystem.UnsubscribeFromEvent(EventIDList.Jump, OnJump);
+            //EventSystem.UnsubscribeFromEvent(EventIDList.Attack, OnAttack);
+            //EventSystem.UnsubscribeFromEvent(EventIDList.Aim, OnAim);
+            //EventSystem.UnsubscribeFromEvent(EventIDList.AimLook, OnAimLook);
 
             isSubscribed = false;
         }
@@ -146,12 +146,9 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Gives the player a direction to move in and sets if the player is moving or not.
     /// Called by the unity input events.
-    /// 
-    /// Parameters: InputAction.CallbackContext
     /// </summary>
-    private void OnMovement(GameEventData eventData)
+    private void OnMovement(InputAction.CallbackContext context)
     {
-        InputAction.CallbackContext context = eventData.ReadValue<InputAction.CallbackContext>();
         // If we pressed down and are not currently attacking
         if (context.performed)
         {
@@ -170,24 +167,18 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Sets is sprinting to true or false.
     /// Called by the unity input events.
-    /// 
-    /// Parameters: InputAction.CallbackContext
     /// </summary>
-    private void OnSprint(GameEventData eventData)
+    private void OnSprint(InputAction.CallbackContext context)
     {
-        InputAction.CallbackContext context = eventData.ReadValue<InputAction.CallbackContext>();
         // Set if the player is sprinting
         charMoveRef.ToggleSprinting(context.performed);
     }
     /// <summary>
     /// Starts jumping if the player is on the ground.
     /// Called by the unity input events.
-    /// 
-    /// Parameters: InputAction.CallbackContext
     /// </summary>
-    private void OnJump(GameEventData eventData)
+    private void OnJump(InputAction.CallbackContext context)
     {
-        InputAction.CallbackContext context = eventData.ReadValue<InputAction.CallbackContext>();
         if (context.performed)
         {
             // Have the player try to jump
@@ -197,12 +188,9 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Starts the attacking animation and sets is attacking to true.
     /// Called by the unity input events.
-    /// 
-    /// Parameters: InputAction.CallbackContext
     /// </summary>
-    private void OnAttack(GameEventData eventData)
+    private void OnAttack(InputAction.CallbackContext context)
     {
-        InputAction.CallbackContext context = eventData.ReadValue<InputAction.CallbackContext>();
         if (context.performed)
         {
             switch (CurrentControlType)
@@ -228,12 +216,9 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Swaps the player to and from aiming.
     /// Called by the unity input events.
-    /// 
-    /// Parameters: InputAction.CallbackContext
     /// </summary>
-    private void OnAim(GameEventData eventData)
+    private void OnAim(InputAction.CallbackContext context)
     {
-        InputAction.CallbackContext context = eventData.ReadValue<InputAction.CallbackContext>();
         // Aim pressed
         if (context.performed)
         {
@@ -248,12 +233,9 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Updates the player's rotation based on camera view input.
     /// Called by the unity input events.
-    /// 
-    /// Parameters: InputAction.CallbackContext
     /// </summary>
-    private void OnAimLook(GameEventData eventData)
+    private void OnAimLook(InputAction.CallbackContext context)
     {
-        InputAction.CallbackContext context = eventData.ReadValue<InputAction.CallbackContext>();
         if (context.performed)
         {
             

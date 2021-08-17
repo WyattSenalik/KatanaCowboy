@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,11 +22,11 @@ namespace GameEventSystem.CustomEditor
         private const float EVENT_LABEL_MIN_WIDTH = 200f;
 
         // References to all the window's current events
-        private List<string> eventList = new List<string>();
+        private List<EventWithTypes> eventList = new List<EventWithTypes>();
         // List of renames that occured so that we can search the file system to replace later
         private List<EventToRename> renames = new List<EventToRename>();
         // Variables that hold temporary information about renaming
-        private int editableEventName = -1;
+        private int editableEventNameIndex = -1;
         private string originalEventName = "";
         private string renamedEventName = "";
 
@@ -40,6 +41,11 @@ namespace GameEventSystem.CustomEditor
         private bool justHitSave = false;
         // If we just found out events were added from source control
         private bool justAddedExternalEvents = false;
+
+        private Vector2 scrollPos = Vector2.zero;
+
+        private Tuple<int, int> paramRenameIndices = new Tuple<int, int>(-1, -1);
+        private string renamedParamName = "";
 
 
         /// <summary>
@@ -82,8 +88,10 @@ namespace GameEventSystem.CustomEditor
             DisplayAddEventButton();
             GUILayout.Space(10f);
 
+            scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
             // Event list
             DisplayEventList();
+            EditorGUILayout.EndScrollView();
         }
 
 
@@ -196,11 +204,11 @@ namespace GameEventSystem.CustomEditor
                 GUILayout.BeginHorizontal();
                 {
                     // If the current event is not the one being renamed
-                    if (editableEventName != i)
+                    if (editableEventNameIndex != i)
                     {
                         // Display the text field as uninteractable
                         GUI.enabled = false;
-                        GUILayout.TextField(eventList[i], eventTextFieldStyle, GUILayout.MinWidth(EVENT_LABEL_MIN_WIDTH), GUILayout.ExpandWidth(false));
+                        GUILayout.TextField(eventList[i].Name, eventTextFieldStyle, GUILayout.MinWidth(EVENT_LABEL_MIN_WIDTH), GUILayout.ExpandWidth(false));
                         GUI.enabled = true;
                         // If the rename button is pressed, allow the current event to be renamed
                         if (GUILayout.Button("Rename", GUILayout.MaxWidth(BUTT_MAX_WIDTH)))
@@ -211,6 +219,13 @@ namespace GameEventSystem.CustomEditor
                         if (GUILayout.Button("Delete", GUILayout.MaxWidth(BUTT_MAX_WIDTH)))
                         {
                             DeleteEvent(i);
+                            --i;
+                        }
+                        // Add param button is pressed, add a parameter
+                        if (GUILayout.Button("Add Event", GUILayout.MaxWidth(BUTT_MAX_WIDTH)))
+                        {
+                            eventList[i].ParamTypeNames.Add("bool");
+                            CheckAutoSave();
                         }
                     }
                     // If the current event is currently being renamed
@@ -233,10 +248,57 @@ namespace GameEventSystem.CustomEditor
                         {
                             CancelEventNameRename();
                         }
-
                     }
                 }
                 GUILayout.EndHorizontal();
+                // Param display
+                for (int k = 0; k < eventList[i].ParamTypeNames.Count; ++k)
+                {
+                    string typeString = eventList[i].ParamTypeNames[k];
+                    GUILayout.BeginHorizontal();
+                    {
+                        bool isParamRename = paramRenameIndices.Item1 == i && paramRenameIndices.Item2 == k;
+                        if (!isParamRename)
+                        {
+                            // Display the text field as uninteractable
+                            GUI.enabled = false;
+                            GUILayout.TextField(typeString, eventTextFieldStyle, GUILayout.MinWidth(EVENT_LABEL_MIN_WIDTH), GUILayout.ExpandWidth(false));
+                            GUI.enabled = true;
+                            // If the rename button is pressed, allow the current event to be renamed
+                            if (GUILayout.Button("Rename", GUILayout.MaxWidth(BUTT_MAX_WIDTH)))
+                            {
+                                renamedParamName = typeString;
+                                paramRenameIndices = new Tuple<int, int>(i, k);
+                            }
+                            // If the delete button is pressed, delete the current event
+                            if (GUILayout.Button("Delete", GUILayout.MaxWidth(BUTT_MAX_WIDTH)))
+                            {
+                                eventList[i].ParamTypeNames.RemoveAt(k);
+                                --k;
+                                CheckAutoSave();
+                            }
+                        }
+                        // If it is the one we are trying to rename
+                        else
+                        {
+                            renamedParamName = GUILayout.TextField(renamedParamName, eventTextFieldStyle, GUILayout.MinWidth(EVENT_LABEL_MIN_WIDTH), GUILayout.ExpandWidth(false));
+                            // If the rename button is pressed, allow the current event to be renamed
+                            if (GUILayout.Button("Confirm", GUILayout.MaxWidth(BUTT_MAX_WIDTH)))
+                            {
+                                eventList[i].ParamTypeNames[k] = renamedParamName;
+                                paramRenameIndices = new Tuple<int, int>(-1, -1);
+                                CheckAutoSave();
+                            }
+                            // If the cancel button is pressed, stop renaming
+                            if (GUILayout.Button("Cancel", GUILayout.MaxWidth(BUTT_MAX_WIDTH)))
+                            {
+                                eventList[i].ParamTypeNames[k] = typeString;
+                                paramRenameIndices = new Tuple<int, int>(-1, -1);
+                            }
+                        }
+                    }
+                    GUILayout.EndHorizontal();
+                }
             }
             GUILayout.EndVertical();
         }
@@ -276,7 +338,7 @@ namespace GameEventSystem.CustomEditor
             // Check if any events share the same name
             for (int k = 0; k < eventList.Count; ++k)
             {
-                if (eventName == eventList[k])
+                if (eventName == eventList[k].Name)
                 {
                     return false;
                 }
@@ -290,7 +352,7 @@ namespace GameEventSystem.CustomEditor
         /// </summary>
         private void UpdateEventListFromFileSystem()
         {
-            eventList = new List<string>(EventListFileManager.GetListOfEventNames());
+            eventList = EventListFileManager.GetListOfEventsWithTypes();
         }
         /// <summary>
         /// Checks if the current event list is in sync with the events in the file system.
@@ -298,20 +360,49 @@ namespace GameEventSystem.CustomEditor
         /// <returns>True if they are in sync. False if they don't match in some way.</returns>
         private bool DoesEventListMatchFileSystem()
         {
-            string[] fileEventNames = EventListFileManager.GetListOfEventNames();
+            List<EventWithTypes> fileEventNames = EventListFileManager.GetListOfEventsWithTypes();
 
             // If they don't have the same amount of events, they are out of sync
-            if (eventList.Count != fileEventNames.Length)
+            if (eventList.Count != fileEventNames.Count)
             {
                 return false;
             }
 
             // Check against each name. If the file system contains a name the event list doesn't have,
             // then they are out of sync.
-            for (int i = 0; i < fileEventNames.Length; ++i)
+            foreach (EventWithTypes curFileEventName in fileEventNames)
             {
-                string curFileEventName = fileEventNames[i];
-                if (!eventList.Contains(curFileEventName))
+                bool doesContainName = false;
+                foreach (EventWithTypes curWindowEventName in eventList)
+                {
+                    if (curFileEventName.Name == curWindowEventName.Name)
+                    {
+                        doesContainName = true;
+                    }
+                    List<string> curFileTypeNames = curFileEventName.ParamTypeNames;
+                    List<string> curWindowTypeNames = curWindowEventName.ParamTypeNames;
+                    if (curFileTypeNames.Count != curWindowTypeNames.Count)
+                    {
+                        return false;
+                    }
+                    bool doesContainType = false;
+                    foreach (string fileName in curFileTypeNames)
+                    {
+                        foreach (string windowName in curWindowTypeNames)
+                        {
+                            if (fileName == windowName)
+                            {
+                                doesContainType = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!doesContainType)
+                    {
+                        return false;
+                    }
+                }
+                if (!doesContainName)
                 {
                     return false;
                 }
@@ -327,9 +418,9 @@ namespace GameEventSystem.CustomEditor
         /// <param name="index">Index of the event to allow rename for.</param>
         private void AllowEventNameRename(int index)
         {
-            editableEventName = index;
+            editableEventNameIndex = index;
             // Get a reference to the original name for later use
-            originalEventName = eventList[index];
+            originalEventName = eventList[index].Name;
             // Start the rename of the event off by just being the original
             renamedEventName = originalEventName;
         }
@@ -338,17 +429,17 @@ namespace GameEventSystem.CustomEditor
         /// </summary>
         private void CancelEventNameRename()
         {
-            editableEventName = -1;
+            editableEventNameIndex = -1;
         }
 
         /// <summary>
         /// Adds the event to the event list and auto-saves if enabled.
         /// </summary>
-        /// <param name="eventName">Event name to add.</param>
+        /// <param name="eventName">Name of new event to create.</param>
         private void AddEvent(string eventName)
         {
             // Add the event into the array
-            eventList.Add(eventName);
+            eventList.Add(new EventWithTypes(eventName));
             // Check for auto save
             CheckAutoSave();
         }
@@ -359,13 +450,13 @@ namespace GameEventSystem.CustomEditor
         private void DeleteEvent(int index)
         {
             // Remove the event from the array
-            string eventToDelete = eventList[index];
+            EventWithTypes eventToDelete = eventList[index];
             eventList.Remove(eventToDelete);
             // Check if the deleted event was a rename, get rid of that rename
             int renamedIndex = -1;
             for (int i = 0; i < renames.Count; ++i)
             {
-                if (eventToDelete == renames[i].RenamedEventName)
+                if (eventToDelete.Name == renames[i].RenamedEventName)
                 {
                     renamedIndex = i;
                 }
@@ -383,7 +474,7 @@ namespace GameEventSystem.CustomEditor
         private void RenameEvent(int index)
         {
             // Change the name of the event
-            eventList[index] = renamedEventName;
+            eventList[index].Name = renamedEventName;
 
             // Check if this rename is a rename of a previous rename
             string actualOriginalName = originalEventName;
@@ -485,6 +576,7 @@ namespace GameEventSystem.CustomEditor
         /// <returns>True if we are autosaving, false otherwise.</returns>
         private bool CheckAutoSave()
         {
+            Debug.Log("CheckAutoSave");
             if (isAutoSave)
             {
                 ApplySavedChanges();
@@ -498,6 +590,7 @@ namespace GameEventSystem.CustomEditor
         /// </summary>
         private void ApplySavedChanges()
         {
+            Debug.Log("Applying saved changes");
             // Confirm the directory exists
             if (!Directory.Exists(EventListFileManager.EVENT_SAVE_PATH))
             {
@@ -505,25 +598,32 @@ namespace GameEventSystem.CustomEditor
             }
 
             // Get rid of all the old files if they aren't in the new files
-            string[] eventsInDirectory = EventListFileManager.GetListOfEventNames();
-            foreach (string eventName in eventsInDirectory)
+            List<EventWithTypes> eventsInDirectory = EventListFileManager.GetListOfEventsWithTypes();
+            foreach (EventWithTypes eventDir in eventsInDirectory)
             {
                 // Delete the asset unless it is in the event list
-                if (!eventList.Contains(eventName))
+                if (!eventList.Contains(eventDir))
                 {
-                    //Debug.Log("Deleting " + eventName);
-                    File.Delete(EventListFileManager.GetEventAssetPath(eventName));
-                    File.Delete(EventListFileManager.GetEventAssetPath(eventName) + EventListFileManager.META_FILE_EXTENSION);
+                    Debug.Log("Deleting " + eventDir);
+                    string fileName = EventListFileManager.GetFileNameFromEventWithTypes(eventDir);
+                    File.Delete(EventListFileManager.GetEventAssetPath(fileName));
+                    File.Delete(EventListFileManager.GetEventAssetPath(fileName) + EventListFileManager.META_FILE_EXTENSION);
+                }
+                else
+                {
+                    Debug.Log("Chose not to delete " + eventDir);
                 }
             }
             // Create the new files if they don't already exist
-            foreach (string eventName in eventList)
+            foreach (EventWithTypes eventInList in eventList)
             {
                 // Create the asset if it doesn't already exist
-                if (!eventsInDirectory.Contains(eventName))
+                if (!eventsInDirectory.Contains(eventInList))
                 {
-                    //Debug.Log("Creating " + eventName);
-                    AssetDatabase.CreateAsset(CreateInstance<GameEventIdentifier>(), EventListFileManager.GetEventAssetPath(eventName));
+                    Debug.Log("Creating " + eventInList);
+                    string soName = EventListFileManager.GetFileNameFromEventWithTypes(eventInList);
+                    AssetDatabase.CreateAsset(CreateInstance<GameEventIdentifierScriptableObject>(),
+                        EventListFileManager.GetEventAssetPath(soName));
                 }
             }
             // Iterate over the renames
@@ -647,4 +747,6 @@ namespace GameEventSystem.CustomEditor
             renamedEventName = eventRenamedName;
         }
     }
+
+    
 }
