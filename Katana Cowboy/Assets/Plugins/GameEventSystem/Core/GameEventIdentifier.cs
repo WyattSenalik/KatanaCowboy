@@ -1,43 +1,47 @@
-﻿using System;
-using UnityEngine;
+﻿using GameEventSystem.Internal;
 
 namespace GameEventSystem
 {
-    /// <summary>
-    /// ID for a GameEvent thats data is the name of the created scriptable object.
-    /// </summary>
-    [CreateAssetMenu(fileName = "New GameEventID", menuName = "ScriptableObjects/EventSystem/GameEventIdentifier")]
-    public class GameEventIdentifier : ScriptableObject
+    public class GameEventIdentifierBase : IGameEventIdentifier
     {
-        /// <summary>
-        /// Gets the ID (asset name) for the GameEventID.
-        /// </summary>
-        /// <returns>string ID for the GameEvent.</returns>
-        public string GetID()
-        {
-            return this.name;
-        }
+        public string GetID() => id;
+        private string id = "";
 
-        /// <summary>
-        /// Subscribes the action to the event identified by this ID.
-        /// </summary>
-        /// <param name="action">Action to call when the event is invoked.</param>
-        public void Subscribe(Action<GameEventData> action)
+        public GameEventIdentifierBase(string identifier)
         {
-            EventSystem.SubscribeToEvent(this, action);
+            id = identifier;
         }
-        /// <summary>
-        /// Unsubscribes the action from the event identified by this ID.
-        /// </summary>
-        /// <param name="action">Action to no longer associate with the event.</param>
-        public void Unsubscribe(Action<GameEventData> action)
-        {
-            EventSystem.UnsubscribeFromEvent(this, action);
-        }
-
-        public override string ToString()
-        {
-            return GetID();
-        }
+    }
+    public class GameEventIdentifier : GameEventIdentifierBase
+    {
+        public GameEventIdentifier(string identifier) : base(identifier) { }
+    }
+    public class GameEventIdentifier<T> : GameEventIdentifierBase
+    {
+        public GameEventIdentifier(string identifier) : base(identifier) { }
+    }
+    public class GameEventIdentifier<T, G> : GameEventIdentifierBase
+    {
+        public GameEventIdentifier(string identifier) : base(identifier) { }
+    }
+    public class GameEventIdentifier<T, G, H> : GameEventIdentifierBase
+    {
+        public GameEventIdentifier(string identifier) : base(identifier) { }
+    }
+    public class GameEventIdentifier<T, G, H, J> : GameEventIdentifierBase
+    {
+        public GameEventIdentifier(string identifier) : base(identifier) { }
+    }
+    public class GameEventIdentifier<T, G, H, J, K> : GameEventIdentifierBase
+    {
+        public GameEventIdentifier(string identifier) : base(identifier) { }
+    }
+    public class GameEventIdentifier<T, G, H, J, K, L> : GameEventIdentifierBase
+    {
+        public GameEventIdentifier(string identifier) : base(identifier) { }
+    }
+    public class GameEventIdentifier<T, G, H, J, K, L, I> : GameEventIdentifierBase
+    {
+        public GameEventIdentifier(string identifier) : base(identifier) { }
     }
 }

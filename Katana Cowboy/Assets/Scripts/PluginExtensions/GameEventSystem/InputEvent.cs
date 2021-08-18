@@ -10,9 +10,9 @@ namespace GameEventSystem.Extension
     public class InputEvent : MonoBehaviour
     {
         // ID of the input event
-        [SerializeField] private GameEventIdentifier inputEventID = null;
+        [SerializeField] private GameEventIdentifierScriptableObject inputEventID = null;
         // Wrapper to create the event
-        private GameEvent inputWrapper = null;
+        private GameEvent<InputAction.CallbackContext> inputWrapper = null;
 
 
         // Called 0th
@@ -20,7 +20,7 @@ namespace GameEventSystem.Extension
         private void Awake()
         {
             // Create the event
-            inputWrapper = new GameEvent(inputEventID);
+            inputWrapper = new GameEvent<InputAction.CallbackContext>(inputEventID);
         }
 
 
@@ -28,7 +28,6 @@ namespace GameEventSystem.Extension
         /// Invokes the GameEvent.
         /// Called by PlayerInput's unity events.
         /// </summary>
-        /// <param name="context"></param>
         public void Invoke(InputAction.CallbackContext context)
         {
             inputWrapper.Invoke(context);

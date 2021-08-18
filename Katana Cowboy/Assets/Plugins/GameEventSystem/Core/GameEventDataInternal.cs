@@ -6,7 +6,7 @@ namespace GameEventSystem.Internal
 {
     /// <summary>
     /// Internal version of the GameEventData class.
-    /// Used by the GameEventWrapper to help create GameEvents easier.
+    /// Used by the GameEvent to help create GameEvents easier.
     /// </summary>
     public class GameEventDataInternal : GameEventData
     {
