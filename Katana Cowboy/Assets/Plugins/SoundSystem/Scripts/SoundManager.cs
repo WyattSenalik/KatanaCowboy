@@ -13,26 +13,28 @@ namespace SoundSystem
         private static ISound2DPool flatSoundPool = new Sound2DPool("2DSound Pool", false);
 
 
-        public static bool Play(ISound sound)
+        // Flat
+        public static bool PlayFlat(ISound sound)
         {
             throw new NotImplementedException();
         }
-        public static bool Pause(ISound sound)
+        public static bool PauseFlat(ISound sound)
         {
             throw new NotImplementedException();
         }
-        public static bool Load(ISound sound)
+        public static bool LoadFlat(ISound sound)
         {
             throw new NotImplementedException();
         }
-        public static bool Release(ISound sound)
+        public static bool ReleaseFlat(ISound sound)
         {
             throw new NotImplementedException();
         }
-        public static bool Unload(ISound sound)
+        public static bool UnloadFlat(ISound sound)
         {
             throw new NotImplementedException();
         }
+        // Music
         public static bool PlayMusic(ISound music)
         {
             return musicPool.Play(music);
@@ -52,6 +54,27 @@ namespace SoundSystem
         public static bool UnloadMusic(ISound music)
         {
             return musicPool.Remove(music);
+        }
+        // Three Dimensional
+        public static bool Play3D(ISound sound, Vector3 playLocation)
+        {
+            throw new NotImplementedException();
+        }
+        public static bool Pause3D(Sound3DInstance soundInstance)
+        {
+            throw new NotImplementedException();
+        }
+        public static bool Load3D(ISound sound)
+        {
+            throw new NotImplementedException();
+        }
+        public static bool Release3D(Sound3DInstance soundInstance)
+        {
+            throw new NotImplementedException();
+        }
+        public static bool Unload3D(Sound3DInstance soundInstance)
+        {
+            throw new NotImplementedException();
         }
     }
 }

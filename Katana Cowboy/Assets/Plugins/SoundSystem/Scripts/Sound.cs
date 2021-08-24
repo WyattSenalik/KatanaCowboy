@@ -42,26 +42,46 @@ namespace SoundSystem
         [SerializeField] private bool isScenePersistent = false;
 
 
-        // Sound
-        public bool Play()
+        // Flat sounds
+        /// <summary>
+        /// Plays the sound as a 2D sound.
+        /// </summary>
+        /// <returns>If the sound was played.</returns>
+        public bool PlayAsFlat()
         {
-            return SoundManager.Play(this);
+            return SoundManager.PlayFlat(this);
         }
-        public bool Pause()
+        /// <summary>
+        /// Pauses the sound (2D sound).
+        /// </summary>
+        /// <returns>If the sound was paused</returns>
+        public bool PauseAsFlat()
         {
-            return SoundManager.Pause(this);
+            return SoundManager.PauseFlat(this);
         }
-        public bool Load()
+        /// <summary>
+        /// Loads the sound as a 2D sound.
+        /// </summary>
+        /// <returns>If the sound was loaded.</returns>
+        public bool LoadAsFlat()
         {
-            return SoundManager.Load(this);
+            return SoundManager.LoadFlat(this);
         }
-        public bool Release()
+        /// <summary>
+        /// Releases the sound (2D sound).
+        /// </summary>
+        /// <returns>If the sound was released.</returns>
+        public bool ReleaseAsFlat()
         {
-            return SoundManager.Release(this);
+            return SoundManager.ReleaseFlat(this);
         }
-        public bool Unload()
+        /// <summary>
+        /// Unloads the sound (2D sound).
+        /// </summary>
+        /// <returns>If the sound was unloaded.</returns>
+        public bool UnloadAsFlat()
         {
-            return SoundManager.Unload(this);
+            return SoundManager.UnloadFlat(this);
         }
         // Music
         public bool PlayMusic()
@@ -81,6 +101,27 @@ namespace SoundSystem
             return SoundManager.ReleaseMusic(this);
         }
         public bool UnloadMusic()
+        {
+            return SoundManager.UnloadMusic(this);
+        }
+        // Three Dimensional
+        public bool Play3D()
+        {
+            return SoundManager.PlayFlat(this);
+        }
+        public bool Pause3D()
+        {
+            return SoundManager.PauseMusic(this);
+        }
+        public bool Load3D()
+        {
+            return SoundManager.LoadMusic(this);
+        }
+        public bool Release3D()
+        {
+            return SoundManager.ReleaseMusic(this);
+        }
+        public bool Unload3D()
         {
             return SoundManager.UnloadMusic(this);
         }
