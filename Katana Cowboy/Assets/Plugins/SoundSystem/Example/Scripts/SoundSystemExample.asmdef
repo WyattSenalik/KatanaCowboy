@@ -1,0 +1,15 @@
+{
+    "name": "SoundSystemExample",
+    "references": [
+        "GUID:1bd87766492ca434ea156d3479811fe0"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
