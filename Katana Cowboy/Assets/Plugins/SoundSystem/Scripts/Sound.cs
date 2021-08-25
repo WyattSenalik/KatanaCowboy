@@ -42,88 +42,112 @@ namespace SoundSystem
         [SerializeField] private bool isScenePersistent = false;
 
 
-        // Flat sounds
+        #region Flat
         /// <summary>
         /// Plays the sound as a 2D sound.
         /// </summary>
+        /// <param name="option">Option for playing.</param>
         /// <returns>If the sound was played.</returns>
-        public bool PlayAsFlat()
+        public bool PlayAsFlat(Play2DOptions option = Play2DOptions.FirstNoInterupt)
         {
-            return SoundManager.PlayFlat(this);
+            return SoundManager.PlayFlat(this, option);
         }
         /// <summary>
         /// Pauses the sound (2D sound).
         /// </summary>
+        /// <param name="option">Option for pausing.</param>
         /// <returns>If the sound was paused</returns>
-        public bool PauseAsFlat()
+        public bool PauseAsFlat(Pause2DOptions option = Pause2DOptions.FirstPlaying)
         {
-            return SoundManager.PauseFlat(this);
+            return SoundManager.PauseFlat(this, option);
         }
         /// <summary>
         /// Loads the sound as a 2D sound.
         /// </summary>
+        /// <param name="option">Option for loading.</param>
         /// <returns>If the sound was loaded.</returns>
-        public bool LoadAsFlat()
+        public bool LoadAsFlat(Add2DOptions option = Add2DOptions.SingleInstance)
         {
-            return SoundManager.LoadFlat(this);
+            return SoundManager.LoadFlat(this, option);
         }
         /// <summary>
         /// Releases the sound (2D sound).
         /// </summary>
+        /// <param name="option">Option for releasing.</param>
         /// <returns>If the sound was released.</returns>
-        public bool ReleaseAsFlat()
+        public bool ReleaseAsFlat(GetRid2DOptions option = GetRid2DOptions.First)
         {
-            return SoundManager.ReleaseFlat(this);
+            return SoundManager.ReleaseFlat(this, option);
         }
         /// <summary>
         /// Unloads the sound (2D sound).
         /// </summary>
+        /// <param name="option">Option for unloading.</param>
         /// <returns>If the sound was unloaded.</returns>
-        public bool UnloadAsFlat()
+        public bool UnloadAsFlat(GetRid2DOptions option = GetRid2DOptions.First)
         {
-            return SoundManager.UnloadFlat(this);
+            return SoundManager.UnloadFlat(this, option);
         }
-        // Music
-        public bool PlayMusic()
+        #endregion Flat
+
+
+        #region Music
+        /// <summary>
+        /// Plays the sound as music.
+        /// </summary>
+        /// <returns>If the sound was successfully played.</returns>
+        public void PlayMusic()
         {
-            return SoundManager.PlayMusic(this);
+            SoundManager.PlayMusic(this);
         }
-        public bool PauseMusic()
-        {
-            return SoundManager.PauseMusic(this);
-        }
+        /// <summary>
+        /// Loads the sound as music.
+        /// </summary>
+        /// <returns>If the sound was successfully loaded.</returns>
         public bool LoadMusic()
         {
             return SoundManager.LoadMusic(this);
         }
+        /// <summary>
+        /// Releases the sound from the music player.
+        /// </summary>
+        /// <returns>If the sound was successfully released.</returns>
         public bool ReleaseMusic()
         {
             return SoundManager.ReleaseMusic(this);
         }
+        /// <summary>
+        /// Unloads the sound from the music player.
+        /// </summary>
+        /// <returns>If the sound was successfully removed.</returns>
         public bool UnloadMusic()
         {
             return SoundManager.UnloadMusic(this);
         }
-        // Three Dimensional
-        public bool Play3D()
+        #endregion Music
+
+
+        #region ThreeDim
+        public Sound3DInstance PlayAs3D(Vector3 position)
         {
-            return SoundManager.PlayFlat(this);
+            return SoundManager.Play3D(this, position);
         }
-        public bool Pause3D()
+        public bool PauseAs3D(Sound3DInstance soundInstance)
         {
-            return SoundManager.PauseMusic(this);
+            return SoundManager.Pause3D(soundInstance);
         }
-        public bool Load3D()
+        public Sound3DInstance LoadAs3D(Vector3 position)
         {
-            return SoundManager.LoadMusic(this);
+            return SoundManager.Load3D(this, position);
         }
-        public bool Release3D()
+        public bool ReleaseAs3D(Sound3DInstance soundInstance)
         {
-            return SoundManager.ReleaseMusic(this);
+            return SoundManager.Release3D(soundInstance);
         }
-        public bool Unload3D()
+        public bool UnloadAs3D(Sound3DInstance soundInstance)
         {
-            return SoundManager.UnloadMusic(this);
+            return SoundManager.Unload3D(soundInstance);
         }
+        #endregion ThreeDim
     }
 }
