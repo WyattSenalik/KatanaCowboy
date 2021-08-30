@@ -14,6 +14,9 @@ namespace GameEventSystem
         // References to all the events by their ID.
         private static Dictionary<string, IGameEvent> eventsHash = new Dictionary<string, IGameEvent>();
 
+        // Map to convert Actions with generic parameters to actions with GameEventData
+        private static Dictionary<object, Action<GameEventData>> actionHash = new Dictionary<object, Action<GameEventData>>();
+
 
         /// <summary>
         /// Puts a new event into the EventSystem.
@@ -77,37 +80,37 @@ namespace GameEventSystem
         /// <returns>True if event is found. False otherwise.</returns>
         public static bool SubscribeToEvent(GameEventIdentifier eventID, Action action)
         {
-            return SubscribeToEvent(eventID, CreateGameEventDataAction(action));
+            return SubscribeToEvent(eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool SubscribeToEvent<T>(GameEventIdentifier<T> eventID, Action<T> action)
         {
-            return SubscribeToEvent(eventID, CreateGameEventDataAction(action));
+            return SubscribeToEvent(eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool SubscribeToEvent<T, G>(GameEventIdentifier<T, G> eventID, Action<T, G> action)
         {
-            return SubscribeToEvent(eventID, CreateGameEventDataAction(action));
+            return SubscribeToEvent(eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool SubscribeToEvent<T, G, H>(GameEventIdentifier<T, G, H> eventID, Action<T, G, H> action)
         {
-            return SubscribeToEvent(eventID, CreateGameEventDataAction(action));
+            return SubscribeToEvent(eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool SubscribeToEvent<T, G, H, J>(GameEventIdentifier<T, G, H, J> eventID, Action<T, G, H, J> action)
         {
-            return SubscribeToEvent(eventID, CreateGameEventDataAction(action));
+            return SubscribeToEvent(eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool SubscribeToEvent<T, G, H, J, K>(GameEventIdentifier<T, G, H, J, K> eventID, Action<T, G, H, J, K> action)
         {
-            return SubscribeToEvent(eventID, CreateGameEventDataAction(action));
+            return SubscribeToEvent(eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool SubscribeToEvent<T, G, H, J, K, L>(GameEventIdentifier<T, G, H, J, K, L> eventID,
             Action<T, G, H, J, K, L> action)
         {
-            return SubscribeToEvent(eventID, CreateGameEventDataAction(action));
+            return SubscribeToEvent(eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool SubscribeToEvent<T, G, H, J, K, L, I>(GameEventIdentifier<T, G, H, J, K, L, I> eventID,
             Action<T, G, H, J, K, L, I> action)
         {
-            return SubscribeToEvent(eventID, CreateGameEventDataAction(action));
+            return SubscribeToEvent(eventID, GetGameEventDataActionFromGenericAction(action));
         }
         /// <summary>
         /// Subscribes the action to the event with the given identifier.
@@ -152,37 +155,37 @@ namespace GameEventSystem
         /// <returns>True if event is found. False otherwise.</returns>
         public static bool UnsubscribeFromEvent(GameEventIdentifier eventID, Action action)
         {
-            return UnsubscribeFromEvent(eventID, CreateGameEventDataAction(action));
+            return UnsubscribeFromEvent(eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool UnsubscribeFromEvent<T>(GameEventIdentifier<T> eventID, Action<T> action)
         {
-            return UnsubscribeFromEvent(eventID, CreateGameEventDataAction(action));
+            return UnsubscribeFromEvent(eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool UnsubscribeFromEvent<T, G>(GameEventIdentifier<T, G> eventID, Action<T, G> action)
         {
-            return UnsubscribeFromEvent(eventID, CreateGameEventDataAction(action));
+            return UnsubscribeFromEvent(eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool UnsubscribeFromEvent<T, G, H>(GameEventIdentifier<T, G, H> eventID, Action<T, G, H> action)
         {
-            return UnsubscribeFromEvent(eventID, CreateGameEventDataAction(action));
+            return UnsubscribeFromEvent(eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool UnsubscribeFromEvent<T, G, H, J>(GameEventIdentifier<T, G, H, J> eventID, Action<T, G, H, J> action)
         {
-            return UnsubscribeFromEvent(eventID, CreateGameEventDataAction(action));
+            return UnsubscribeFromEvent(eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool UnsubscribeFromEvent<T, G, H, J, K>(GameEventIdentifier<T, G, H, J, K> eventID, Action<T, G, H, J, K> action)
         {
-            return UnsubscribeFromEvent(eventID, CreateGameEventDataAction(action));
+            return UnsubscribeFromEvent(eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool UnsubscribeFromEvent<T, G, H, J, K, L>(GameEventIdentifier<T, G, H, J, K, L> eventID,
             Action<T, G, H, J, K, L> action)
         {
-            return UnsubscribeFromEvent(eventID, CreateGameEventDataAction(action));
+            return UnsubscribeFromEvent(eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool UnsubscribeFromEvent<T, G, H, J, K, L, I>(GameEventIdentifier<T, G, H, J, K, L, I> eventID,
             Action<T, G, H, J, K, L, I> action)
         {
-            return UnsubscribeFromEvent(eventID, CreateGameEventDataAction(action));
+            return UnsubscribeFromEvent(eventID, GetGameEventDataActionFromGenericAction(action));
         }
         /// <summary>
         /// Unsubscribes the action from the event with the given identifier.
@@ -200,6 +203,21 @@ namespace GameEventSystem
         /// </summary>
         private static bool UnsubscribeFromEvent(IGameEventIdentifier eventID, Action<GameEventData> action)
         {
+            // Remove the action from the action hash
+            object actionKey = null;
+            foreach (KeyValuePair<object, Action<GameEventData>> pair in actionHash)
+            {
+                if (pair.Value == action)
+                {
+                    actionKey = pair.Key;
+                    break;
+                }
+            }
+            if (actionKey != null)
+            {
+                actionHash.Remove(actionKey);
+            }
+
             if (eventsHash.ContainsKey(eventID.GetID()))
             {
                 eventsHash[eventID.GetID()].Unsubscribe(action);
@@ -223,40 +241,40 @@ namespace GameEventSystem
         /// <returns>True if event is found. False otherwise.</returns>
         public static bool ToggleSubscriptionToEvent(bool condition, GameEventIdentifier eventID, Action action)
         {
-            return ToggleSubscriptionToEvent(condition, eventID, CreateGameEventDataAction(action));
+            return ToggleSubscriptionToEvent(condition, eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool ToggleSubscriptionToEvent<T>(bool condition, GameEventIdentifier<T> eventID, Action<T> action)
         {
-            return ToggleSubscriptionToEvent(condition, eventID, CreateGameEventDataAction(action));
+            return ToggleSubscriptionToEvent(condition, eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool ToggleSubscriptionToEvent<T, G>(bool condition, GameEventIdentifier<T, G> eventID, Action<T, G> action)
         {
-            return ToggleSubscriptionToEvent(condition, eventID, CreateGameEventDataAction(action));
+            return ToggleSubscriptionToEvent(condition, eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool ToggleSubscriptionToEvent<T, G, H>(bool condition, GameEventIdentifier<T, G, H> eventID,
             Action<T, G, H> action)
         {
-            return ToggleSubscriptionToEvent(condition, eventID, CreateGameEventDataAction(action));
+            return ToggleSubscriptionToEvent(condition, eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool ToggleSubscriptionToEvent<T, G, H, J>(bool condition, GameEventIdentifier<T, G, H, J> eventID,
             Action<T, G, H, J> action)
         {
-            return ToggleSubscriptionToEvent(condition, eventID, CreateGameEventDataAction(action));
+            return ToggleSubscriptionToEvent(condition, eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool ToggleSubscriptionToEvent<T, G, H, J, K>(bool condition, GameEventIdentifier<T, G, H, J, K> eventID,
             Action<T, G, H, J, K> action)
         {
-            return ToggleSubscriptionToEvent(condition, eventID, CreateGameEventDataAction(action));
+            return ToggleSubscriptionToEvent(condition, eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool ToggleSubscriptionToEvent<T, G, H, J, K, L>(bool condition,
             GameEventIdentifier<T, G, H, J, K, L> eventID, Action<T, G, H, J, K, L> action)
         {
-            return ToggleSubscriptionToEvent(condition, eventID, CreateGameEventDataAction(action));
+            return ToggleSubscriptionToEvent(condition, eventID, GetGameEventDataActionFromGenericAction(action));
         }
         public static bool ToggleSubscriptionToEvent<T, G, H, J, K, L, I>(bool condition,
             GameEventIdentifier<T, G, H, J, K, L, I> eventID, Action<T, G, H, J, K, L, I> action)
         {
-            return ToggleSubscriptionToEvent(condition, eventID, CreateGameEventDataAction(action));
+            return ToggleSubscriptionToEvent(condition, eventID, GetGameEventDataActionFromGenericAction(action));
         }
         /// <summary>
         /// Toggles if the given action is subscribed or unsubscribed to/from the event with the given identifier.
@@ -287,67 +305,93 @@ namespace GameEventSystem
         #endregion ToggleSubscriptionToEvent
 
 
-        #region CreateGameEventDataAction
+        #region GetGameEventDataActionFromGenericAction
         /// <summary>
         /// Creates a Action<GameEventData> from the given action.
         /// </summary>
-        private static Action<GameEventData> CreateGameEventDataAction(Action action)
+        private static Action<GameEventData> GetGameEventDataActionFromGenericAction(Action action)
         {
-            return (GameEventData data) => action.Invoke();
+            Action<GameEventData> gameEventAction = (GameEventData data) => action.Invoke();
+            return MapActionToGameEventDataAction(action, gameEventAction);
         }
-        private static Action<GameEventData> CreateGameEventDataAction<T>(Action<T> action)
+        private static Action<GameEventData> GetGameEventDataActionFromGenericAction<T>(Action<T> action)
         {
-            return (GameEventData data) =>
+            Action<GameEventData> gameEventAction = (GameEventData data) =>
             {
                 action.Invoke(data.ReadValue<T>());
             };
+            return MapActionToGameEventDataAction(action, gameEventAction);
         }
-        private static Action<GameEventData> CreateGameEventDataAction<T, G>(Action<T, G> action)
+        private static Action<GameEventData> GetGameEventDataActionFromGenericAction<T, G>(Action<T, G> action)
         {
-            return (GameEventData data) =>
+            Action<GameEventData> gameEventAction = (GameEventData data) =>
             {
                 action.Invoke(data.ReadValue<T>(), data.ReadValue<G>());
             };
+            return MapActionToGameEventDataAction(action, gameEventAction);
         }
-        private static Action<GameEventData> CreateGameEventDataAction<T, G, H>(Action<T, G, H> action)
+        private static Action<GameEventData> GetGameEventDataActionFromGenericAction<T, G, H>(Action<T, G, H> action)
         {
-            return (GameEventData data) =>
+            Action<GameEventData> gameEventAction = (GameEventData data) =>
             {
                 action.Invoke(data.ReadValue<T>(), data.ReadValue<G>(), data.ReadValue<H>());
             };
+            return MapActionToGameEventDataAction(action, gameEventAction);
         }
-        private static Action<GameEventData> CreateGameEventDataAction<T, G, H, J>(Action<T, G, H, J> action)
+        private static Action<GameEventData> GetGameEventDataActionFromGenericAction<T, G, H, J>(Action<T, G, H, J> action)
         {
-            return (GameEventData data) =>
+            Action<GameEventData> gameEventAction = (GameEventData data) =>
             {
                 action.Invoke(data.ReadValue<T>(), data.ReadValue<G>(), data.ReadValue<H>(),
                     data.ReadValue<J>());
             };
+            return MapActionToGameEventDataAction(action, gameEventAction);
         }
-        private static Action<GameEventData> CreateGameEventDataAction<T, G, H, J, K>(Action<T, G, H, J, K> action)
+        private static Action<GameEventData> GetGameEventDataActionFromGenericAction<T, G, H, J, K>(Action<T, G, H, J, K> action)
         {
-            return (GameEventData data) =>
+            Action<GameEventData> gameEventAction = (GameEventData data) =>
             {
                 action.Invoke(data.ReadValue<T>(), data.ReadValue<G>(), data.ReadValue<H>(),
                     data.ReadValue<J>(), data.ReadValue<K>());
             };
+            return MapActionToGameEventDataAction(action, gameEventAction);
         }
-        private static Action<GameEventData> CreateGameEventDataAction<T, G, H, J, K, L>(Action<T, G, H, J, K, L> action)
+        private static Action<GameEventData> GetGameEventDataActionFromGenericAction<T, G, H, J, K, L>(Action<T, G, H, J, K, L> action)
         {
-            return (GameEventData data) =>
+            Action<GameEventData> gameEventAction = (GameEventData data) =>
             {
                 action.Invoke(data.ReadValue<T>(), data.ReadValue<G>(), data.ReadValue<H>(),
                     data.ReadValue<J>(), data.ReadValue<K>(), data.ReadValue<L>());
             };
+            return MapActionToGameEventDataAction(action, gameEventAction);
         }
-        private static Action<GameEventData> CreateGameEventDataAction<T, G, H, J, K, L, I>(Action<T, G, H, J, K, L, I> action)
+        private static Action<GameEventData> GetGameEventDataActionFromGenericAction<T, G, H, J, K, L, I>(Action<T, G, H, J, K, L, I> action)
         {
-            return (GameEventData data) =>
+            Action<GameEventData> gameEventAction = (GameEventData data) =>
             {
                 action.Invoke(data.ReadValue<T>(), data.ReadValue<G>(), data.ReadValue<H>(),
                     data.ReadValue<J>(), data.ReadValue<K>(), data.ReadValue<L>(), data.ReadValue<I>());
             };
+            return MapActionToGameEventDataAction(action, gameEventAction);
         }
-        #endregion CreateGameEventDataAction
+        #endregion GetGameEventDataActionFromGenericAction
+
+
+        /// <summary>
+        /// Maps the given original action to correspond with the given GameEventData action.
+        /// If it is already mapped, it just returns that mapped value.
+        /// </summary>
+        /// <param name="originalAction">Original action with a variety of parameters.</param>
+        /// <param name="gameEventAction">GameEventData action to create if it is not already mapped.</param>
+        /// <returns>GameEventData action that is in the map.</returns>
+        private static Action<GameEventData> MapActionToGameEventDataAction(object originalAction,
+            Action<GameEventData> gameEventAction)
+        {
+            if (!actionHash.ContainsKey(originalAction))
+            {
+                actionHash.Add(originalAction, gameEventAction);
+            }
+            return actionHash[originalAction];
+        }
     }
 }

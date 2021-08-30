@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace GameEventSystem.Internal
 {
@@ -8,7 +9,7 @@ namespace GameEventSystem.Internal
     public class GameEventInternal : IGameEvent
     {
         // The actual event action. Takes GameEventData as its parameter.
-        public event Action<GameEventData> OnEvent;
+        private event Action<GameEventData> onEvent;
 
 
         /// <summary>
@@ -30,15 +31,15 @@ namespace GameEventSystem.Internal
 
         public void Invoke(GameEventData data)
         {
-            OnEvent?.Invoke(data);
+            onEvent?.Invoke(data);
         }
         public void Subscribe(Action<GameEventData> actionToAddToEvent)
         {
-            OnEvent += actionToAddToEvent;
+            onEvent += actionToAddToEvent;
         }
         public void Unsubscribe(Action<GameEventData> actionToRemoveFromEvent)
         {
-            OnEvent -= actionToRemoveFromEvent;
+            onEvent -= actionToRemoveFromEvent;
         }
         public bool IsRealEvent()
         {
