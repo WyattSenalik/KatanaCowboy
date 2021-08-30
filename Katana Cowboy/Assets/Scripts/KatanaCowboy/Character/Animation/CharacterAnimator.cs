@@ -4,7 +4,7 @@
 /// Controls the animations of a character.
 /// </summary>
 [RequireComponent(typeof(CharacterMovement))]
-public class CharacterAnimation : MonoBehaviour
+public class CharacterAnimator : MonoBehaviour
 {
     // Constants
     // Animator Parameter Names

@@ -107,12 +107,15 @@ public class CharacterMovement : MonoBehaviour
     /// <summary>
     /// Jumps if the character is grounded. Otherwise does nothing.
     /// </summary>
-    public void Jump()
+    /// <returns>If successfully jumped.</returns>
+    public bool TryJump()
     {
         if (isGrounded)
         {
             gravityVelocity.y = Mathf.Sqrt(jumpHeight * 2f * gravity);
+            return true;
         }
+        return false;
     }
 
     /// <summary>

@@ -225,6 +225,22 @@ namespace SoundSystem.Internal
             // When found, delete the AudioSource
             return ReleaseOrRemove(sound, option, (AudioSource source) => UnityEngine.Object.Destroy(source));
         }
+        public void ReleaseAll()
+        {
+            IReadOnlyList<ISound> soundsToRelease = GetActiveSounds();
+            foreach (ISound sound in soundsToRelease)
+            {
+                Release(sound, GetRid2DOptions.All);
+            }
+        }
+        public void RemoveAll()
+        {
+            IReadOnlyList<ISound> soundsToRemove = GetActiveSounds();
+            foreach (ISound sound in soundsToRemove)
+            {
+                Remove(sound, GetRid2DOptions.All);
+            }
+        }
         #endregion ISound2DPool
 
 
@@ -353,6 +369,15 @@ namespace SoundSystem.Internal
                         return false;
                     }
             }
+        }
+        private IReadOnlyList<ISound> GetActiveSounds()
+        {
+            List<ISound> activeSounds = new List<ISound>();
+            foreach (KeyValuePair<ISound, List<AudioSource>> pair in activeAudios)
+            {
+                activeSounds.Add(pair.Key);
+            }
+            return activeSounds;
         }
         #endregion Helpers
     }

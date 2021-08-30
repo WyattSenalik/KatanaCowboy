@@ -8,8 +8,7 @@ public class PushShootable : Shootable
 {
     // Customizable.
     // Magnitude of force to apply.
-    [SerializeField]
-    private float forceMag = 30f;
+    [SerializeField] private float forceMag = 30f;
 
     // References.
     // Reference to the attached rigidbody.

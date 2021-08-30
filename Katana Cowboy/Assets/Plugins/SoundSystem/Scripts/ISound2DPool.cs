@@ -1,12 +1,15 @@
 ﻿
-namespace SoundSystem.Internal
+namespace SoundSystem
 {
     // Options for each function
     public enum Play2DOptions { FirstNoInterupt, FirstInterupt, MultipleInstance }
     public enum Pause2DOptions { FirstPlaying, All }
     public enum Add2DOptions { SingleInstance, MultipleInstance }
     public enum GetRid2DOptions { First, All, FirstNonPlaying, AllNonPlaying }
+}
 
+namespace SoundSystem.Internal
+{
     /// <summary>
     /// Interface for pooling objects for 2D sounds.
     /// </summary>
@@ -63,5 +66,13 @@ namespace SoundSystem.Internal
         /// </param>
         /// <returns>If the sound was removed. False if no sound was removed.</returns>
         bool Remove(ISound sound, GetRid2DOptions option = GetRid2DOptions.First);
+        /// <summary>
+        /// Releases all the current sounds to make the audios available.
+        /// </summary>
+        void ReleaseAll();
+        /// <summary>
+        /// Removes all the added spunds.
+        /// </summary>
+        void RemoveAll();
     }
 }

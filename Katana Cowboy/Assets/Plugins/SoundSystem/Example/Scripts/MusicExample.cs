@@ -15,7 +15,7 @@ namespace SoundSystem.Example
         }
         public void Pause()
         {
-            music.PauseMusic();
+            SoundManager.PauseMusic();
         }
         public void Load()
         {

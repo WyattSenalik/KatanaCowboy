@@ -7,9 +7,9 @@ namespace SoundSystem.Internal
         private ISound activeMusic = null;
 
 
-        public MusicPool()
+        public MusicPool(string name = "MusicPool")
         {
-            sound2DPool = new Sound2DPool();
+            sound2DPool = new Sound2DPool(name, true);
         }
 
 
@@ -19,10 +19,21 @@ namespace SoundSystem.Internal
         }
         public void Pause()
         {
+            if (activeMusic == null)
+            {
+                return;
+            }
+
             sound2DPool.Pause(activeMusic);
         }
         public void Play(ISound music)
         {
+            // Pause the last music
+            if (activeMusic != null)
+            {
+                sound2DPool.Pause(activeMusic);
+            }
+
             activeMusic = music;
             sound2DPool.Play(music, Play2DOptions.FirstInterupt);
         }

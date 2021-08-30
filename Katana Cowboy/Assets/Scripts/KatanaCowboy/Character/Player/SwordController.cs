@@ -6,7 +6,7 @@
 public class SwordController : MonoBehaviour
 {
     /// <summary> Reference to the character's animator. </summary>
-    [SerializeField] private CharacterAnimation charAnim = null;
+    [SerializeField] private CharacterAnimator charAnim = null;
 
     public bool IsAttacking => isAttacking;
     private bool isAttacking = false;
