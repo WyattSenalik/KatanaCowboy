@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEngine;
+
 using Cinemachine;
-using UnityEngine;
 
 // NO LONGER IN USE.
 public class CameraInput : MonoBehaviour, AxisState.IInputAxisProvider

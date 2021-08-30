@@ -51,18 +51,17 @@ public class GunController : MonoBehaviour
     public void Shoot()
     {
         // Get the amount of bullets we have.
-        int amountBullets = inventory.GetAmount(InventoryItem.BULLET);
+        int amountBullets = inventory.GetAmount(InventoryItemNames.BULLET);
         if (amountBullets > 0)
         {
-            inventory.LoseItem(InventoryItem.BULLET, 1);
+            inventory.LoseItem(InventoryItemNames.BULLET, 1);
             Debug.Log("Shoot");
 
             if (Physics.Raycast(camTrans.position, camTrans.forward, out RaycastHit hit, range, shootLayerMask))
             {
                 Debug.Log("Shot " + hit.transform.name);
                 // Pull Shootable off object.
-                Shootable shotThing = hit.transform.GetComponent<Shootable>();
-                if (shotThing != null)
+                if (hit.transform.TryGetComponent(out Shootable shotThing))
                 {
                     // Shoot the thing.
                     // Get the info of the shot.

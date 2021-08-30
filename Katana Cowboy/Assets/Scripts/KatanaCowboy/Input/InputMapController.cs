@@ -5,19 +5,29 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// Handles swapping of the input map to handle when some scripts swap and then want to swap back to what it previously was.
 /// </summary>
+[RequireComponent(typeof(PlayerInput))]
 public class InputMapController : SingletonMonoBehav<InputMapController>
 {
-    // Reference to the player input
-    [SerializeField] private PlayerInput playerInputRef = null;
     // Name of the default map
     [SerializeField] private string defaultMapName = "ThirdPersonMovement";
+
+    // Reference to the player input
+    private PlayerInput playerInputRef = null;
 
     // Stack of active input maps.
     private List<string> activeMapNames = new List<string>();
 
 
+    // Called 0th
+    // Domestic Initialization
+    protected override void Awake()
+    {
+        base.Awake();
+
+        playerInputRef = GetComponent<PlayerInput>();
+    }
     // Called 1st
-    // Initialization
+    // Foreign Initialization
     private void Start()
     {
         ResetInputMap();

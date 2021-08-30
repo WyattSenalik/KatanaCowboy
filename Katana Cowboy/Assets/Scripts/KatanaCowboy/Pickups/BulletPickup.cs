@@ -18,7 +18,7 @@ public class BulletPickup : Pickup
         if (invent != null)
         {
             // Give the gun bullets.
-            invent.GainItem(InventoryItem.BULLET, bulletsToGive);
+            invent.GainItem(InventoryItemNames.BULLET, bulletsToGive);
         }
         else
         {

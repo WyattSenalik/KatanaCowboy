@@ -18,8 +18,4 @@ public class InventoryItem
         Name = name;
         Amount = initialAmount;
     }
-
-    // Names of all the inventory items.
-    // Static references to the names of the available items.
-    public static string BULLET = "Bullet";
 }

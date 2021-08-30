@@ -33,6 +33,8 @@ public class CameraZoom : MonoBehaviour
 
     private bool isZoomCoroutineActive = false;
 
+    private bool isSubscribed = false;
+
 
     // Functions called by unity messages (ex: Start, Awake, Update, etc.)
     #region UnityEvents
@@ -52,13 +54,13 @@ public class CameraZoom : MonoBehaviour
     private void OnEnable()
     {
         // Subscribe to events
-        SubscribeToEvents();
+        ToggleSubscriptionToEvents(true);
     }
     // Called when this component is disabled
     private void OnDisable()
     {
         // Unsubscribe from events
-        UnsubscribeFromEvents();
+        ToggleSubscriptionToEvents(false);
     }
     #endregion UnityEvents
 
@@ -66,20 +68,18 @@ public class CameraZoom : MonoBehaviour
     // Functions that subscribe and unsubscribe from the events this script listens to
     #region EventSubscriptions
     /// <summary>
-    /// Subscribes to events this script listens to.
+    /// Subscribes or unsubscribes this script to listen to GameEventSystem events.
     /// </summary>
-    private void SubscribeToEvents()
+    /// <param name="condition">Subscribe or unsubscribe.</param>
+    private void ToggleSubscriptionToEvents(bool condition)
     {
-        // Input events
-        EventSystem.SubscribeToEvent(InputEventIDList.Zoom, OnZoom);
-    }
-    /// <summary>
-    /// Unsubscribes from events this listens to.
-    /// </summary>
-    private void UnsubscribeFromEvents()
-    {
-        // Input events
-        EventSystem.UnsubscribeFromEvent(InputEventIDList.Zoom, OnZoom);
+        if (isSubscribed != condition)
+        {
+            // Input events
+            EventSystem.ToggleSubscriptionToEvent(condition, InputEventIDList.Zoom, OnZoom);
+
+            isSubscribed = condition;
+        }
     }
     #endregion EventSubscriptions
 

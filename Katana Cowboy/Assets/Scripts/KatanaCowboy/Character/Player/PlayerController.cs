@@ -8,13 +8,16 @@ using GameEventSystem;
 /// Interfaces between the CharacterMovement, CharacterRotator, CameraController, SwordController, and GunController.
 /// </summary>
 [RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterMovement))]
 [RequireComponent(typeof(CharacterRotator))]
 public class PlayerController : MonoBehaviour
 {
     // For what kind of controls the player should be using.
     public enum ControlType { Standard, Aim };
 
+    // Event Identifiers
     // References
+    [Header("Components")]
     // Camera controller for handling swapping between cameras.
     [SerializeField] private CameraController camContRef = null;
     // Sword controller for handling animation and such on the sword.
@@ -23,6 +26,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GunController gunContRef = null;
 
     // Aim controller
+    [Header("Specifics")]
     // Speed to rotate camera while aiming.
     [SerializeField] private float aimRotateSpeedY = 50.0f;
     // Smoothing the turning.
@@ -67,13 +71,13 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         // Subscribe to events
-        SubscribeToEvents();
+        ToggleEventSubscription(true);
     }
     // Called when the component is disabled
     private void OnDisable()
     {
         // Unubscribe from events
-        UnsubscribeFromEvents();
+        ToggleEventSubscription(false);
     }
     // Called every frame
     private void Update()
@@ -102,40 +106,18 @@ public class PlayerController : MonoBehaviour
 
     // Functions that subscribe and unsubscribe from the events this script listens to
     #region EventSubscriptions
-    /// <summary>
-    /// Subscribes to events this script listens to.
-    /// </summary>
-    private void SubscribeToEvents()
+    private void ToggleEventSubscription(bool condition)
     {
-        if (!isSubscribed)
+        if (isSubscribed != condition)
         {
-            // Input events
-            EventSystem.SubscribeToEvent(InputEventIDList.Movement, OnMovement);
-            EventSystem.SubscribeToEvent(InputEventIDList.Sprint, OnSprint);
-            EventSystem.SubscribeToEvent(InputEventIDList.Jump, OnJump);
-            EventSystem.SubscribeToEvent(InputEventIDList.Attack, OnAttack);
-            EventSystem.SubscribeToEvent(InputEventIDList.Aim, OnAim);
-            EventSystem.SubscribeToEvent(InputEventIDList.AimLook, OnAimLook);
+            EventSystem.ToggleSubscriptionToEvent(condition, InputEventIDList.Movement, OnMovement);
+            EventSystem.ToggleSubscriptionToEvent(condition, InputEventIDList.Sprint, OnSprint);
+            EventSystem.ToggleSubscriptionToEvent(condition, InputEventIDList.Jump, OnJump);
+            EventSystem.ToggleSubscriptionToEvent(condition, InputEventIDList.Attack, OnAttack);
+            EventSystem.ToggleSubscriptionToEvent(condition, InputEventIDList.Aim, OnAim);
+            EventSystem.ToggleSubscriptionToEvent(condition, InputEventIDList.AimLook, OnAimLook);
 
-            isSubscribed = true;
-        }
-    }
-    /// <summary>
-    /// Unsubscribes from events this listens to.
-    /// </summary>
-    private void UnsubscribeFromEvents()
-    {
-        if (isSubscribed)
-        {
-            // Input events
-            EventSystem.UnsubscribeFromEvent(InputEventIDList.Movement, OnMovement);
-            EventSystem.UnsubscribeFromEvent(InputEventIDList.Sprint, OnSprint);
-            EventSystem.UnsubscribeFromEvent(InputEventIDList.Jump, OnJump);
-            EventSystem.UnsubscribeFromEvent(InputEventIDList.Attack, OnAttack);
-            EventSystem.UnsubscribeFromEvent(InputEventIDList.Aim, OnAim);
-            EventSystem.UnsubscribeFromEvent(InputEventIDList.AimLook, OnAimLook);
-
-            isSubscribed = false;
+            isSubscribed = condition;
         }
     }
     #endregion EventSubscriptions
@@ -182,7 +164,7 @@ public class PlayerController : MonoBehaviour
         if (context.performed)
         {
             // Have the player try to jump
-            charMoveRef.Jump();
+            charMoveRef.TryJump();
         }
     }
     /// <summary>

@@ -10,7 +10,7 @@ public abstract class Shootable : MonoBehaviour
     [SerializeField] protected float maxHealth = 1f;
 
     // The current health of the shootable.
-    protected float curHealth;
+    protected float curHealth = 0;
     // The raycast hit information of the shot.
     protected ShotInfo shotInfo;
 
