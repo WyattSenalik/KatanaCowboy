@@ -1,22 +1,22 @@
-﻿
+﻿using UnityEngine;
+
 namespace SoundSystem.Internal
 {
     public class MusicPool : IMusicPool
     {
-        private ISound2DPool sound2DPool = null;
+        private readonly GameObject musicPoolObject = null;
+        private readonly AudioSource audioSource = null;
         private ISound activeMusic = null;
 
 
         public MusicPool(string name = "MusicPool")
         {
-            sound2DPool = new Sound2DPool(name, true);
+            musicPoolObject = new GameObject(name);
+            UnityEngine.Object.DontDestroyOnLoad(musicPoolObject);
+            audioSource = musicPoolObject.AddComponent<AudioSource>();
         }
 
 
-        public bool Add(ISound music)
-        {
-            return sound2DPool.Add(music);
-        }
         public void Pause()
         {
             if (activeMusic == null)
@@ -24,34 +24,17 @@ namespace SoundSystem.Internal
                 return;
             }
 
-            sound2DPool.Pause(activeMusic);
+            audioSource.Pause();
         }
         public void Play(ISound music)
         {
-            // Pause the last music
-            if (activeMusic != null)
-            {
-                sound2DPool.Pause(activeMusic);
-            }
-
             activeMusic = music;
-            sound2DPool.Play(music, Play2DOptions.FirstInterupt);
+            audioSource.SetFromSound(music);
+            audioSource.Play();
         }
-        public bool Release(ISound music)
+        public void Restart()
         {
-            if (music == activeMusic)
-            {
-                activeMusic = null;
-            }
-            return sound2DPool.Release(music);
-        }
-        public bool Remove(ISound music)
-        {
-            if (music == activeMusic)
-            {
-                activeMusic = null;
-            }
-            return sound2DPool.Remove(music);
+            audioSource.time = 0;
         }
     }
 }

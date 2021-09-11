@@ -1,69 +1,33 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace SoundSystem.Example
 {
     public class SoundExample : MonoBehaviour
     {
         [SerializeField] private Sound sound = null;
+        private ISoundInstance flatInstance = null;
+        private ISoundInstance instance3D = null;
 
 
-        public void Play()
+        public void PlayAsFlat()
         {
-            sound.PlayAsFlat();
+            flatInstance = sound.PlayAsFlat();
         }
-        public void PlayNew()
+        public void PauseFlat()
         {
-            sound.PlayAsFlat(Play2DOptions.MultipleInstance);
+            flatInstance.Pause();
         }
-        public void Pause()
+        public void PlayAs3D()
         {
-            sound.PauseAsFlat();
+            instance3D = sound.PlayAs3D(new Vector3(Random.Range(-10, 10), Random.Range(-10, 10), Random.Range(-10, 10)));
         }
-        public void PauseAll()
+        public void Pause3D()
         {
-            sound.PauseAsFlat(Pause2DOptions.All);
+            instance3D.Pause();
         }
-        public void Load()
+        public void PlayAsMusic()
         {
-            sound.LoadAsFlat();
-        }
-        public void LoadNew()
-        {
-            sound.LoadAsFlat(Add2DOptions.MultipleInstance);
-        }
-        public void Release()
-        {
-            sound.ReleaseAsFlat();
-        }
-        public void ReleaseAll()
-        {
-            sound.ReleaseAsFlat(GetRid2DOptions.All);
-        }
-        public void ReleaseNonPlaying()
-        {
-            sound.ReleaseAsFlat(GetRid2DOptions.FirstNonPlaying);
-        }
-        public void ReleaseAllNonPlaying()
-        {
-            sound.ReleaseAsFlat(GetRid2DOptions.AllNonPlaying);
-        }
-        public void Unload()
-        {
-            sound.UnloadAsFlat();
-        }
-        public void UnloadAll()
-        {
-            sound.UnloadAsFlat(GetRid2DOptions.All);
-        }
-        public void UnloadNonPlaying()
-        {
-            sound.UnloadAsFlat(GetRid2DOptions.FirstNonPlaying);
-        }
-        public void UnloadAllNonPlaying()
-        {
-            sound.UnloadAsFlat(GetRid2DOptions.AllNonPlaying);
+            sound.PlayAsMusic();
         }
     }
 }

@@ -6,24 +6,48 @@ namespace SoundSystem.Internal
     /// <summary>
     /// Base class for handling object pooling for sounds.
     /// </summary>
-    /// <typeparam name="T">Key for the active AudioSource dictionary.</typeparam>
-    public abstract class BaseSoundPool<T>: IBaseSoundPool
+    public abstract class BaseSoundPool : IBaseSoundPool
     {
-        // Dictionary of all the in-use AudioSources
-        protected Dictionary<T, List<AudioSource>> activeAudios = new Dictionary<T, List<AudioSource>>();
-        // Collection of not in-use AudioSources
-        protected Stack<AudioSource> idleAudios = new Stack<AudioSource>();
+        // GameObject and SoundInstanceDisposer for all sound pools to use to dispose of sound instances
+        private static GameObject poolGameObject = null;
+        protected static SoundInstanceDisposer soundInstanceDisposer { get; private set; }
 
-        
+        // Dictionary of all the in-use AudioSources
+        protected readonly List<AudioSource> activeAudios = new List<AudioSource>();
+        // Collection of not in-use AudioSources
+        protected readonly Stack<AudioSource> idleAudios = new Stack<AudioSource>();
+
+
         protected BaseSoundPool(int startAudios = 0)
         {
-            activeAudios = new Dictionary<T, List<AudioSource>>();
+            activeAudios = new List<AudioSource>();
             idleAudios = new Stack<AudioSource>(startAudios);
+
+            InitializePoolGameObject();
         }
-        ~BaseSoundPool()
+        private static void InitializePoolGameObject()
         {
-            activeAudios.Clear();
-            idleAudios.Clear();
+            if (poolGameObject == null)
+            {
+                poolGameObject = new GameObject("SoundInstance Monitor");
+                UnityEngine.Object.DontDestroyOnLoad(poolGameObject);
+                soundInstanceDisposer = poolGameObject.AddComponent<SoundInstanceDisposer>();
+            }
+        }
+
+
+        public void ReleaseAudioSource(AudioSource audioSource)
+        {
+            audioSource.clip = null;
+            activeAudios.Remove(audioSource);
+            idleAudios.Push(audioSource);
+        }
+        public void Clear(int size = 0)
+        {
+            while (idleAudios.Count > size)
+            {
+                DeleteIdleAudioSource(idleAudios.Pop());
+            }
         }
 
 
@@ -42,6 +66,22 @@ namespace SoundSystem.Internal
 
             return idleAudios.Pop();
         }
+        /// <summary>
+        /// Plays the given sound.
+        /// </summary>
+        /// <returns>Instance of the sounds being played.</returns>
+        protected ISoundInstance Play(ISound sound)
+        {
+            AudioSource audioSource = GetAvailableAudioSource();
+            audioSource.SetFromSound(sound);
+            audioSource.Play();
+
+            ISoundInstance soundInstance = new SoundInstance(audioSource, this);
+            soundInstanceDisposer.MonitorSoundInstance(soundInstance);
+
+            return soundInstance;
+        }
         protected abstract AudioSource CreateAudioSource();
+        protected abstract void DeleteIdleAudioSource(AudioSource audioSource);
     }
 }
