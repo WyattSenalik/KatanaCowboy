@@ -2,27 +2,27 @@
 
 public class Picker : MonoBehaviour
 {
-    // Specifications.
+    // Constants
     /// <summary>The maximum amount of pickups that can be picked up each frame.</summary>
     private const int MAX_COLS = 16;
+
+    // Specifications.
     /// <summary>Range from the picker things can be picked up.</summary>
-    [SerializeField] private float pickupRadius = 3f;
-    /// <summary>If gizmos should be shown (editor only).</summary>
-    [SerializeField] private bool showGizmos = false;
+    [SerializeField] private Capsule m_pickUpCapsule = new Capsule();
 
     /// <summary>Layermask to check for pickups on.</summary>
-    private int pickLayerMask;
+    private int m_pickLayerMask;
     /// <summary>Colliders that are hit for pickups.</summary>
-    private Collider[] hitcolliders;
+    private Collider[] m_hitcolliders;
 
 
     // Start is called before the first frame update
     private void Start()
     {
         // Get the layer mask.
-        pickLayerMask = LayerMask.GetMask(Pickup.PICKUP_LAYER_NAME);
+        m_pickLayerMask = LayerMask.GetMask(Pickup.PICKUP_LAYER_NAME);
         // Create the hit colliders list.
-        hitcolliders = new Collider[MAX_COLS];
+        m_hitcolliders = new Collider[MAX_COLS];
     }
     // Update is called once per frame
     private void Update()
@@ -31,12 +31,10 @@ public class Picker : MonoBehaviour
         CheckForPickups();
     }
     // Draws gizmos in editor.
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
-        if (showGizmos)
-        {
-            Gizmos.DrawWireSphere(this.gameObject.transform.position, pickupRadius);
-        }
+        Gizmos.color = Color.blue;
+        m_pickUpCapsule.DrawWireCapsuleGizmo(transform.position);
     }
 
 
@@ -46,18 +44,23 @@ public class Picker : MonoBehaviour
     private void CheckForPickups()
     {
         // Look for pickups close to the picker.
-        int numCols = Physics.OverlapSphereNonAlloc(this.transform.position, pickupRadius, hitcolliders, pickLayerMask, QueryTriggerInteraction.Collide);
+        int numCols = Physics.OverlapCapsuleNonAlloc(m_pickUpCapsule.GetPoint0(transform.position),
+            m_pickUpCapsule.GetPoint1(transform.position), m_pickUpCapsule.radius,
+            m_hitcolliders, m_pickLayerMask, QueryTriggerInteraction.Collide);
         for (int i = 0; i < numCols; ++i)
         {
             // Try to pull a pick up off the collider.
-            Pickup pick = hitcolliders[i].GetComponent<Pickup>();
+            Pickup pick = m_hitcolliders[i].GetComponent<Pickup>();
             if (pick != null)
             {
                 // Call pick for that object.
                 pick.Pick(this);
             }
             else
-                Debug.LogError("Found " + hitcolliders[i].name + " on layer " + LayerMask.LayerToName(pickLayerMask) + " but there was no Pickup attached to it.");
+            {
+                Debug.LogError("Found " + m_hitcolliders[i].name + " on layer " +
+                    LayerMask.LayerToName(m_pickLayerMask) + " but there was no Pickup attached to it.");
+            }
         }
     }
 }
