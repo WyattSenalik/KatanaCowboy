@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - CinemachineTarget
   layers:
   - Default
   - TransparentFX
@@ -14,13 +15,13 @@ TagManager:
   - 
   - 
   - Ground
-  - Shootable
+  - Hittable
   - Pickup
   - Player
   - Enemy
   - PlayerWeapon
   - EnemyWeapon
-  - Hitable
+  - 
   - 
   - 
   - 

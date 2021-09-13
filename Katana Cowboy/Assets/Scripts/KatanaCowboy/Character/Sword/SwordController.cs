@@ -6,12 +6,14 @@ using StarterAssets;
 /// Controls when the swords starts and stops attacking.
 /// </summary>
 [RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(SwordInput))]
+[RequireComponent(typeof(SwordInputs))]
 [RequireComponent(typeof(ThirdPersonController))]
 public class SwordController : MonoBehaviour
 {
+    [SerializeField] private SwordCollider _swordCollider = null;
+
     private Animator _animator = null;
-    private SwordInput _input = null;
+    private SwordInputs _input = null;
     private ThirdPersonController _thirdPersonController = null;
 
     private int _animIDAttack = Animator.StringToHash("Attack");
@@ -22,8 +24,12 @@ public class SwordController : MonoBehaviour
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        _input = GetComponent<SwordInput>();
+        _input = GetComponent<SwordInputs>();
         _thirdPersonController = GetComponent<ThirdPersonController>();
+    }
+    private void Start()
+    {
+        _swordCollider.gameObject.SetActive(false);
     }
     private void OnEnable()
     {
@@ -43,6 +49,7 @@ public class SwordController : MonoBehaviour
         if (!isAttacking)
         {
             isAttacking = true;
+            _swordCollider.gameObject.SetActive(true);
             _animator.SetTrigger(_animIDAttack);
             _thirdPersonController.CanMove = false;
         }
@@ -54,6 +61,7 @@ public class SwordController : MonoBehaviour
     public void StopSwingAnimation()
     {
         isAttacking = false;
+        _swordCollider.gameObject.SetActive(false);
         _thirdPersonController.CanMove = true;
     }
 

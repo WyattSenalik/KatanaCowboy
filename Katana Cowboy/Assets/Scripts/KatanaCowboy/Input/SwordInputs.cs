@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput))]
-public class SwordInput : MonoBehaviour
+public class SwordInputs : MonoBehaviour
 {
     public event Action<bool> onAttack;
 

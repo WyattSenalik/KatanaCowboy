@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 4832601486359755166}
   - component: {fileID: 8742032122309121640}
   m_Layer: 13
-  m_Name: Collider
+  m_Name: SwordCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73,7 +73,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1273935698902198579}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.1
   m_Height: 0.93
