@@ -4,20 +4,20 @@ using UnityEngine;
 [Serializable]
 public struct Capsule
 {
-    [SerializeField] private Vector3 m_center;
-    [SerializeField] [Min(0.0f)] private float m_radius;
-    [SerializeField] [Min(0.0f)] private float m_height;
+    [SerializeField] private Vector3 _center;
+    [SerializeField] [Min(0.0f)] private float _radius;
+    [SerializeField] [Min(0.0f)] private float _height;
 
-    public Vector3 localCenter => m_center;
-    public float radius => m_radius;
-    public float height => m_height;
+    public Vector3 localCenter => _center;
+    public float radius => _radius;
+    public float height => _height;
 
 
     public Capsule(Vector3 center, float radius = 0.5f, float height = 1f)
     {
-        m_center = center;
-        m_radius = radius;
-        m_height = height;
+        _center = center;
+        _radius = radius;
+        _height = height;
     }
 
 

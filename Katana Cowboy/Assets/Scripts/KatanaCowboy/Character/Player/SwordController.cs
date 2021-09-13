@@ -1,23 +1,51 @@
 ﻿using UnityEngine;
 
+using StarterAssets;
+
 /// <summary>
 /// Controls when the swords starts and stops attacking.
 /// </summary>
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(SwordInput))]
+[RequireComponent(typeof(ThirdPersonController))]
 public class SwordController : MonoBehaviour
 {
-    /// <summary> Reference to the character's animator. </summary>
-    [SerializeField] private CharacterAnimator charAnim = null;
+    private Animator _animator = null;
+    private SwordInput _input = null;
+    private ThirdPersonController _thirdPersonController = null;
 
-    public bool IsAttacking => isAttacking;
-    private bool isAttacking = false;
+    private int _animIDAttack = Animator.StringToHash("Attack");
+
+    public bool isAttacking { get; private set; }
+
+
+    private void Awake()
+    {
+        _animator = GetComponent<Animator>();
+        _input = GetComponent<SwordInput>();
+        _thirdPersonController = GetComponent<ThirdPersonController>();
+    }
+    private void OnEnable()
+    {
+        _input.onAttack += Attack;
+    }
+    private void OnDisable()
+    {
+        _input.onAttack -= Attack;
+    }
+
 
     /// <summary>
     /// Called by third person movement script to begin the swing animation of the sword.
     /// </summary>
     public void StartSwingAnimation()
     {
-        isAttacking = true;
-        charAnim.StartAttackAnimation();
+        if (!isAttacking)
+        {
+            isAttacking = true;
+            _animator.SetTrigger(_animIDAttack);
+            _thirdPersonController.CanMove = false;
+        }
     }
     /// <summary>
     /// Stops attacking.
@@ -26,6 +54,15 @@ public class SwordController : MonoBehaviour
     public void StopSwingAnimation()
     {
         isAttacking = false;
-        charAnim.StopAttackAnimation();
+        _thirdPersonController.CanMove = true;
+    }
+
+
+    private void Attack(bool attackState)
+    {
+        if (attackState)
+        {
+            StartSwingAnimation();
+        }
     }
 }

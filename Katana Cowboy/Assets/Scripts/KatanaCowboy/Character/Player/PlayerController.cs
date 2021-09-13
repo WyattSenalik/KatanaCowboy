@@ -89,7 +89,7 @@ public class PlayerController : MonoBehaviour
             charRotatorRef.RotateCharacter(aimDirection);
         }
 
-        if (!swordContRef.IsAttacking)
+        if (!swordContRef.isAttacking)
         {
             if (moveVector.sqrMagnitude > 0)
             {
@@ -179,7 +179,7 @@ public class PlayerController : MonoBehaviour
             {
                 // Start attacking with the sword
                 case ControlType.Standard:
-                    if (!swordContRef.IsAttacking)
+                    if (!swordContRef.isAttacking)
                     {
                         swordContRef.StartSwingAnimation();
                         charMoveRef.StopMoving();

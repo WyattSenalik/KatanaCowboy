@@ -59,6 +59,8 @@ namespace StarterAssets
 		[Tooltip("For locking the camera position on all axis")]
 		public bool LockCameraPosition = false;
 
+		public bool CanMove { get; set; } = true;
+
 		// cinemachine
 		private float _cinemachineTargetYaw;
 		private float _cinemachineTargetPitch;
@@ -168,6 +170,11 @@ namespace StarterAssets
 
 		private void Move()
 		{
+			if (!CanMove)
+            {
+				return;
+            }
+
 			// set target speed based on move speed, sprint speed and if sprint is pressed
 			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 
